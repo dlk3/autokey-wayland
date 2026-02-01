@@ -7,3 +7,5 @@ QScintilla
 pyhamcrest
 file-magic
 pyudev
+evdev
+pyasyncore; python_version>='3.12'
