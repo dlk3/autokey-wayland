@@ -17,8 +17,11 @@ https://github.com/dlk3/autokey-wayland/wiki/FAQ-%E2%80%90-Frequently-Asked-Ques
 
 - What happens?
 
+
 - What did you expect to see happen?
+
 
 - What environment are you running AutoKey in?
   - What Linux distribution and what version of that distribution?
+
   - What version of Python?  (Enter the command "python" in a terminal session and see what it says.)
