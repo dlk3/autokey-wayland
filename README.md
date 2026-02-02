@@ -6,19 +6,21 @@ This fork of the [AutoKey](https://github.com/autokey/autokey) project enables t
 
 ### Fedora Packages
 
-Packages for autokey-wayland are available in a COPR repository for currently supported versions of Fedora. 
+AutoKey packages are available in a COPR repository for currently supported versions of Fedora. 
 
-1. Uninstall any existing AutoKey packages first.<br><br><code>$ sudo dnf uninstall autokey*</code><br><br>Your existing AutoKey configuration will be preserved.  If you want to be extra careful, make a backup copy of everything in your <code>~/.config/autokey</code> directory before uninstalling.
+Enable my COPR repository and install AutoKey:
+
+        $ sudo dnf copr enable dlk/autokey
+        $ sudo dnf install autokey-gtk
+
+If you have the "official" version of AutoKey installed this will upgrade/replace it.
 
 ### Ubuntu/Debian Packages
 
-Packages for Debian-based distributions like Ubuntu are available in a PPA repository.
-
-1. Uninstall any existing AutoKey packages first.<br><br><code>$ sudo apt remove autokey*</code><br><br>Your existing AutoKey configuration will be preserved.  If you want to be extra careful, make a backup copy of everything in your <code>~/.config/autokey</code> directory before uninstalling.
 
 ### Installing manually from GitHub
 
-1. You do not need to uninstall existing versions of AutoKey before doing a manual install.
+You can clone this GitHub repository and run AutoKey from within it using a Python virtual environment.  See the [Installing AutoKey for Wayland](https://github.com/dlk3/autokey-wayland/wiki/Installing-AutoKey-for-Wayland) instructions page for details.  This is a good option to choose if you intend to do your own hacking on AutoKey.
 
 ## Support
 
