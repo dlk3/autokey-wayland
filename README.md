@@ -26,7 +26,7 @@ Read the [FAQ](https://github.com/dlk3/autokey-wayland/wiki/FAQ-%E2%80%90-Freque
 
 The [official AutoKey wiki](http://github.com/autokey/autokey/wiki) contains a lot of useful information about how to use AutoKey, including many example scripts and the like.  Make use of it.
 
-You may post questions or bug reports to this project's [Issues](https://github.com/dlk3/autokey-wayland/issues) tracker and I will do my best to address them.  As always, questions that could be answered by reading documentation or by using a search engine will not receive much/any attention.  Problem reports should always be accompanied by a full copy of your <code>~/.local/share/autokey/autokey.log</code> file that captures the problem while running autokey with the verbose ("-v") command line option.
+You may post questions or bug reports to this project's [Issues](https://github.com/dlk3/autokey-wayland/issues) tracker and I will do my best to address them.  As always, questions that could be answered by reading documentation or by using a search engine will not receive much/any attention.  Problem reports should always be accompanied by a full copy of your <code>~/.local/share/autokey/autokey.log</code> file that captures the problem while running autokey with the verbose ("-v") command line option.  See the [FAQ](https://github.com/dlk3/autokey-wayland/wiki/FAQ-%E2%80%90-Frequently-Asked-Questions#attaching-an-autokey-debug-log-to-a-problem-issue-report) for instructions.
 
 ## Project Branches
 

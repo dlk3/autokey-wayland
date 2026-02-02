@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
-Please read our FAQ to be see if the problem you are having has already been addressed there -> https://github.com/dlk3/autokey-wayland/wiki/FAQ-%E2%80%90-Frequently-Asked-Questions
+Please read our FAQ to be see if the problem you are having has already been addressed there -> 
+https://github.com/dlk3/autokey-wayland/wiki/FAQ-%E2%80%90-Frequently-Asked-Questions
 
-Please also see the instructions there on submitting a debug log with your bug report.
+Please also see the instructions there on submitting a debug log with your bug report -> 
+https://github.com/dlk3/autokey-wayland/wiki/FAQ-%E2%80%90-Frequently-Asked-Questions#attaching-an-autokey-debug-log-to-a-problem-issue-report
