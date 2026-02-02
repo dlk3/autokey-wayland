@@ -30,7 +30,8 @@ import queue
 import subprocess
 import time
 import copy
-
+import re
+import json
 
 import autokey.model.phrase
 if typing.TYPE_CHECKING:
@@ -1170,6 +1171,7 @@ class XRecordInterface(XInterfaceBase, AbstractSysInterface):
         # Finally free the context
         self.recordDisplay.record_free_context(self.ctx)
         self.recordDisplay.close()
+        logger.info("XRecord interface shutting down")
 
     def cancel(self):
         self.localDisplay.record_disable_context(self.ctx)

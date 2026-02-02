@@ -34,10 +34,10 @@ import autokey.configmanager.configmanager_constants as cm_constants
 from autokey.gnome_interface import GnomeMouseReadInterface
 
 #TODO when exiting the thread waits for one more signal and that signal repeats  for a bit during exit
-#  @dlk3 I believe I fixed this by putting a timeout on the select in __flush_events() so that it would
-#  not block forever waiting for a keypress after a self.ui device has been closed.  Besides at the end
-#  of the app, this can now also happen when a new self.ui device is created by __watch_for_new_devices()
-#  to connect a new keyboard/mouse to the system.
+#  @dlk3 I put a timeout on the select in __flush_events() so that it would not
+#  block forever waiting for a keypress after a self.ui device has been closed.
+#  This matches how things are done in the equivalent function in the X11
+#  interface.py module.
 
 class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInterface):
     """
@@ -177,8 +177,8 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
         threading.Thread.__init__(self)
         self.setDaemon(True)
         self.setName("UInputInterface-thread")
-        self.mediator = mediator  # type: IoMediator
-        self.app = app # type: AutokeyApplication
+        self.mediator = mediator  #  type - IoMediator
+        self.app = app            #  type - AutokeyApplication
         self.shutdown = False
         self.sending = False
         #  @dlk3 - support multiple keyboards/mice
@@ -200,8 +200,8 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
 
         # @dlk3 - support multiple keyboards/mice
         self.grab_multiple_devices()
-        logger.debug(f"The following devices are available on this system:\n\t{'\n\t'.join([ dev.name for dev in self.get_devices() ])}")
-        logger.debug(f"I grabbed these devices from that list: \n\t{'\n\t'.join([ dev.name for dev in self.keyboards + self.mice ])}")
+        logger.debug("The following devices are available on this system:\n\t{}".format('\n\t'.join([ dev.name for dev in self.get_devices() ])))
+        logger.debug("I grabbed these devices from that list: \n\t{}".format('\n\t'.join([ dev.name for dev in self.keyboards + self.mice ])))
         self.__watch_for_new_devices()
 
         try:
@@ -245,7 +245,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
                 logger.info("UDEV reports that a new device was added to the system, checking to see if it is a keyboard or mouse that I should grab.")
                 self.grab_multiple_devices()
                 self.ui = evdev.UInput.from_device(*self.device_paths, name="autokey mouse and keyboard")
-                logger.debug(f"Devices that I've grabbed: \"{'\", \"'.join([ dev.name for dev in self.keyboards + self.mice ])}\"")
+                logger.debug("Devices that I've grabbed: \"{}\"".format('\", \"'.join([ dev.name for dev in self.keyboards + self.mice ])))
 
         monitor = pyudev.Monitor.from_netlink(pyudev.Context())
 
@@ -955,7 +955,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
 
             pass
         except Exception as e:
-            logger.warning("Error sending modified key %r %r: %s", modifiers, keyName, str(e))
+            logger.warning("Error sending modified key %r %r: %s", modifiers, key, str(e))
 
 
     def cancel(self):

@@ -102,6 +102,7 @@ class IoMediator(threading.Thread):
     def shutdown(self):
         logger.debug("IoMediator shutting down")
         self.interface.cancel()
+        logger.debug("queue.put_nowait()")
         self.queue.put_nowait((None, None))
         logger.debug("Waiting for IoMediator thread to end")
         self.join()
