@@ -9,8 +9,7 @@ assignees: ''
 
 Please read our FAQ to be see if the problem you are having has already been addressed there ⮞ https://bit.ly/4tgDDrX
 
-Please also see the instructions there on submitting a debug log with your bug report ⮞
-https://bit.ly/4tgzV1k
+Please also see the instructions there on submitting a debug log with your bug report ⮞ https://bit.ly/3M49ify
 
 **Describe the issue you are having**
 - What happens?
