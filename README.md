@@ -8,10 +8,13 @@ This fork of the [AutoKey](https://github.com/autokey/autokey) project enables t
 
 AutoKey packages are available in a COPR repository for currently supported versions of Fedora. 
 
-Enable my COPR repository and install AutoKey:
+Enable my COPR repository on your system:
 
-        $ sudo dnf copr enable dlk/autokey
-        $ sudo dnf install autokey-gtk
+        sudo dnf copr enable dlk/autokey
+        
+Install AutoKey:
+
+        sudo dnf install autokey-gtk
 
 If you have the "official" version of AutoKey installed this will upgrade/replace it.
 
