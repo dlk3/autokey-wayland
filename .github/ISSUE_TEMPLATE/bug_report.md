@@ -11,7 +11,7 @@ Please read our FAQ to be see if the problem you are having has already been add
 
 Please also see the instructions in the FAQ on submitting a debug log with your bug report ⮞ https://bit.ly/3M49ify
 
-**Describe the issue you are having**
+Please tell me:
 
 - What happens?
 
