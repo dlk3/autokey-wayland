@@ -1,7 +1,7 @@
 %{?python_enable_dependency_generator}
 Name:		autokey
-Version:	0.97.0
-Release:	b4%{?dist}
+Version:	0.97.1
+Release:	0%{?dist}
 Summary:	Desktop automation utility
 
 
@@ -115,7 +115,7 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/gnome-shell/extensions/au
 # sed -i 's/python3-xlib/python-xlib/' %{buildroot}%{python3_sitelib}/%{name}-%{version}-py%{python3_version}.egg-info/requires.txt
 
 %files common
-%doc ACKNOWLEDGMENTS README.rst new_features.rst CHANGELOG.rst
+%doc ACKNOWLEDGMENTS README.md CHANGELOG.md
 %{python3_sitelib}/*
 %exclude %{python3_sitelib}/autokey/gtkapp.py*
 %exclude %{python3_sitelib}/autokey/gtkui/*
@@ -145,6 +145,10 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/gnome-shell/extensions/au
 %{_mandir}/man1/autokey-qt.1*
 
 %changelog
+* Mon Feb 2 2026 David King <dave@daveking.com> - 0.97.1-0
+- Bug fixes
+- Support for more than one keyboard and mouse
+
 * Fri Dec 20 2024 David King <dave@daveking.com> - 0.97.0-0
 - Beta test release with support for the Wayland desktop environment
 

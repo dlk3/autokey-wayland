@@ -113,20 +113,20 @@ class BuildWithQtResources(setuptools.command.build_py.build_py):
 
 ak_metadata = extract_autokey_metadata()
 this_directory = PurePath(__file__).parent
-with open(this_directory / 'README.rst', encoding='utf-8') as f:
+with open(this_directory / 'README.md', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name='autokey',
     version=ak_metadata.version,
-    description='Keyboard and GUI automation on Linux (X11)',
+    description='Keyboard and GUI automation on Linux',
     long_description=long_description,
-    long_description_content_type='text/x-rst',
+    long_description_content_type='text/x-markdown',
     author=ak_metadata.author,
     author_email=ak_metadata.author_email,
     maintainer=ak_metadata.maintainer,
     maintainer_email=ak_metadata.maintainer_email,
-    url='https://github.com/autokey/autokey',
+    url='https://github.com/dlk3/autokey-wayland',
     cmdclass={'build_py': BuildWithQtResources},
     license='GPLv3',
     # setuptools_scm removes need for MANIFEST.in. Allows setuptools to get which files to
