@@ -16,6 +16,7 @@ import select
 import random
 import re
 import pathlib
+import subprocess
 
 from autokey.model.button import Button
 from autokey.model.phrase import SendMode
@@ -383,13 +384,13 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
         else:
             logger.warning(f'Your "{user}" userid is not in the "{group}" user group.  I will try to add it.')
             try:
-                proc = subprocess.run("pkexec usermod -a -G {group} {user}", shell=True, capture_output=True, check=True)
+                proc = subprocess.run(f"pkexec usermod -a -G {group} {user}", shell=True, capture_output=True, check=True)
                 logger.info(f'"{user}" userid was added to the "{group}" user group.  Reboot/relogin is required.')
-                self.app.show_error_dialog("Success", details=f'AutoKey added the "{user}" user to the "{group}" user group.  You must logoff and log back on in order to make this take effect.')
+                self.app.show_error_dialog("Success", details='AutoKey added the "{}" user to the "{}" user group.  You must logoff and log back on in order to make this take effect.'.format(user, group))
                 exit()
             except Exception as e:
-                self.app.show_error_dialog("usermod Command Failed", details=f'AutoKey was unable to add "{user}" user to the "{group}" user group.  The error message was "{e.stderr}"')
-                raise Exception(f'AutoKey was unable to add "{user}" to the "{input}" user group.  The error message was "{e.stderr}". Run the command "sudo usermod -a -G {group} {user}" to make that addition.')
+                self.app.show_error_dialog("usermod Command Failed", details='AutoKey was unable to add "{}" user to the "{}" user group.  The error message was "{}"'.format(user, group, e.stderr))
+                raise Exception(f'AutoKey was unable to add "{user}" to the "{group}" user group.  The error message was "{e.stderr}". Run the command "sudo usermod -a -G {group} {user}" to make that addition.')
 
     @queue_method(queue)
     def send_mouse_click(self, xCoord, yCoord, button: Button, relative):

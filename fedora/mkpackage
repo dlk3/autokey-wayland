@@ -75,7 +75,7 @@ if p.returncode != 0:
 
 #  Put additional files into SOURCES
 try:
-	shutil.copy('../debian/10-autokey.rules', os.path.join(os.path.expanduser('~'), f'rpmbuild/SOURCES/10-autokey.rules'))
+	shutil.copy('../config/10-autokey.rules', os.path.join(os.path.expanduser('~'), f'rpmbuild/SOURCES/10-autokey.rules'))
 	shutil.copy('../autokey-gnome-extension/46/metadata.json', os.path.join(os.path.expanduser('~'), f'rpmbuild/SOURCES/metadata.json'))
 	shutil.copy('../autokey-gnome-extension/46/extension.js', os.path.join(os.path.expanduser('~'), f'rpmbuild/SOURCES/extension.js'))
 except:

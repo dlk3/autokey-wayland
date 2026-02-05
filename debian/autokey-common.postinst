@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+mkdir -p '/usr/share/gnome-shell/extensions/autokey-gnome-extension@autokey/'
+cp -R /usr/share/autokey/gnome-shell-extension/* '/usr/share/gnome-shell/extensions/autokey-gnome-extension@autokey/'
+
+cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
+/usr/bin/udevadm control --reload
+/usr/bin/udevadm trigger /dev/uinput
+
+#DEBHELPER#

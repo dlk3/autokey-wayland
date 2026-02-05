@@ -131,7 +131,7 @@ setup(
     license='GPLv3',
     # setuptools_scm removes need for MANIFEST.in. Allows setuptools to get which files to
     # include in source distributions from git.
-    setup_requires=['setuptools_scm'],
+    # setup_requires=['setuptools_scm'],
     # Use setuptools_scm to get version number from git! (Gives tag, plus dev
     # commit details since most recent tag if not on tagged commit).
     # If using this, would have to also set common.VERSION from this so that
@@ -174,7 +174,12 @@ setup(
                 ('share/man/man1/',
                  ['doc/man/autokey-qt.1',
                   'doc/man/autokey-gtk.1',
-                  'doc/man/autokey-run.1'])
+                  'doc/man/autokey-run.1']),
+                ('share/autokey/gnome-shell-extension/',
+                 ['autokey-gnome-extension/46/extension.js',
+                  'autokey-gnome-extension/46/metadata.json']),
+                ('share/autokey/uinput-udev-rule/',
+                 ['config/10-autokey.rules'])
                 ],
     entry_points={
         'console_scripts': [
@@ -183,7 +188,7 @@ setup(
             'autokey-headless=autokey.headless_app:main',
         ]
     },
-    scripts=['autokey-run', 'autokey-shell', 'autokey-user-config'],
+    scripts=['autokey-run', 'autokey-shell'],
     # Minimal installation pre-requisite python packages.
     # Some are not included here because they should be installed
     # through the system package manager, not pip.
@@ -191,7 +196,7 @@ setup(
         'pyinotify',
         'python-xlib',
         'packaging',
-        'file-magic',
+        'python-magic',
         'pyasyncore; python_version>="3.12"'
     ],
     extras_require={
@@ -203,7 +208,7 @@ setup(
                 "PyGObject"
                 ]
             },
-    test_suite="pytest",
+    #test_suite="pytest",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
