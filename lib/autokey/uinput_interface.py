@@ -195,7 +195,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
 
         ### UINPUT init
         self.validate()
-
+        
         #self.grab_devices()
 
         # @dlk3 - support multiple keyboards/mice
@@ -373,18 +373,23 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
 
     def validate(self):
         """
-        Checks that UInput will work correctly
-
-        Prints out error message currently if that fails.
+        Ensure that this user is a member of the "input" user group
         """
+        group = 'input'
         user = os.getlogin()
-        input_group = grp.getgrnam("input")
-        if user in input_group.gr_mem or os.geteuid()==0:
-            logger.info("Your \"input\" user group membership is good!")
+        input_group = grp.getgrnam(group)
+        if user in input_group.gr_mem or os.geteuid() == 0:
+            logger.info(f'Your "{group}" user group membership is good!')
         else:
-            logger.error("Your userid is not in the \"input\" user group.  Add yourself to that group and try again.")
-            logger.error(f"sudo usermod -a -G input {user}")
-            raise Exception(f"Your userid is not in the \"input\" user group.  Add yourself to that group and try again.  Run the command \"sudo usermod -a -G input {user}\"")
+            logger.warning(f'Your "{user}" userid is not in the "{group}" user group.  I will try to add it.')
+            try:
+                proc = subprocess.run("pkexec usermod -a -G {group} {user}", shell=True, capture_output=True, check=True)
+                logger.info(f'"{user}" userid was added to the "{group}" user group.  Reboot/relogin is required.')
+                self.app.show_error_dialog("Success", details=f'AutoKey added the "{user}" user to the "{group}" user group.  You must logoff and log back on in order to make this take effect.')
+                exit()
+            except Exception as e:
+                self.app.show_error_dialog("usermod Command Failed", details=f'AutoKey was unable to add "{user}" user to the "{group}" user group.  The error message was "{e.stderr}"')
+                raise Exception(f'AutoKey was unable to add "{user}" to the "{input}" user group.  The error message was "{e.stderr}". Run the command "sudo usermod -a -G {group} {user}" to make that addition.')
 
     @queue_method(queue)
     def send_mouse_click(self, xCoord, yCoord, button: Button, relative):
