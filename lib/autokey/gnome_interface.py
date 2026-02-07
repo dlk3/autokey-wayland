@@ -10,30 +10,8 @@ logger = __import__("autokey.logger").logger.get_logger(__name__)
 
 class DBusInterface:
     def __init__(self):
-
-        mainloop= DBusGMainLoop()
+        mainloop = DBusGMainLoop()
         session_bus = dbus.SessionBus(mainloop=mainloop)
-
-        #  dlk3 - Check to see if the extension is installed and enabled
-        extension_uuid = 'autokey-gnome-extension@autokey'
-        shell_obj = session_bus.get_object('org.gnome.Shell', '/org/gnome/Shell')
-        interface = dbus.Interface(shell_obj, 'org.gnome.Shell.Extensions')
-        info = interface.GetExtensionInfo(extension_uuid)
-        status = 'not installed'
-        if 'enabled' in info: 
-            status = 'installed'
-            if info['enabled'] == 1:
-                logger.info('The AutoKey Gnome Shell extension is enabled')
-                status = 'enabled'
-            else:
-                #  Enable it now
-                if interface.EnableExtension(extension_uuid):
-                    logger.info('AutoKey has enabled its Gnome Shell extension')
-                    status = 'enabled'
-        if status != 'enabled':
-            self.app.show_error_dialog_with_link("Gnome Shell externsion not installed", details="AutoKey's Gnome Shell extension is not installed.  AutoKey won't work without this.  Clock OK to see the installation instructions.", link_data="https://github.com/dlk3/autokey-wayland/wiki/Installing-AutoKey-for-Wayland#31-install-the-autokey-gnome-extension-gnome-shell-extension")
-            raise Exception("The AutoKey Gnome Shell extension is not installed. AutoKey won't work without this.  Showing error dialog and terminating.")
-
         shell_obj = session_bus.get_object('org.gnome.Shell', '/org/gnome/Shell/Extensions/AutoKey')
         self.dbus_interface = dbus.Interface(shell_obj, 'org.gnome.Shell.Extensions.AutoKey')
 

@@ -1,13 +1,15 @@
 #!/bin/sh
 
-set -e
-
 case "$1" in
     remove|deconfigure)
-        rm -fr '/usr/share/gnome-shell/extensions/autokey-gnome-extension@autokey'
-        rm '/etc/udev/rules.d/10-autokey.rules'
+	if [ "$(logname)" != "root" ]; then
+            usermod -r -G "input" "$(logname)"
+	    su -c 'gnome-extensions uninstall "autokey-gnome-extension@autokey"' $(logname)
+	fi
+
+        rm -f '/etc/udev/rules.d/10-autokey.rules'
         /usr/bin/udevadm control --reload
-        /usr/bin/udevadm trigger /dev/uinput
+        /usr/bin/udevadm trigger
     ;;
 esac
 

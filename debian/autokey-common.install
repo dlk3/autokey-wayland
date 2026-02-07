@@ -15,6 +15,7 @@ usr/lib/python*/*-packages/autokey/macro.py
 usr/lib/python*/*-packages/autokey/monitor.py
 usr/lib/python*/*-packages/autokey/service.py
 usr/lib/python*/*-packages/autokey/uinput_interface.py
+usr/lib/python*/*-packages/autokey/wayland_checks.py
 usr/lib/python*/*-packages/autokey/configmanager/
 usr/lib/python*/*-packages/autokey/iomediator/*.py
 usr/lib/python*/*-packages/autokey/model/*.py

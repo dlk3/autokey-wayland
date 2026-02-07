@@ -196,7 +196,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
 
         ### UINPUT init
         self.validate()
-        
+
         #self.grab_devices()
 
         # @dlk3 - support multiple keyboards/mice
@@ -374,23 +374,18 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
 
     def validate(self):
         """
-        Ensure that this user is a member of the "input" user group
+        Checks that UInput will work correctly
+
+        Prints out error message currently if that fails.
         """
-        group = 'input'
         user = os.getlogin()
-        input_group = grp.getgrnam(group)
-        if user in input_group.gr_mem or os.geteuid() == 0:
-            logger.info(f'Your "{group}" user group membership is good!')
+        input_group = grp.getgrnam("input")
+        if user in input_group.gr_mem or os.geteuid()==0:
+            logger.info("input User membership good!")
         else:
-            logger.warning(f'Your "{user}" userid is not in the "{group}" user group.  I will try to add it.')
-            try:
-                proc = subprocess.run(f"pkexec usermod -a -G {group} {user}", shell=True, capture_output=True, check=True)
-                logger.info(f'"{user}" userid was added to the "{group}" user group.  Reboot/relogin is required.')
-                self.app.show_error_dialog("Success", details='AutoKey added the "{}" user to the "{}" user group.  You must logoff and log back on in order to make this take effect.'.format(user, group))
-                exit()
-            except Exception as e:
-                self.app.show_error_dialog("usermod Command Failed", details='AutoKey was unable to add "{}" user to the "{}" user group.  The error message was "{}"'.format(user, group, e.stderr))
-                raise Exception(f'AutoKey was unable to add "{user}" to the "{group}" user group.  The error message was "{e.stderr}". Run the command "sudo usermod -a -G {group} {user}" to make that addition.')
+            logger.error("User not in input group add yourself or run program as root")
+            logger.error(f"sudo usermod -a -G input {user}")
+            raise Exception("User not in input group add yourself or run program as root")
 
     @queue_method(queue)
     def send_mouse_click(self, xCoord, yCoord, button: Button, relative):

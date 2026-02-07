@@ -21,12 +21,14 @@ Homepage: https://github.com/dlk3/autokey-wayland
 
 Package: autokey-common
 Architecture: all
-Depends: python3-dbus,
+Depends: imagemagick,
+         python3-dbus,
          python3-evdev,
          python3-pyinotify,
          python3-pyudev,
          python3-xlib,
          wmctrl,
+         xautomation,
          ${misc:Depends},
          ${python3:Depends}
 Description: desktop automation utility - common data

@@ -176,8 +176,7 @@ setup(
                   'doc/man/autokey-gtk.1',
                   'doc/man/autokey-run.1']),
                 ('share/autokey/gnome-shell-extension/',
-                 ['autokey-gnome-extension/46/extension.js',
-                  'autokey-gnome-extension/46/metadata.json']),
+                 ['autokey-gnome-extension/autokey-gnome-extension@autokey.shell-extension.zip']),
                 ('share/autokey/uinput-udev-rule/',
                  ['config/10-autokey.rules'])
                 ],
@@ -208,7 +207,7 @@ setup(
                 "PyGObject"
                 ]
             },
-    #test_suite="pytest",
+    test_suite="pytest",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
