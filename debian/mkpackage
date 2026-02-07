@@ -4,6 +4,8 @@
 
 GIT_URL='https://github.com/dlk3/autokey-wayland.git'
 BRANCH='new-install'
+VERSION='v0.97.1'
+
 export DEBEMAIL='dave@daveking.com'
 
 #  Run in interactive containers with a /bin/sh trap on failure 
@@ -71,6 +73,7 @@ else
 		git fetch --all
 		git switch $BRANCH
 	fi
+	git tag "$VERSION"
 	debian/build.sh
 	
 	#  Copy the package files out of the container and on to the host
