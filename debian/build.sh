@@ -5,7 +5,7 @@
 
 # create Gnome Shell extension pack
 cd 'autokey-gnome-extension/46'
-zip "../autokey-gnome-extension.shell-extension.zip" *
+zip "../autokey-gnome-extension@autokey.shell-extension.zip" *
 cd ../..
 
 VERSION=$(git describe --tags --abbrev=0 --match "v*.*.*")
