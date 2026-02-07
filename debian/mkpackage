@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+#  Generate the Ubuntu debs for AutoKey using a Ubuntu 24.04 LTS container
+
+GIT_URL='https://github.com/dlk3/autokey-wayland.git'
+BRANCH='new-install'
+export DEBEMAIL='dave@daveking.com'
+
+#  Run in interactive containers with a /bin/sh trap on failure 
+DEBUG=true
+
+#  Name of the Fedora container we use as the base for our container build
+UBUNTU_CONTAINER="ubuntu:latest"
+
+#  Abend the script and execute the trap when something bad happens
+set -e
+
+if [ $(cat /etc/hostname) == "fang.localdomain" ]; then
+
+	#  This section of the script does not run in the podman container, it only
+	#  runs on the container's host and drives the overall build process
+
+	#  Set to "true" to test the package build process in an interactive 
+	#  VM.  The package will not be submitted to the PPA.
+	#
+	#  Need to have installed the QEMU emulation package: qemu-user-static
+	TESTBUILD=false
+
+	cd $(dirname $(realpath "$0"))
+
+	#  Build the debs
+	echo "Starting build at $(date +%H:%m:%S)"
+	OPT=""
+	if $DEBUG; then
+		OPT="-it"
+	fi
+	/usr/bin/podman run $OPT --name=debbuild --rm --volume=${HOME}:${HOME} docker.io/${UBUNTU_CONTAINER} "$(realpath "$0")" ${HOME}
+	echo "Build complete at $(date +%H:%m:%S)"
+	echo "That took $(elapsed $STARTTIME)"
+		
+	if [ ! $TESTBUILD ]; then
+		echo 'submit debs to ppa here'
+	fi
+
+else
+
+	#  This section of the script runs in the docker container to build the ntopng 
+	#  RPM packages.
+
+	#  The resulting packages will be copied to the $HOME directory of the user
+	#  running this script on the host computer.  That user needs to have the
+	#  ~/rpmbuild directory tree set up for this to work.
+	TARGETDIR=$1
+
+        #  Keep the container running and give me a shell prompt when something bad happens
+	if $DEBUG; then
+		trap /bin/sh ERR
+	fi
+
+	apt update -y
+	apt upgrade -y
+	apt install -y git sudo zip
+
+	#  Create the rpmbuild directory tree inside the container
+	mkdir -p ${HOME}/src
+	cd ${HOME}/src
+
+	git clone "$GIT_URL"
+	cd autokey-wayland
+	if [ -n "$BRANCH" ] && [ "$BRANCH" != "main" ]; then
+		git fetch --all
+		git switch $BRANCH
+	fi
+	debian/build.sh
+	
+	#  Copy the package files out of the container and on to the host
+	cp -vr ${HOME}/src/*.deb ${TARGETDIR}/Downloads/
+	
+fi

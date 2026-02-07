@@ -4,7 +4,9 @@
   cat debian/build_requirements.txt | xargs sudo apt install -y
 
 # create Gnome Shell extension pack
-gnome-extensions pack -f -o "autokey-gnome-extension" "autokey-gnome-extension/46"
+pushd 'autokey-gnome-extension/46'
+zip "../autokey-gnome-extension.shell-extension.zip" *
+popd
 
 VERSION=$(git describe --tags --abbrev=0 --match "v*.*.*")
 # Strip leading 'v' because that is invalid as a debian version number
