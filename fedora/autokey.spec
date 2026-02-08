@@ -1,7 +1,7 @@
 %{?python_enable_dependency_generator}
 Name:		autokey
 Version:	0.97.1
-Release:	0%{?dist}
+Release:	1%{?dist}
 Summary:	Desktop automation utility
 
 
@@ -9,8 +9,7 @@ License:	GPLv3
 URL:		https://github.com/dlk3/autokey-wayland
 Source0:	https://github.com/dlk3/autokey-wayland/archive/v%{version}.tar.gz
 Source1:	10-autokey.rules
-Source2:	metadata.json
-Source3:	extension.js
+Source2:	autokey-gnome-extension@autokey.shell-extension.zip
 
 BuildArch:	noarch
 BuildRequires:	python3-devel,python3-xlib,python3-inotify,python3-dbus,python3-qt5-devel,python3-pip,python3-setuptools
@@ -31,36 +30,48 @@ Requires:	python3-evdev
 Requires:	python3-file-magic
 Requires:	python3-pyudev
 Requires:	wmctrl
+Requires:   imagemagick
 Provides:	autokey = %{version}-%{release}
 %description common
 This package contains the common data shared between the various front ends.
 
 %post common
+cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
 /usr/bin/udevadm control --reload
-/usr/bin/udevadm trigger
-if [ ! -z "$SUDO_USER" ]; then
-  /usr/sbin/usermod -aG input "${SUDO_USER}" &>/dev/null
+/usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+
+if [ "$USER" = "root" ] && [ "$(logname)" != "root" ]; then
+    #  Add the user to the "input" group membership
+    usermod -a -G "input" "$(logname)"
+    #  Install the Gnome Shell extension 
+    su -c 'gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip' $(logname)
+else
+    echo "*******************************************************************************"
+    echo "*  If you plan to run AutoKey on a Wayland desktop, please enter the          *"
+    echo "*  following commands to configure your userid to run AutoKey:                *"
+    echo "*                                                                             *"
+    echo "sudo usermod -a -G input \$(id -u -n)"
+    echo "gnome-extension install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip"
+    echo "*                                                                             *"
+    echo "*  You will need to log off and log back on so that these changes take        *"
+    echo "*  effect before trying to run AutoKey.                                       *"
+    echo "*******************************************************************************"
 fi
-echo
-echo "AutoKey installs a GNOME Shell extension and uses the uinput kernel device"
-echo "to communicate with the Wayland desktop environment.  Manual steps are"
-echo "needed to enable these services for your userid."
-echo
-echo "Please log off, log back on, and then run the following script before"
-echo "trying to run AutoKey:"
-echo
-echo "    autokey-user-config"
-echo
-echo "This is a one-time-only requirement.  If you have done this step before"
-echo "on this system, with a previous release of AutoKey, you do not need to"
-echo "do it again.  On the other hand, no harm will come if you do run this"
-echo "script more than once."
-echo
 exit 0
 
-%postun common
-/usr/bin/udevadm control --reload
-/usr/bin/udevadm trigger
+%preun common
+case "$1" in
+    0)
+        if [ "$(logname)" != "root" ]; then
+            usermod -r -G "input" "$(logname)"
+            su -c 'gnome-extensions uninstall "autokey-gnome-extension@autokey"' $(logname)
+        fi
+
+        rm -f '/etc/udev/rules.d/10-autokey.rules'
+        /usr/bin/udevadm control --reload
+        /usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+    ;;
+esac
 exit 0
 
 %package gtk
@@ -88,12 +99,11 @@ This package contains the QT front end for autokey
 %prep
 %setup -q -n %{name}-%{version}
 cp %{SOURCE1} 10-autokey.rules
-cp %{SOURCE2} metadata.json
-cp %{SOURCE3} extension.js
+cp %{SOURCE2} autokey-gnome-extension@autokey.shell-extension.zip
+
 
 %build
 %{__python3} setup.py build
-
 
 %install
 rm -rf %{buildroot}
@@ -107,9 +117,8 @@ for lib in $(find %{buildroot}%{python3_sitelib}/autokey/ -name "*.py"); do
 done
 
 # Put udev rules and gnome-autokey-extension file into place in BUILDROOT
-install -m 644 -D --target-dir=%{buildroot}%{_sysconfdir}/udev/rules.d 10-autokey.rules
-install -m 644 -D --target-dir=%{buildroot}%{_datadir}/gnome-shell/extensions/autokey-gnome-extension@autokey metadata.json
-install -m 644 -D --target-dir=%{buildroot}%{_datadir}/gnome-shell/extensions/autokey-gnome-extension@autokey extension.js
+install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/uinput-dev-rule 10-autokey.rules
+install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-extension autokey-gnome-extension@autokey.shell-extension.zip
 
 # ensure pkg_resources is able to find the required python packages
 # sed -i 's/python3-xlib/python-xlib/' %{buildroot}%{python3_sitelib}/%{name}-%{version}-py%{python3_version}.egg-info/requires.txt
@@ -121,13 +130,11 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/gnome-shell/extensions/au
 %exclude %{python3_sitelib}/autokey/gtkui/*
 %exclude %{python3_sitelib}/autokey/qtapp.py*
 %exclude %{python3_sitelib}/autokey/qtui/*
-%config %{_sysconfdir}/udev/rules.d/10-autokey.rules
-%{_datadir}/gnome-shell/extensions/autokey-gnome-extension@autokey/*
+%{_datadir}/autokey/*
 %{_datadir}/icons/*
 %{_bindir}/autokey-headless
 %{_bindir}/autokey-run
 %{_bindir}/autokey-shell
-%{_bindir}/autokey-user-config
 %{_mandir}/man1/autokey-run.1*
 
 %files gtk
@@ -145,6 +152,9 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/gnome-shell/extensions/au
 %{_mandir}/man1/autokey-qt.1*
 
 %changelog
+* Sun Feb 8 2026 David King <dave@daveking.com> - 0.97.1-1
+- Updated installation process
+
 * Mon Feb 2 2026 David King <dave@daveking.com> - 0.97.1-0
 - Bug fixes
 - Support for more than one keyboard and mouse

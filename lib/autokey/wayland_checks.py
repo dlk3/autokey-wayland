@@ -48,7 +48,7 @@ def waylandChecks():
         show_popup = True
 
     if show_popup:
-        message = f'Your user id is not configured to run AutoKey under Waland.  If this is your first time running AutoKey, try rebooting your system and starting AutoKey again.  Otherwise, try entering these two commands, then rebooting:\n\n<b>sudo usermod -a -G "{group}" "{user}"\n\ngnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip</b>'
+        message = f'Your user id is not configured to run AutoKey under Waland.  If this is your <b>first time</b> running AutoKey, try <b>rebooting</b> your system and starting AutoKey again.  Otherwise, try entering these two commands, then rebooting:\n\n<b>sudo usermod -a -G "{group}" "{user}"\n\ngnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip</b>'
         title = 'AutoKey System Configuration Needed'
         subprocess.run(f"zenity --error --title='{title}' --text='{message}'", shell=True, check=True)
         return False
