@@ -63,7 +63,8 @@ case "$1" in
     0)
         if [ "$(logname)" != "root" ]; then
             usermod -r -G "input" "$(logname)"
-            su -c 'gnome-extensions uninstall "autokey-gnome-extension@autokey"' $(logname)
+            su -c 'gnome-extensions uninstall autokey-gnome-extension@autokey' $(logname)
+            rm -fr "/home/$(logname)/.local/share/gnome-shell/extensions/autokey-gnome-extension@autokey"
         fi
 
         rm -f '/etc/udev/rules.d/10-autokey.rules'

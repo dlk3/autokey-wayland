@@ -51,7 +51,7 @@ shift $((OPTIND-1))
 #  if/when one is in force (see below)
 set -e
 
-if [ $(cat /etc/hostname) == "fang.localdomain" ]; then
+if [ ! $container ]; then
 
 	#  This section of the script does not run in the podman container, it only
 	#  runs on my workstation and drives the overall build process
@@ -141,12 +141,11 @@ EOF
 
 else
 
-	#  This section of the script runs in the docker container to build the ntopng 
-	#  RPM packages.
+	#  This section of the script runs in the docker container to build the Ubuntu
+	#  debs.
 
-	#  The resulting packages will be copied to the $HOME directory of the user
-	#  running this script on the host computer.  That user needs to have the
-	#  ~/rpmbuild directory tree set up for this to work.
+	#  The output packages will be copied to the $HOME/Downloads directory of
+	#  the user running this script.
 	TARGETDIR=$1
 
         #  Keep the container running and give me a shell prompt when something bad happens
@@ -162,12 +161,12 @@ else
 	mkdir -p ${HOME}/src
 	cd ${HOME}/src
 
-	git clone "$GIT_URL"
-	cd autokey-wayland
+	BRANCH_OPTS=""
 	if [ -n "$BRANCH" ] && [ "$BRANCH" != "main" ]; then
-		git fetch --all
-		git switch $BRANCH
+		BRANCH_OPTS="--branch \"$BRANCH\" --single-branch"
 	fi
+	git clone $BRANCH_OPTS "$GIT_URL"
+	cd autokey-wayland
 	git tag "$VERSION"
 	debian/build.sh
 	
