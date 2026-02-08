@@ -65,7 +65,6 @@ if [ ! $container ]; then
 	fi
 	/usr/bin/podman run $OPT --name=debbuild --rm --volume=${HOME}:${HOME} docker.io/${UBUNTU_CONTAINER} "$(realpath "$0")" ${HOME}
 	echo "Build complete at $(date +%H:%m:%S)"
-	echo "That took $(elapsed $STARTTIME)"
 		
 	#  If this isn't a test, put the deb files into my PPA
 	if [ $TESTBUILD == false ]; then
@@ -163,8 +162,9 @@ else
 
 	BRANCH_OPTS=""
 	if [ -n "$BRANCH" ] && [ "$BRANCH" != "main" ]; then
-		BRANCH_OPTS="--branch \"$BRANCH\" --single-branch"
+		BRANCH_OPTS="--branch $BRANCH --single-branch"
 	fi
+	echo git clone $BRANCH_OPTS "$GIT_URL"
 	git clone $BRANCH_OPTS "$GIT_URL"
 	cd autokey-wayland
 	git tag "$VERSION"
