@@ -48,7 +48,7 @@ def waylandChecks():
         show_popup = True
 
     if show_popup:
-        message = f'Your user id is not configured to run AutoKey under Waland.  If this is your <b>first time</b> running AutoKey, try <b>rebooting</b> your system and starting AutoKey again.  Otherwise, try entering these two commands, then rebooting:<br /><br /><b>sudo usermod -a -G "{group}" "{user}"<br />gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip</b>'
+        message = f'Your user id is not configured to run AutoKey under Waland.  If this is your <b>first time</b> running AutoKey, try <b>rebooting</b> your system and starting AutoKey again.  Otherwise, try entering these two commands, then rebooting:<br /><br />sudo usermod -a -G "{group}" "{user}"<br /><br />gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip'
         title = 'AutoKey System Configuration Needed'
         try:
             subprocess.run(f"kdialog --error '{message}' --title '{title}'", shell=True, check=True)

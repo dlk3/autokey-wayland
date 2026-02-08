@@ -5,7 +5,9 @@
   "shell-version": [
     "45",
     "46",
-    "47"
+    "47",
+    "48",
+    "49"
   ],
   "version": 0.2,
   "url": "https://github.com/autokey/autokey/autokey-gnome-extension",

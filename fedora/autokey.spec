@@ -27,7 +27,6 @@ Summary:	Desktop automation utility - common data
 Requires:	gnome-extensions-app
 Requires:	python3-dbus
 Requires:	python3-evdev
-Requires:	python3-file-magic
 Requires:	python3-pyudev
 Requires:	wmctrl
 Requires:	ImageMagick
@@ -57,7 +56,6 @@ else
     echo "*  effect before trying to run AutoKey.                                       *"
     echo "*******************************************************************************"
 fi
-exit 0
 
 %preun common
 case "$1" in
@@ -85,6 +83,19 @@ Provides:	autokey = %{version}-%{release}
 %description gtk
 This package contains the GTK+ front end for autokey
 
+%post gtk
+update-alternatives --install /usr/bin/autokey autokey \
+  /usr/bin/autokey-gtk 50 \
+  --slave /usr/share/man/man1/autokey.1.gz autokey.1.gz  \
+  /usr/share/man/man1/autokey-gtk.1.gz
+
+%preun gtk
+case "$1" in
+    0)
+        update-alternatives --remove autokey /usr/bin/autokey-gtk
+    ;;
+esac
+exit 0
 
 %package qt
 Summary:	AutoKey QT front end
@@ -95,6 +106,19 @@ Provides:	autokey = %{version}-%{release}
 %description qt
 This package contains the QT front end for autokey
 
+%post qt
+update-alternatives --install /usr/bin/autokey autokey \
+  /usr/bin/autokey-qt 60 \
+  --slave /usr/share/man/man1/autokey.1.gz autokey.1.gz  \
+  /usr/share/man/man1/autokey-qt.1.gz
+
+%preun qt
+case "$1" in
+    0)
+        update-alternatives --remove autokey /usr/bin/autokey-qt
+    ;;
+esac
+exit 0
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -117,7 +141,7 @@ for lib in $(find %{buildroot}%{python3_sitelib}/autokey/ -name "*.py"); do
 done
 
 # Put udev rules and gnome-autokey-extension file into place in BUILDROOT
-install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/uinput-dev-rule 10-autokey.rules
+install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/uinput-udev-rule 10-autokey.rules
 install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-extension autokey-gnome-extension@autokey.shell-extension.zip
 
 # ensure pkg_resources is able to find the required python packages
@@ -130,7 +154,7 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-exten
 %exclude %{python3_sitelib}/autokey/gtkui/*
 %exclude %{python3_sitelib}/autokey/qtapp.py*
 %exclude %{python3_sitelib}/autokey/qtui/*
-%{_datadir}/autokey/*
+%{_datadir}/autokey
 %{_datadir}/icons/*
 %{_bindir}/autokey-headless
 %{_bindir}/autokey-run
