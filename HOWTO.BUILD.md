@@ -25,9 +25,9 @@ The <code>fedora/mkpackage</code> script builds a source RPM and sends it to COP
 
 # Starting the Ubuntu Build
 
-Edit <code>debian/mkpackage</code> and make sure it's pointing at the right branch of the repo
-
 ## To build Ubuntu debs on a Fedora workstation:
+
+Edit <code>debian/mkpackage</code> and make sure it's pointing at the right branch of the repo.  This build pulls its source from git, so make sure you've done your commits and pushes.
 
     cd ~/src/autokey-wayland/debian
     ./mkpackage
@@ -35,6 +35,8 @@ Edit <code>debian/mkpackage</code> and make sure it's pointing at the right bran
 On Fedora, the output debs will be rsynced to my PPA server, unless the "-t" option is specified.  With "-t" they will be written into ${HOME}/Downloads instead.
 
 ## To build Ubuntu debs on an Ubuntu workstation:
+
+This build uses local source, so be sure you're in the right branch with the right changes.
 
     cd ~/src/autokey-wayland
     debian/build.sh
@@ -44,6 +46,8 @@ On Ubuntu, the output debs will be written to ~/src
 # Starting the Fedora Build
 
 ## To build Fedora RPMs on a Fedora Workstation:
+
+This build uses local source, so be sure you're in the right branch with the right changes.
 
     cd ~/src/autopkey-wayland/fedora
     ./mkpackage
