@@ -43,8 +43,6 @@ On Ubuntu, the output debs will be written to ~/src
 
 # Starting the Fedora Build
 
-Check the <code>copr-cli</code> chroots listed in <code>fedora/mkpackage</code> for currency before doing a build.
-
 ## To build Fedora RPMs on a Fedora Workstation:
 
     cd ~/src/autopkey-wayland/fedora
