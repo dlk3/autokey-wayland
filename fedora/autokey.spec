@@ -30,6 +30,7 @@ Requires:	python3-evdev
 Requires:	python3-pyudev
 Requires:	wmctrl
 Requires:	ImageMagick
+Requires:	xautomation
 Provides:	autokey = %{version}-%{release}
 %description common
 This package contains the common data shared between the various front ends.

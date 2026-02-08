@@ -2,12 +2,21 @@
 
 #  Generate the Ubuntu debs for AutoKey using a Ubuntu 24.04 LTS container
 
+#  Source code to build and version number to use 
 GIT_URL='https://github.com/dlk3/autokey-wayland.git'
 BRANCH='new-install'
 VERSION='v0.97.1'
 
+#  Location we rsync the PPA updates to:
+PPA_DIR='daveking.com:/opt/autokey-wayland-ppa/'
+
+#  Tag of the docker.io Ubuntu container we use as the base for our container build
+UBUNTU_CONTAINER="ubuntu:latest"
+
+#  Debian build tools need an email address for the maintainer
 export DEBEMAIL='dave@daveking.com'
 
+#  Handle command line options
 usage () {
 	echo "Usage: $0 [-d] [-h] [-t]"
 	echo "    where:"
@@ -38,16 +47,14 @@ while getopts "dth" OPT; do
 done
 shift $((OPTIND-1))
 	
-#  Name of the Fedora container we use as the base for our container build
-UBUNTU_CONTAINER="ubuntu:latest"
-
-#  Abend the script and execute the trap when something bad happens
+#  Abend the script when something bad happens.  Will execute the ERR trap 
+#  if/when one is in force (see below)
 set -e
 
 if [ $(cat /etc/hostname) == "fang.localdomain" ]; then
 
 	#  This section of the script does not run in the podman container, it only
-	#  runs on the container's host and drives the overall build process
+	#  runs on my workstation and drives the overall build process
 	cd $(dirname $(realpath "$0"))
 
 	#  Build the debs in a container
@@ -65,17 +72,33 @@ if [ $(cat /etc/hostname) == "fang.localdomain" ]; then
 	
 		#  Update PPA
 		rm -fr /tmp/ppa &>/dev/null || true
-		rsync --archive --partial --progress daveking.com:/opt/autokey-wayland-ppa/ /tmp/ppa/
+		rsync --archive --partial --progress $PPA_DIR /tmp/ppa/
 		mv ${HOME}/Downloads/autokey*.deb /tmp/ppa/
 		cd /tmp/ppa
+
+		#  Keep only one version of each package
+		PREV_NAME=""
+		PREV_VERSION=""
+		for f in $(ls -r *.deb); do
+			NAME=$(echo "$f" | cut -f1 -d_)
+			VERSION=$(echo "$f" | cut -f2 -d_)
+			VERSION=${VERSION%.*}
+			if [ "$NAME" == "$PREV_NAME" ] && [ "$VERSION" == "$PREV_VERSION" ]; then
+				echo "$(date "$DATEFMT"): Deleting $f"
+				rm "$f" &>/dev/null || true
+			else
+				PREV_NAME="$NAME"
+				PREV_VERSION="$VERSION"
+			fi
+		done
+
+		#  Create the Packages files in the repo
+		echo "Creating Packages files for PPA"
 		dpkg-scanpackages --multiversion . >Packages
 		gzip -k -f Packages
 	    
-		# Create the Releases file in the repo
+		# Create the Release files in the repo
 		echo "Creating Release files for PPA"
-		cd "/tmp/ppa"
-		# Create the Release file in the repo
-		echo "Creating Release file in ${PPADIR%%/}/dists/$SUBDIR"
 		
 		do_hash() {
 			HASH_NAME=$1
@@ -112,7 +135,7 @@ EOF
 		cat Release | gpg -abs --clearsign >InRelease
 
 		echo "Sync local repo with remote web site"
-		rsync --archive --partial --progress --delete /tmp/ppa/ daveking.com:/opt/autokey-wayland-ppa/
+		rsync --archive --partial --progress --delete /tmp/ppa/ "$PPA_DIR"
 		echo "Sync complete"
 	fi
 
