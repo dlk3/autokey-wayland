@@ -31,7 +31,8 @@ def waylandChecks():
         if 'Enabled: Yes' in proc.stdout.decode('utf-8'):
             logger.debug('waylandChecks() found the AutoKey Gnome Shell extension')
         else:
-            raise ExtensionNotFound
+            logger.debug('waylandChecks() found the AutoKey Gnome Shell extension but it is disabled.  Attempting to enable it.')
+            subprocess.run(f'gnome-extensions enable {ext_id}', shell=True, capture_output=True, check=True)
     except Exception:
         logger.critical('waylandChecks() did not find the AutoKey Gnome Shell extension, displaying popup')
         show_popup = True
@@ -47,8 +48,8 @@ def waylandChecks():
         show_popup = True
 
     if show_popup:
-        message = f'Your user id is not configured to run AutoKey under Waland.  If this is your first time running AutoKey, try logging off and back on and start AutoKey again.  Otherwise, try entering these two commands, then logging off and back on:\n\n<b>sudo usermod -a -G "{group}" "{user}"\n\ngnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip</b>'
-        title = 'AutoKey User Configuration Needed'
+        message = f'Your user id is not configured to run AutoKey under Waland.  If this is your first time running AutoKey, try rebooting your system and starting AutoKey again.  Otherwise, try entering these two commands, then rebooting:\n\n<b>sudo usermod -a -G "{group}" "{user}"\n\ngnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip</b>'
+        title = 'AutoKey System Configuration Needed'
         subprocess.run(f"zenity --error --title='{title}' --text='{message}'", shell=True, check=True)
         return False
 

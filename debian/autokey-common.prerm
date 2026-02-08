@@ -9,7 +9,7 @@ case "$1" in
 
         rm -f '/etc/udev/rules.d/10-autokey.rules'
         /usr/bin/udevadm control --reload
-        /usr/bin/udevadm trigger
+	/usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
     ;;
 esac
 

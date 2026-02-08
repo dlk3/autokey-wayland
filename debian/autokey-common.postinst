@@ -4,7 +4,7 @@ set -e
 
 cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
 /usr/bin/udevadm control --reload
-/usr/bin/udevadm trigger
+/usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
 
 if [ "$USER" = "root" ] && [ "$(logname)" != "root" ]; then
     #  Add the user to the "input" group membership

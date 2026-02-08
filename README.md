@@ -27,6 +27,7 @@ Enable my PPA on your system:
 
 Install AutoKey:
 
+     sudo apt update
      sudo apt install autokey-gtk
 
 If you have the "official" version of AutoKey installed this will upgrade/replace it.
