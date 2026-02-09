@@ -48,4 +48,4 @@ You may post questions or bug reports to this project's [Issues](https://github.
 
 ## Project Branches
 
-[main](https://github.com/dlk3/autokey-wayland/tree/main) - the current release of the code
+[main](https://github.com/dlk3/autokey-wayland/tree/main) - the current code

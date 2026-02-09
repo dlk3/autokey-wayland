@@ -314,25 +314,22 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
                 except Exception as error:
                     logger.error(f"Could not grab mouse device \"{dev.name}\" from configuration settings: {error}")
 
+        dev_list = "\n(I could not get the list of devices.  Please press \"Esc\", log off and back on, and try running AutoKey again."
         if len(self.keyboards) == 0:
-            logger.error(f"Unable to find a keyboard")
+            logger.error(f"Unable to find a keyboard to connect to")
             dev_list = ''
             if len(devices) > 0:
                 for dev in devices:
                     dev_list = dev_list + '\n' + dev.name
-            else:
-                dev_list = "\n(I could not get the list of devices.  Please press \"Esc\", log off and back on, and try running AutoKey again."
-            self.app.show_error_dialog_with_link(f"Unable to find a keyboard device", f"I am unable to identify your keyboard device.  Update the \"\"keyboard\" list in the AutoKey configuration file {cm_constants.CONFIG_FILE} with the name(s) of your keyboard device(s) from this list:\n{dev_list}\n\nClick the \"Open\" button below to edit the configuration file now or press \"Esc\" to close this message.", link_data=cm_constants.CONFIG_FILE)
+            self.app.show_error_dialog_with_link(f"Unable to connect a keyboard device", f"I am unable to recognize your keyboard device.  Please update the \"keyboard\" and \"mouse\" lists in the AutoKey configuration file {cm_constants.CONFIG_FILE} with the name(s) of your keyboard and mouse device(s) from this list:\n{dev_list}\n\nClick the \"Open\" button below to edit the configuration file now or simply press \"Esc\" to close this message.", link_data=cm_constants.CONFIG_FILE)
             exit(1)
         if len(self.mice) == 0:
-            logger.error(f"Unable to find a mouse")
+            logger.error(f"Unable to find a mouse to connect to")
             dev_list = ''
             if len(devices) > 0:
                 for dev in devices:
                     dev_list = dev_list + '\n' + dev.name
-            else:
-                dev_list = "\n(I could not get the list of devices.  Please press \"Esc\", log off and back on, and try running AutoKey again.)"
-            self.app.show_error_dialog_with_link(f"Unable to find a mouse device", f"I am unable to identify your mouse device.  Update the \"\"mouse\" list in the AutoKey configuration file {cm_constants.CONFIG_FILE} with the name(s) of your mouse device(s) from thxis list:\n{dev_list}\n\nClick the \"Open\" button below to edit the configuration file now or press \"Esc\" to close this message.", link_data=cm_constants.CONFIG_FILE)
+            self.app.show_error_dialog_with_link(f"Unable to connect a mouse device", f"I am unable to recognize your mouse device.  Please update the \"keyboard\" and \"mouse\" lists in the AutoKey configuration file {cm_constants.CONFIG_FILE} with the name(s) of your keyboard and mouse device(s) from this list:\n{dev_list}\n\nClick the \"Open\" button below to edit the configuration file now or simply press \"Esc\" to close this message.", link_data=cm_constants.CONFIG_FILE)
             exit(1)
 
         self.devices = self.keyboards + self.mice
@@ -381,11 +378,11 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
         user = os.getlogin()
         input_group = grp.getgrnam("input")
         if user in input_group.gr_mem or os.geteuid()==0:
-            logger.info("input User membership good!")
+            logger.info(f"{user} is a member of the \"input\" user group")
         else:
-            logger.error("User not in input group add yourself or run program as root")
-            logger.error(f"sudo usermod -a -G input {user}")
-            raise Exception("User not in input group add yourself or run program as root")
+            msg = f"{user} is not in the \"input\" user group."
+            logger.error(msg + f"  Add yourself:\nsudo usermod -a -G input {user}")
+            raise Exception(msg)
 
     @queue_method(queue)
     def send_mouse_click(self, xCoord, yCoord, button: Button, relative):
