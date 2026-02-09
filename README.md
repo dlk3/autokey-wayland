@@ -22,7 +22,7 @@ If you have the "official" version of AutoKey installed this will upgrade/replac
 
 ### Ubuntu/Debian Packages
 
-Enable my PPA on your system:
+Enable my PPA (Personal Package Archive) on your system:
 
      curl -s --compressed "https://daveking.com/autokey-wayland-ppa/autokey-wayland-ppa.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/autokey-wayland-ppa.gpg >/dev/null
      sudo curl -s --compressed -o /etc/apt/sources.list.d/autokey-wayland-ppa.list "https://daveking.com/autokey-wayland-ppa/autokey-wayland-ppa.list"
