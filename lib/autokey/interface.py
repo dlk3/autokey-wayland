@@ -794,6 +794,9 @@ class XInterfaceBase(threading.Thread, AbstractMouseInterface):
                      un, modifiers, key)
         try:
             keycode = self.__lookupKeyCode(key)
+            # dlk3 - autokey/autokey #1066
+            if keycode == 0:
+                return
             masks = self.__build_modifier_mask(modifiers)
             for mask in masks:
                 if grab:
