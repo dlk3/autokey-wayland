@@ -8,7 +8,7 @@ This fork of the [AutoKey](https://github.com/autokey/autokey) project enables t
 
 ### Fedora Packages
 
-AutoKey packages are available in a COPR repository for currently supported versions of Fedora. 
+AutoKey packages are available in a [COPR](https://copr.fedorainfracloud.org/coprs/) repository for currently supported versions of Fedora. 
 
 Enable my COPR repository on your system:
 
