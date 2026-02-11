@@ -1,7 +1,7 @@
 %{?python_enable_dependency_generator}
 Name:		autokey
 Version:	0.97.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Desktop automation utility
 
 
@@ -36,10 +36,12 @@ Provides:	autokey = %{version}-%{release}
 This package contains the common data shared between the various front ends.
 
 %post common
-#  Give the "input" user group write access to the /dev/uinput device
-cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
-/usr/bin/udevadm control --reload
-/usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+#  Change group ownership on /dev/uinput to permit non-root write access
+if [ -e /dev/uinput ]; then
+    cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
+    /usr/bin/udevadm control --reload
+    /usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+fi
 
 if [ "$USER" = "root" ] && [ "$(logname)" != "root" ]; then
     #  Add the user to the "input" group membership
@@ -77,9 +79,11 @@ case "$1" in
         fi
 
         #  Revert /dev/uinput to the default premissions
-        rm -f '/etc/udev/rules.d/10-autokey.rules'
-        /usr/bin/udevadm control --reload
-        /usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+        if [ -e /dev/uinput ]; then
+            rm -f '/etc/udev/rules.d/10-autokey.rules'
+            /usr/bin/udevadm control --reload
+            /usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+        fi
     ;;
 esac
 exit 0

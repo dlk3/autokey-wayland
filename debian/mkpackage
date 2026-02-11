@@ -6,6 +6,7 @@
 GIT_URL='https://github.com/dlk3/autokey-wayland.git'
 BRANCH='new-install'
 VERSION='v0.97.1'
+RELEASE='1'
 
 #  Location we rsync the PPA updates to:
 PPA_DIR='daveking.com:/opt/autokey-wayland-ppa/'
@@ -64,6 +65,12 @@ if [ ! $container ]; then
 		OPT="-it"
 	fi
 	/usr/bin/podman run $OPT --name=debbuild --rm --volume=${HOME}:${HOME} docker.io/${UBUNTU_CONTAINER} "$(realpath "$0")" ${HOME}
+
+	# Add $RELEASE number to the debs
+	for F in ${HOME}/Downloads/autokey*.deb; do
+		N=$(echo "$F" | sed "s/${VERSION}/${VERSION}-${RELEASE}/")
+		mv "$F" "$N"
+	done
 	echo "Build complete at $(date +%H:%m:%S)"
 		
 	#  If this isn't a test, put the deb files into my PPA

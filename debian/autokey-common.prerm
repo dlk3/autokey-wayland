@@ -4,7 +4,9 @@ case "$1" in
     remove|deconfigure)
 	if [ "$(logname)" != "root" ]; then
 	    #  Remove the user from the "input" users group
-            usermod -r -G "input" "$(logname)"
+            if [ -e /dev/uinput ]; then
+                usermod -r -G "input" "$(logname)"
+	    fi
 	    #  If Gnome is present, remove the Gnome Shell extension
             gnome-extensions &>/dev/null
             if [[ $? -ne 127 ]]; then	    
@@ -13,9 +15,12 @@ case "$1" in
 	    fi
 	fi
 
-        rm -f '/etc/udev/rules.d/10-autokey.rules'
-        /usr/bin/udevadm control --reload
-	/usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+	#  Remove non-root write access to /dev/uinput
+        if [ -e /dev/uinput ]; then
+            rm -f '/etc/udev/rules.d/10-autokey.rules'
+            /usr/bin/udevadm control --reload
+	    /usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+	fi
     ;;
 esac
 

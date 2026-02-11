@@ -15,9 +15,12 @@ The <code>fedora/mkpackage</code> script builds a source RPM and sends it to COP
 # Common Preparation
 
 - Update debian/changelog and copy text over into CHANGELOG.md and fedora/autokey.spec
-- Update version number in:
+- Update AutoKey version number in:
   - PKG-INFO
   - lib/autokey/common.py
+  - fedora/autokey.spec
+- Update package release number in:
+  - debian/mkpackage
   - fedora/autokey.spec
 - git tag $VERSION
 - git commit -a -m "a comment"
