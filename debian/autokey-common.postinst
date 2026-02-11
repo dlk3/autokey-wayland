@@ -9,8 +9,11 @@ cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
 if [ "$USER" = "root" ] && [ "$(logname)" != "root" ]; then
     #  Add the user to the "input" group membership
     usermod -a -G "input" "$(logname)"
-    #  Install the Gnome Shell extension 
-    su -c 'gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip' $(logname)
+    #  If Gnome is present, install the Gnome Shell extension
+    gnome-extensions &>/dev/null
+    if [[ $? -ne 127 ]]; then 
+        su -c 'gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip' $(logname)
+    fi
 else
     echo "*******************************************************************************"
     echo "*  If you plan to run AutoKey on a Wayland desktop, please enter the          *"

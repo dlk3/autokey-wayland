@@ -36,6 +36,7 @@ Provides:	autokey = %{version}-%{release}
 This package contains the common data shared between the various front ends.
 
 %post common
+#  Give the "input" user group write access to the /dev/uinput device
 cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
 /usr/bin/udevadm control --reload
 /usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
@@ -43,8 +44,11 @@ cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
 if [ "$USER" = "root" ] && [ "$(logname)" != "root" ]; then
     #  Add the user to the "input" group membership
     usermod -a -G "input" "$(logname)"
-    #  Install the Gnome Shell extension 
-    su -c 'gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip' $(logname)
+    #  If Gnome is present, install the Gnome Shell extension
+    gnome-extensions &>/dev/null
+    if [[ $? -ne 127 ]]; then
+        su -c 'gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip' $(logname)
+    fi
 else
     echo "*******************************************************************************"
     echo "*  If you plan to run AutoKey on a Wayland desktop, please enter the          *"
@@ -62,11 +66,17 @@ fi
 case "$1" in
     0)
         if [ "$(logname)" != "root" ]; then
+            #  Remove the user from the "input" group membership
             usermod -r -G "input" "$(logname)"
-            su -c 'gnome-extensions uninstall autokey-gnome-extension@autokey' $(logname)
-            rm -fr "/home/$(logname)/.local/share/gnome-shell/extensions/autokey-gnome-extension@autokey"
+            #  If Gnome is present, remove the Gnome Shell extension
+            gnome-extensions &>/dev/null
+            if [[ $? -ne 127 ]]; then
+                su -c 'gnome-extensions uninstall autokey-gnome-extension@autokey' $(logname)
+                rm -fr "/home/$(logname)/.local/share/gnome-shell/extensions/autokey-gnome-extension@autokey"
+            fi
         fi
 
+        #  Revert /dev/uinput to the default premissions
         rm -f '/etc/udev/rules.d/10-autokey.rules'
         /usr/bin/udevadm control --reload
         /usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'

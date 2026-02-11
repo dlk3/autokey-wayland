@@ -3,9 +3,14 @@
 case "$1" in
     remove|deconfigure)
 	if [ "$(logname)" != "root" ]; then
+	    #  Remove the user from the "input" users group
             usermod -r -G "input" "$(logname)"
-	    su -c 'gnome-extensions uninstall "autokey-gnome-extension@autokey"' $(logname)
-	    rm -fr "/home/$(logname)/.local/share/gnome-shell/extensions/autokey-gnome-extension@autokey"
+	    #  If Gnome is present, remove the Gnome Shell extension
+            gnome-extensions &>/dev/null
+            if [[ $? -ne 127 ]]; then	    
+                su -c 'gnome-extensions uninstall "autokey-gnome-extension@autokey"' $(logname)
+                rm -fr "/home/$(logname)/.local/share/gnome-shell/extensions/autokey-gnome-extension@autokey"
+	    fi
 	fi
 
         rm -f '/etc/udev/rules.d/10-autokey.rules'
