@@ -2,16 +2,21 @@
 
 set -e 
 
-cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
-/usr/bin/udevadm control --reload
-/usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+#  Change group ownership on /dev/uinput to permit non-root write access
+if [ -e /dev/uinput ]; then
+    cp /usr/share/autokey/uinput-udev-rule/* '/etc/udev/rules.d/'
+    /usr/bin/udevadm control --reload
+    /usr/bin/udevadm trigger --sysname-match='/devices/virtual/misc/uinput'
+fi
 
 if [ "$USER" = "root" ] && [ "$(logname)" != "root" ]; then
-    #  Add the user to the "input" group membership
-    usermod -a -G "input" "$(logname)"
+    #  Add the user to the "input" group
+    if [ -e /dev/uinput ]; then
+        usermod -a -G "input" "$(logname)"
+    fi
     #  If Gnome is present, install the Gnome Shell extension
     gnome-extensions &>/dev/null
-    if [[ $? -ne 127 ]]; then 
+    if [ $? -ne 127 ]; then 
         su -c 'gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip' $(logname)
     fi
 else

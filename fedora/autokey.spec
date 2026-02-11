@@ -48,7 +48,7 @@ if [ "$USER" = "root" ] && [ "$(logname)" != "root" ]; then
     usermod -a -G "input" "$(logname)"
     #  If Gnome is present, install the Gnome Shell extension
     gnome-extensions &>/dev/null
-    if [[ $? -ne 127 ]]; then
+    if [ $? -ne 127 ]; then
         su -c 'gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip' $(logname)
     fi
 else
@@ -72,7 +72,7 @@ case "$1" in
             usermod -r -G "input" "$(logname)"
             #  If Gnome is present, remove the Gnome Shell extension
             gnome-extensions &>/dev/null
-            if [[ $? -ne 127 ]]; then
+            if [ $? -ne 127 ]; then
                 su -c 'gnome-extensions uninstall autokey-gnome-extension@autokey' $(logname)
                 rm -fr "/home/$(logname)/.local/share/gnome-shell/extensions/autokey-gnome-extension@autokey"
             fi

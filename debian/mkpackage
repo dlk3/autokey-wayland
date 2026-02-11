@@ -4,9 +4,8 @@
 
 #  Source code to build and version number to use 
 GIT_URL='https://github.com/dlk3/autokey-wayland.git'
-BRANCH='new-install'
+BRANCH='main'
 VERSION='v0.97.1'
-RELEASE='1'
 
 #  Location we rsync the PPA updates to:
 PPA_DIR='daveking.com:/opt/autokey-wayland-ppa/'
@@ -66,11 +65,6 @@ if [ ! $container ]; then
 	fi
 	/usr/bin/podman run $OPT --name=debbuild --rm --volume=${HOME}:${HOME} docker.io/${UBUNTU_CONTAINER} "$(realpath "$0")" ${HOME}
 
-	# Add $RELEASE number to the debs
-	for F in ${HOME}/Downloads/autokey*.deb; do
-		N=$(echo "$F" | sed "s/${VERSION}/${VERSION}-${RELEASE}/")
-		mv "$F" "$N"
-	done
 	echo "Build complete at $(date +%H:%m:%S)"
 		
 	#  If this isn't a test, put the deb files into my PPA
@@ -81,22 +75,6 @@ if [ ! $container ]; then
 		rsync --archive --partial --progress $PPA_DIR /tmp/ppa/
 		mv ${HOME}/Downloads/autokey*.deb /tmp/ppa/
 		cd /tmp/ppa
-
-		#  Keep only one version of each package
-		PREV_NAME=""
-		PREV_VERSION=""
-		for f in $(ls -r *.deb); do
-			NAME=$(echo "$f" | cut -f1 -d_)
-			VERSION=$(echo "$f" | cut -f2 -d_)
-			VERSION=${VERSION%.*}
-			if [ "$NAME" == "$PREV_NAME" ] && [ "$VERSION" == "$PREV_VERSION" ]; then
-				echo "$(date "$DATEFMT"): Deleting $f"
-				rm "$f" &>/dev/null || true
-			else
-				PREV_NAME="$NAME"
-				PREV_VERSION="$VERSION"
-			fi
-		done
 
 		#  Create the Packages files in the repo
 		echo "Creating Packages files for PPA"
@@ -174,7 +152,7 @@ else
 	echo git clone $BRANCH_OPTS "$GIT_URL"
 	git clone $BRANCH_OPTS "$GIT_URL"
 	cd autokey-wayland
-	git tag "$VERSION"
+	git tag -f "$VERSION"
 	debian/build.sh
 	
 	#  Copy the package files out of the container and on to the host
