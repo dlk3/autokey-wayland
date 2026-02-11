@@ -1,6 +1,6 @@
 # AutoKey for Wayland
 
-This fork of the [AutoKey](https://github.com/autokey/autokey) project enables the code that the official [AutoKey](https://github.com/autokey/autokey) project contains to support the Gnome/Wayland desktop.  In the official project, this code is not functional due to a few minor bugs and the project owners have not accepted the fixes necessary to correct this.  This fork contains those fixes, plus some additional related changes and enhancements I have made to make AutoKey function properly in the Gnome/Wayland environment.
+This fork of the [AutoKey](https://github.com/autokey/autokey) project enables the code that the official [AutoKey](https://github.com/autokey/autokey) project contains to support the Gnome/Wayland desktop.  In the official project, this code is not functional due to a few minor bugs and the project owners have not accepted the fixes necessary to correct this.  This fork contains those fixes, plus some additional related changes and enhancements I have made to make AutoKey function properly in the Gnome/Wayland environment.  This fork continues to support X11 desktops.
 
 [What Works & What Does Not](https://github.com/dlk3/autokey-wayland/wiki/What-Works-&-What-Does-Not)
 
