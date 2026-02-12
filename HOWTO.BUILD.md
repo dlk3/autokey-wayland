@@ -19,9 +19,6 @@ The <code>fedora/mkpackage</code> script builds a source RPM and sends it to COP
   - PKG-INFO
   - lib/autokey/common.py
   - fedora/autokey.spec
-- Update package release number in:
-  - debian/mkpackage
-  - fedora/autokey.spec
 - git tag $VERSION
 - git commit -a -m "a comment"
 - git push
