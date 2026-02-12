@@ -139,7 +139,7 @@ exit 0
 %prep
 %setup -q -n %{name}-%{version}
 cp %{SOURCE1} 10-autokey.rules
-cp %{SOURCE2} autokey-gnome-extension@autokey.shell-extension.zip
+cp %{SOURCE2} autokey-gnome-extension/autokey-gnome-extension@autokey.shell-extension.zip
 
 
 %build
@@ -158,7 +158,7 @@ done
 
 # Put udev rules and gnome-autokey-extension file into place in BUILDROOT
 install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/uinput-udev-rule 10-autokey.rules
-install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-extension autokey-gnome-extension@autokey.shell-extension.zip
+install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-extension autokey-gnome-extension/autokey-gnome-extension@autokey.shell-extension.zip
 
 # ensure pkg_resources is able to find the required python packages
 # sed -i 's/python3-xlib/python-xlib/' %{buildroot}%{python3_sitelib}/%{name}-%{version}-py%{python3_version}.egg-info/requires.txt
