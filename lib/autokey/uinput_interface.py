@@ -964,6 +964,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
         logger.debug("UInputInterface: Shutdown flag set.")
 
         self.udev_observer.stop()
+        logger.debug('UinputInterface: UDEV MonitorObserver stopped')
 
         self.listenerThread.join()
         self.eventThread.join()
