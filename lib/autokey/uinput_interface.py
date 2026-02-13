@@ -254,8 +254,8 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
         monitor.filter_by('usb')
         monitor.filter_by('hidraw')  # Covers bluetooth devices, I think. I can't test this, I don't have any bluetooth keyboards/mice.
 
-        observer = pyudev.MonitorObserver(monitor, event_handler)
-        observer.start()
+        self.udev_observer = pyudev.MonitorObserver(monitor, event_handler)
+        self.udev_observer.start()
 
     #  @dlk3 - support multiple keyboards/mice
     def grab_multiple_devices(self):
@@ -962,6 +962,8 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
         logger.debug("UInputInterface: Event thread exit marker enqueued.")
         self.shutdown = True
         logger.debug("UInputInterface: Shutdown flag set.")
+
+        self.udev_observer.stop()
 
         self.listenerThread.join()
         self.eventThread.join()
