@@ -1,12 +1,12 @@
-# AutoKey for Wayland
+# AutoKey for Wayland (and X11, too)
 
-This fork of the [AutoKey](https://github.com/autokey/autokey) project enables the code that the official [AutoKey](https://github.com/autokey/autokey) project contains to support the Gnome/Wayland desktop.  In the official project, this code is not functional due to a few minor bugs and the project owners have not accepted the fixes necessary to correct this.  This fork contains those fixes, plus some additional related changes and enhancements I have made to make AutoKey function properly in the Gnome/Wayland environment.  This fork continues to support X11 desktops.
+This fork of the [AutoKey](https://github.com/autokey/autokey) project enables the unreleased code that the "develop" branch of the official [AutoKey](https://github.com/autokey/autokey) project contains to support the Gnome/Wayland desktop.  This fork contains fixes, plus additional changes and enhancements, to make AutoKey function properly in both the X11 and Gnome/Wayland environments.  
 
-**Important:** This version of AutoKey currently only works with Gnome desktops under Wayland.  Under X11, it continues to work with any desktop environment.  We hope to extend Wayland support to include other desktop environments over time.
+**Important:** This version of AutoKey currently only works with Gnome desktops under Wayland.  Under X11, it continues to work with any desktop environment.  I hope to extend Wayland support to KDE shortly, and to other desktop environments in the future.
 
 [What Works & What Does Not](https://github.com/dlk3/autokey-wayland/wiki/What-Works-&-What-Does-Not)
 
-Ubuntu/Debian and Fedora installation packages are available.  AutoKey also may be cloned from GitHub, configured, and run manually.
+Ubuntu/Debian and Fedora installation packages are available.  The AutoKey for Wayland code may also be cloned from GitHub, configured, and run manually.
 
 [Installation Instructions](https://github.com/dlk3/autokey-wayland/wiki/Installing-AutoKey-for-Wayland)
 
