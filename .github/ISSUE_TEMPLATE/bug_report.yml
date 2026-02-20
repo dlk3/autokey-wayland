@@ -8,8 +8,7 @@ assignees:
 body:
   - type: markdown
     attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
+      value: Thanks for taking the time to fill out this bug report!
   - type: input
     id: distro
     attributes:
@@ -34,9 +33,10 @@ body:
       options:
         - X11
         - Wayland
+        - Other
       default: 0
     validations:
-      required: true
+      required: false
   - type: textarea
     id: what-happened
     attributes:
@@ -46,3 +46,6 @@ body:
       value: "A bug happened!"
     validations:
       required: true
+  - type: markdown
+    attributes:
+      value: If applicable, please follow the intructions in [this entry](https://github.com/dlk3/autokey-wayland/wiki/FAQ-%E2%80%90-Frequently-Asked-Questions#attaching-an-autokey-debug-log-to-a-problem-issues-report) in the FAQ to create a debug log that captures this bug, and attach it to this bug report.
