@@ -1,0 +1,15 @@
+name: Other Issue
+description: Create a new issue.
+title: "[Other]: "
+labels: []
+projects: []
+assignees:
+  - dlk3
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Add a description
+      placeholder: Type your description here...
+    validations:
+      required: true
