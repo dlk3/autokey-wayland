@@ -5,7 +5,6 @@ labels: []
 projects: []
 assignees:
   - dlk3
-type: bug
 body:
   - type: markdown
     attributes:
