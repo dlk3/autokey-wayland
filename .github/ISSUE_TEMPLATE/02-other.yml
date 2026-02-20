@@ -1,5 +1,5 @@
-name: Other Issue
-description: Create a new issue.
+name: Other Type Of Issue
+description: Create a new, non-bug, issue like a new feature request.
 title: "[Other]: "
 labels: []
 projects: []
