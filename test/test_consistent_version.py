@@ -20,12 +20,14 @@
 #  Test to make sure that the version number is consistent across the various
 #  files in this project
 
-def test_consistent_version():
-    import os
-    import sys
-    import subprocess
+import os
+import sys
 
-    PROJECT_PATH = f"{os.environ['HOME']}/src/autokey-wayland"
+PROJECT_PATH = f"{os.environ['HOME']}/src/autokey-wayland"
+sys.path.insert(0, PROJECT_PATH + '/lib')
+
+def test_consistent_version():
+    import subprocess
 
     #  Get the git tag for this branch
     env = os.environ.copy()
@@ -56,6 +58,5 @@ def test_consistent_version():
     assert version.lstrip('v') == specfile_version
               
     #  Check the version variable used inside AutoKey
-    sys.path.insert(0, PROJECT_PATH + '/lib')
     from autokey import common
     assert version.lstrip('v') == common.VERSION
