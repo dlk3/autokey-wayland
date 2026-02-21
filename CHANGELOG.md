@@ -18,7 +18,7 @@
     useful when sending Unicode characters using the keyboard, when typing too 
     quickly can overwhelm the system, resulting in garbled output: 
 
-    ```keyboard.send_keys('<ctrl>+<shift>+u1f44c', delay=50)```
+    ```keyboard.send_keys('<ctrl>+<shift>+u1f44c ', delay=50)```
 
 ### Bug Fixes
 
