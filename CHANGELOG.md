@@ -1,5 +1,31 @@
 # Changelog
 
+## AutoKey 0.97.3
+
+### New Features
+
+  * A new sample script demonstrating how to send strings containing Unicode
+    via the keyboard using the ```keyboard.send_keys()``` method.  This will
+    only be created on new installs where no ```~/.config/autokey``` directory
+    exists.  Others can copy the script source from [here](https://github.com/dlk3/autokey-wayland/blob/main/lib/autokey/configmanager/predefined_user_scripts/unicode_strings_in_scripts.pyi). 
+
+    This script works for me in both an X11 and a Wayland environment.  I'll
+    be interested to hear what environment you are using if it doesn't work for
+    you.  Please don't be shy about opening an [issue](https://github.com/dlk3/autokey-wayland/issues).
+
+    I already have #22 open to try to make the Wayland-side code simpler than
+    it is.
+    
+### Bug Fixes
+
+  * The scripting API documentation has been regenerated for AutoKey for Wayland.
+    There's [a link](https://html-preview.github.io/?url=https://raw.githubusercontent.com/dlk3/autokey-wayland/main/doc/scripting/index.html) 
+    to it from the [wiki](https://github.com/dlk3/autokey-wayland/wiki).  
+    It needs some love to make it a bit prettier but at least it provides access
+    to updated docs that conform to the latest version of the source.
+
+ -- David King <dave@daveking.com>  Fri, 20 Feb 2026 21:11:00 -050
+
 ## AutoKey 0.97.2
 
 ### New Features
