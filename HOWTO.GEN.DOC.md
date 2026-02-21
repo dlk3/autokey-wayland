@@ -6,7 +6,7 @@ Originally, [Epydoc](https://epydoc.sourceforge.net/) was used to format these c
 
 This command can be used to generate the content for the ```doc/scripting``` folder:
 ```
-pydoctor --docformat=restructuredtext --project-name="AutoKey Script" --project-version=0.97.2 --project-url=https://github.com/dlk3/autokey-wayland --html-viewsource-base=https://github.com/dlk3/autokey-wayland/tree/v0.97.2 --html-output=doc/scripting lib/autokey/scripting/*
+pydoctor --docformat=restructuredtext --project-name="AutoKey Script" --project-version=0.97.2 --project-url=https://github.com/dlk3/autokey-wayland --html-viewsource-base=https://github.com/dlk3/autokey-wayland/tree/v0.97.2 --html-output=doc/scripting $(find lib/autokey/scripting -type f | grep -v -e "__" -e "/abstract")
 ```
 
 
