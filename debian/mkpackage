@@ -21,7 +21,7 @@
 #  Source code to build and version number to use 
 GIT_URL='https://github.com/dlk3/autokey-wayland.git'
 BRANCH='main'
-VERSION='v0.97.1'
+VERSION='v0.97.2'
 
 #  Location we rsync the PPA updates to:
 PPA_DIR='daveking.com:/opt/autokey-wayland-ppa/'
@@ -155,7 +155,7 @@ else
 
 	apt update -y
 	apt upgrade -y
-	apt install -y git sudo zip
+	apt install -y git sudo zip python3-pytest
 
 	#  Create the rpmbuild directory tree inside the container
 	mkdir -p ${HOME}/src
@@ -169,6 +169,7 @@ else
 	git clone $BRANCH_OPTS "$GIT_URL"
 	cd autokey-wayland
 	git tag -f "$VERSION"
+        pytest
 	debian/build.sh
 	
 	#  Copy the package files out of the container and on to the host

@@ -1,7 +1,7 @@
 %{?python_enable_dependency_generator}
 Name:		autokey
-Version:	0.97.1
-Release:	2%{?dist}
+Version:	0.97.2
+Release:	0%{?dist}
 Summary:	Desktop automation utility
 
 
@@ -192,6 +192,9 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-exten
 %{_mandir}/man1/autokey-qt.1*
 
 %changelog
+* Fri Feb 20 2026 David King <dave@daveking.com> - 0.97.2-0
+- See /usr/share/doc/CHANGELOG.md for list of changes
+
 * Sun Feb 8 2026 David King <dave@daveking.com> - 0.97.1-1
 - Updated installation process
 
