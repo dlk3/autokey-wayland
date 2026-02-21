@@ -2,18 +2,44 @@
 
 ## AutoKey 0.97.2
 
+### New Features
+
+  * Added a "delay" option for the keyboard.send_keys() API method that makes
+    AutoKey type more slowly.  For the moment, this only works on Wayland.
+    It will be ignored when running on an X11 system.  I hope to change that 
+    soon.  
+
+    Usage:
+
+    ```keyboard.send_keys('type this string', delay=50)``` 
+
+    The ```delay=50``` will cause there to be a 50 microsecond delay between 
+    each character in the string as AutoKey types it out.  I have found this 
+    useful when sending Unicode characters using the keyboard, when typing too 
+    quickly can overwhelm the system, resulting in garbled output: 
+
+    ```keyboard.send_keys('<ctrl>+<shift>+u1f44c', delay=50)```
+
 ### Bug Fixes
 
-  * Fix errors in post-install and pre-remove package scriptlets 
+  * Fix errors in post-install and pre-remove package scriptlets
+  * Handle non-fatal exception seen during first-time use on Debian 13.3 test
+    system - #16
+  * Change the sample phrases and scripts so that they do not rely on the
+    clipboard API which does not work on Wayland systems in backgrounded apps 
+    - #17, #18
   
+ -- David King <dave@daveking.com>  Fri, 20 Feb 2026 21:11:00 -050
+
 ## AutoKey 0.97.1
 
-### Features
+This project was forked from the "develop" branch of the "official" 
+[autokey/autokey](https://github.com/autokey/autokey) project on GitHub.
+
+### New Features
   
   * AutoKey now supports Gnome/Wayland desktop environments in addition to 
     X11 environments.
-  * This project was forked from the "develop" branch of the "official" 
-    [autokey/autokey](https://github.com/autokey/autokey) project on GitHub.
   * Corrected minor bugs in AutoKey's Wayland integration code.
   * Enhanced error messages in the Wayland integration to make them easier to 
     understand.
