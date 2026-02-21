@@ -20,4 +20,6 @@ You may post questions or bug reports to this project's [Issues](https://github.
 
 ## Project Branches
 
-[main](https://github.com/dlk3/autokey-wayland/tree/main) - the current code
+[main](https://github.com/dlk3/autokey-wayland/tree/main) - the current development code.
+
+For more stable code, see the [Releases](https://github.com/dlk3/autokey-wayland/releases).
