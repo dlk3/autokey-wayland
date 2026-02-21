@@ -77,7 +77,7 @@ class Engine:
 
         Descriptions for the optional arguments:
 
-        :param parentFolder: Folder to make this folder a subfolder of. If
+        :param parent_folder: Folder to make this folder a subfolder of. If
             passed as a folder, it will be that folder within AutoKey.
             If passed as pathlib.Path, it will be created or added at that path.
             Paths expand ~ to $HOME.

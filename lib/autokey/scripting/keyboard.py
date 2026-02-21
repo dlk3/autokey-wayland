@@ -46,7 +46,6 @@ class Keyboard:
         Trying to send special keys using a clipboard pasting method will paste the literal representation
         (e.g. "<ctrl>+<f11>") instead of the actual special key or key combination.
 
-
         Usage: C{keyboard.send_keys(keyString)}
 
         :param key_string: string of keys to send. Special keys are only possible in keyboard mode.
