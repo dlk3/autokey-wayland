@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "DTD/xhtml1-strict.dtd">
+<html>
+  
+
+  <head>
+    
+    <title>clipboard_tkinter.TkClipboard</title>
+    <meta name="generator" content="pydoctor 25.10.1"> 
+        
+    </meta>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1" />
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="apidocs.css" />
+    <link rel="stylesheet" type="text/css" href="extra.css" />
+    
+</head>
+
+  <body>
+
+    
+
+    <nav class="navbar navbar-default mainnavbar">
+      
+  
+  <div class="container-fluid">
+
+
+    <div class="navbar-header">
+      
+      <div class="navlinks">
+        <span class="navbar-brand">
+          <a href="https://github.com/dlk3/autokey-wayland" class="projecthome">AutoKey Script</a> <a href="index.html">API Documentation</a>
+        </span>
+
+        <a href="moduleIndex.html">
+          Modules
+        </a>
+
+        <a href="classIndex.html">
+          Classes
+        </a>
+
+        <a href="nameIndex.html">
+          Names
+        </a>
+
+        <div id="search-box-container">
+          <div class="input-group">
+            <input id="search-box" type="search" name="search-query" placeholder="Search..." aria-label="Search" minlength="2" class="form-control" autocomplete="off" />
+            
+            <span class="input-group-btn">
+              <a style="display: none;" class="btn btn-default" id="search-clear-button" title="Clear" onclick="clearSearch()"><img src="fonts/x-circle.svg" alt="Clear" /></a>
+              <a class="btn btn-default" id="apidocs-help-button" title="Help" href="apidocs-help.html"><img src="fonts/info.svg" alt="Help" /></a>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="search-results-container" style="display: none;">
+        
+        <div id="search-buttons">
+          <span class="label label-default" id="search-docstrings-button">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="toggle-search-in-docstrings-checkbox" value="false" onclick="toggleSearchInDocstrings()">
+              search in docstrings
+            </input>
+          </label>
+          </span>
+          
+        </div>
+        
+        <noscript>
+            <h1>Cannot search: JavaScript is not supported/enabled in your browser.</h1>
+        </noscript>
+
+        <div id="search-status"> </div>
+
+        <div class="warning" id="search-warn-box" style="display: none;">
+          <p class="rst-last"><span id="search-warn"></span></p>
+        </div>
+
+        <table id="search-results">
+          <!-- Filled dynamically by JS -->
+        </table>
+        
+        <div style="margin-top: 10px;">
+          <p>For more information on the search, visit the <a href="apidocs-help.html#rst-search">help page</a>.</p>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</nav>
+    
+    <div class="container-fluid">
+
+      <!-- Side navigation -->
+      <div class="sidebarcontainer" style="display: none;">
+        
+        <div class="sidebar"><nav class="sidebar">
+  
+
+  <div>
+
+      <div class="thingTitle">
+        <span>Class</span>
+        <code class="thisobject"><a href="clipboard_tkinter.TkClipboard.html" class="internal-link" title="This class"><wbr></wbr>Tk<wbr></wbr>Clipboard</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        
+        
+
+        <div class="childrenKindTitle">Methods</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__init__" class="internal-link" title="clipboard_tkinter.TkClipboard.__init__">__init__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#fill_clipboard" class="internal-link" title="clipboard_tkinter.TkClipboard.fill_clipboard">fill<wbr></wbr>_clipboard</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#fill_selection" class="internal-link" title="clipboard_tkinter.TkClipboard.fill_selection">fill<wbr></wbr>_selection</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#get_clipboard" class="internal-link" title="clipboard_tkinter.TkClipboard.get_clipboard">get<wbr></wbr>_clipboard</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#get_selection" class="internal-link" title="clipboard_tkinter.TkClipboard.get_selection">get<wbr></wbr>_selection</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#set_clipboard_image" class="internal-link" title="clipboard_tkinter.TkClipboard.set_clipboard_image">set<wbr></wbr>_clipboard<wbr></wbr>_image</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+
+        <div class="childrenKindTitle">Attributes</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#tkroot" class="internal-link" title="clipboard_tkinter.TkClipboard.tkroot">tkroot</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div><div>
+
+      <div class="thingTitle">
+        <span>Module</span>
+        <code><a href="clipboard_tkinter.html" class="internal-link" title="The parent of this class">clipboard<wbr></wbr>_tkinter</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        <div class="childrenKindTitle">Classes</div>
+        <ul>
+    
+    <li class=" thisobject">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="clipboard_tkinter.TkClipboard.html" class="internal-link" title="clipboard_tkinter.TkClipboard"><wbr></wbr>Tk<wbr></wbr>Clipboard</a></code>
+            </div>
+        
+
+    </li>
+</ul>
+
+        
+         
+
+        
+         
+
+        <div class="childrenKindTitle">Variables</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="clipboard_tkinter.html#logger" class="internal-link" title="clipboard_tkinter.logger">logger</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div>
+
+</nav>
+        </div>
+        <div id="collapse-sidebar">
+          <a class="btn btn-link" onclick="toggleSideBarCollapse()" title="Toggle Sidebar Collapse">
+          </a>
+        </div> 
+        <script src="sidebartoggle.js" type="text/javascript"></script>
+       
+      </div>
+
+      <main class="">
+        
+
+        
+
+        <div class="page-header">
+          <h1 class="class"><code><code><a href="clipboard_tkinter.html" class="internal-link">clipboard_tkinter</a></code><wbr></wbr>.<code><a href="clipboard_tkinter.TkClipboard.html" class="internal-link" title="clipboard_tkinter.TkClipboard">TkClipboard</a></code></code></h1>
+          <div id="show-private">
+            <button class="btn btn-link" onclick="togglePrivate()">Toggle Private API</button>
+          </div>
+        </div>
+
+        <div class="categoryHeader">
+          class documentation
+        </div>
+
+        <div class="extrasDocstring">
+          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">TkClipboard</span>(AbstractClipboard): <a href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/clipboard_tkinter.py#L27" class="sourceLink">(source)</a></code></p><p>Constructor: <code><a href="#__init__" class="internal-link" title="clipboard_tkinter.TkClipboard.__init__">TkClipboard(app)</a></code></p><p><a href="classIndex.html#clipboard_tkinter.TkClipboard">View In Hierarchy</a></p>
+        </div>
+
+        <div class="moduleDocstring">
+          <div><p>Read/write access to the X selection and clipboard</p></div>
+        </div>
+
+        <div id="split-tables">
+          <table class="children sortable" id="id10">
+  
+  
+  <tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__init__" class="internal-link" title="clipboard_tkinter.TkClipboard.__init__">__init__</a></code></td>
+    <td>Initialize the tkinter version of the Clipboard</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#fill_clipboard" class="internal-link" title="clipboard_tkinter.TkClipboard.fill_clipboard">fill<wbr></wbr>_clipboard</a></code></td>
+    <td>Copy text into the clipboard</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#fill_selection" class="internal-link" title="clipboard_tkinter.TkClipboard.fill_selection">fill<wbr></wbr>_selection</a></code></td>
+    <td>Copy text into the X selection</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#get_clipboard" class="internal-link" title="clipboard_tkinter.TkClipboard.get_clipboard">get<wbr></wbr>_clipboard</a></code></td>
+    <td>Read text from the clipboard</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#get_selection" class="internal-link" title="clipboard_tkinter.TkClipboard.get_selection">get<wbr></wbr>_selection</a></code></td>
+    <td>Read text from the X selection</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#set_clipboard_image" class="internal-link" title="clipboard_tkinter.TkClipboard.set_clipboard_image">set<wbr></wbr>_clipboard<wbr></wbr>_image</a></code></td>
+    <td>Set clipboard to image</td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#tkroot" class="internal-link" title="clipboard_tkinter.TkClipboard.tkroot">tkroot</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr>
+</table>
+          
+
+            
+        </div>
+
+        <div id="child-list">
+          <div class="basemethod">
+  
+  
+  <a name="clipboard_tkinter.TkClipboard.__init__">
+    
+  </a>
+  <a name="__init__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__init__</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">app=None</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/clipboard_tkinter.py#L32">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#__init__" title="clipboard_tkinter.TkClipboard.__init__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Initialize the tkinter version of the Clipboard</p>
+<p>Usage: Called when TkClipboard is imported</p>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="clipboard_tkinter.TkClipboard.fill_clipboard">
+    
+  </a>
+  <a name="fill_clipboard">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">fill_clipboard</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">contents</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/clipboard_tkinter.py#L71">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#fill_clipboard" title="clipboard_tkinter.TkClipboard.fill_clipboard">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Copy text into the clipboard</p>
+<p>Usage: C{clipboard.fill_clipboard(contents)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">contents</span></td><td class="fieldArgDesc">string to be placed in the selection</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="clipboard_tkinter.TkClipboard.fill_selection">
+    
+  </a>
+  <a name="fill_selection">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">fill_selection</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">contents</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/clipboard_tkinter.py#L41">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#fill_selection" title="clipboard_tkinter.TkClipboard.fill_selection">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Copy text into the X selection</p>
+<p>Usage: C{clipboard.fill_selection(contents)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">contents</span></td><td class="fieldArgDesc">string to be placed in the selection</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="clipboard_tkinter.TkClipboard.get_clipboard">
+    
+  </a>
+  <a name="get_clipboard">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">get_clipboard</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/clipboard_tkinter.py#L87">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#get_clipboard" title="clipboard_tkinter.TkClipboard.get_clipboard">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Read text from the clipboard</p>
+<p>Usage: C{clipboard.get_clipboard()}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{str}</td><td class="fieldArgDesc">text contents of the clipboard</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="clipboard_tkinter.TkClipboard.get_selection">
+    
+  </a>
+  <a name="get_selection">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">get_selection</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/clipboard_tkinter.py#L53">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#get_selection" title="clipboard_tkinter.TkClipboard.get_selection">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Read text from the X selection</p>
+<p>The X selection refers to the currently highlighted text.</p>
+<p>Usage: C{clipboard.get_selection()}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{str}</td><td class="fieldArgDesc">text contents of the mouse selection</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="clipboard_tkinter.TkClipboard.set_clipboard_image">
+    
+  </a>
+  <a name="set_clipboard_image">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">set_clipboard_image</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">path</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/clipboard_tkinter.py#L103">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#set_clipboard_image" title="clipboard_tkinter.TkClipboard.set_clipboard_image">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Set clipboard to image</p>
+<p>Usage: C{clipboard.set_clipboard_image(path)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">path</span></td><td class="fieldArgDesc">Path to image file</td></tr></table></div>
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="clipboard_tkinter.TkClipboard.tkroot">
+    
+  </a>
+  <a name="tkroot">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">tkroot</span> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/clipboard_tkinter.py#L38">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#tkroot" title="clipboard_tkinter.TkClipboard.tkroot">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div>
+        </div>
+      
+      </main>
+    </div>
+
+    <footer class="navbar navbar-default">
+
+  
+  <div class="container-fluid">
+    <a href="index.html">API Documentation</a> for <a href="https://github.com/dlk3/autokey-wayland" class="projecthome">AutoKey Script</a>,
+  generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a>
+    25.10.1 at 2026-02-21 11:17:44.
+  </div>
+
+  <!-- Search related scripts needs to be loaded at the end of HTML 
+    parsing not to introduce overhead and display HTML data asap -->
+  <script src="ajax.js" type="text/javascript"></script>
+  <script src="searchlib.js" type="text/javascript"></script>
+  <script src="search.js" type="text/javascript"></script>
+
+</footer>
+  
+    <script src="pydoctor.js" type="text/javascript"></script>
+
+  </body>
+</html>

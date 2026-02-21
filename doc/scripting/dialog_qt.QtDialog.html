@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "DTD/xhtml1-strict.dtd">
+<html>
+  
+
+  <head>
+    
+    <title>dialog_qt.QtDialog</title>
+    <meta name="generator" content="pydoctor 25.10.1"> 
+        
+    </meta>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1" />
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="apidocs.css" />
+    <link rel="stylesheet" type="text/css" href="extra.css" />
+    
+</head>
+
+  <body>
+
+    
+
+    <nav class="navbar navbar-default mainnavbar">
+      
+  
+  <div class="container-fluid">
+
+
+    <div class="navbar-header">
+      
+      <div class="navlinks">
+        <span class="navbar-brand">
+          <a href="https://github.com/dlk3/autokey-wayland" class="projecthome">AutoKey Script</a> <a href="index.html">API Documentation</a>
+        </span>
+
+        <a href="moduleIndex.html">
+          Modules
+        </a>
+
+        <a href="classIndex.html">
+          Classes
+        </a>
+
+        <a href="nameIndex.html">
+          Names
+        </a>
+
+        <div id="search-box-container">
+          <div class="input-group">
+            <input id="search-box" type="search" name="search-query" placeholder="Search..." aria-label="Search" minlength="2" class="form-control" autocomplete="off" />
+            
+            <span class="input-group-btn">
+              <a style="display: none;" class="btn btn-default" id="search-clear-button" title="Clear" onclick="clearSearch()"><img src="fonts/x-circle.svg" alt="Clear" /></a>
+              <a class="btn btn-default" id="apidocs-help-button" title="Help" href="apidocs-help.html"><img src="fonts/info.svg" alt="Help" /></a>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="search-results-container" style="display: none;">
+        
+        <div id="search-buttons">
+          <span class="label label-default" id="search-docstrings-button">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="toggle-search-in-docstrings-checkbox" value="false" onclick="toggleSearchInDocstrings()">
+              search in docstrings
+            </input>
+          </label>
+          </span>
+          
+        </div>
+        
+        <noscript>
+            <h1>Cannot search: JavaScript is not supported/enabled in your browser.</h1>
+        </noscript>
+
+        <div id="search-status"> </div>
+
+        <div class="warning" id="search-warn-box" style="display: none;">
+          <p class="rst-last"><span id="search-warn"></span></p>
+        </div>
+
+        <table id="search-results">
+          <!-- Filled dynamically by JS -->
+        </table>
+        
+        <div style="margin-top: 10px;">
+          <p>For more information on the search, visit the <a href="apidocs-help.html#rst-search">help page</a>.</p>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</nav>
+    
+    <div class="container-fluid">
+
+      <!-- Side navigation -->
+      <div class="sidebarcontainer" style="display: none;">
+        
+        <div class="sidebar"><nav class="sidebar">
+  
+
+  <div>
+
+      <div class="thingTitle">
+        <span>Class</span>
+        <code class="thisobject"><a href="dialog_qt.QtDialog.html" class="internal-link" title="This class"><wbr></wbr>Qt<wbr></wbr>Dialog</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        
+        
+
+        <div class="childrenKindTitle">Methods</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#calendar" class="internal-link" title="dialog_qt.QtDialog.calendar">calendar</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#choose_colour" class="internal-link" title="dialog_qt.QtDialog.choose_colour">choose<wbr></wbr>_colour</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#choose_directory" class="internal-link" title="dialog_qt.QtDialog.choose_directory">choose<wbr></wbr>_directory</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#combo_menu" class="internal-link" title="dialog_qt.QtDialog.combo_menu">combo<wbr></wbr>_menu</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#info_dialog" class="internal-link" title="dialog_qt.QtDialog.info_dialog">info<wbr></wbr>_dialog</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#input_dialog" class="internal-link" title="dialog_qt.QtDialog.input_dialog">input<wbr></wbr>_dialog</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#list_menu" class="internal-link" title="dialog_qt.QtDialog.list_menu">list<wbr></wbr>_menu</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#list_menu_multi" class="internal-link" title="dialog_qt.QtDialog.list_menu_multi">list<wbr></wbr>_menu<wbr></wbr>_multi</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#open_file" class="internal-link" title="dialog_qt.QtDialog.open_file">open<wbr></wbr>_file</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#password_dialog" class="internal-link" title="dialog_qt.QtDialog.password_dialog">password<wbr></wbr>_dialog</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#save_file" class="internal-link" title="dialog_qt.QtDialog.save_file">save<wbr></wbr>_file</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#send_notification" class="internal-link" title="dialog_qt.QtDialog.send_notification">send<wbr></wbr>_notification</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_run_kdialog" class="internal-link" title="dialog_qt.QtDialog._run_kdialog">_run<wbr></wbr>_kdialog</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+
+        
+         
+
+        
+         
+        
+      </div>
+  </div><div>
+
+      <div class="thingTitle">
+        <span>Module</span>
+        <code><a href="dialog_qt.html" class="internal-link" title="The parent of this class">dialog<wbr></wbr>_qt</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        <div class="childrenKindTitle">Classes</div>
+        <ul>
+    
+    <li class=" thisobject">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="dialog_qt.QtDialog.html" class="internal-link" title="dialog_qt.QtDialog"><wbr></wbr>Qt<wbr></wbr>Dialog</a></code>
+            </div>
+        
+
+    </li>
+</ul>
+
+        
+         
+
+        
+         
+
+        
+         
+
+        
+         
+        
+      </div>
+  </div>
+
+</nav>
+        </div>
+        <div id="collapse-sidebar">
+          <a class="btn btn-link" onclick="toggleSideBarCollapse()" title="Toggle Sidebar Collapse">
+          </a>
+        </div> 
+        <script src="sidebartoggle.js" type="text/javascript"></script>
+       
+      </div>
+
+      <main class="">
+        
+
+        
+
+        <div class="page-header">
+          <h1 class="class"><code><code><a href="dialog_qt.html" class="internal-link">dialog_qt</a></code><wbr></wbr>.<code><a href="dialog_qt.QtDialog.html" class="internal-link" title="dialog_qt.QtDialog">QtDialog</a></code></code></h1>
+          <div id="show-private">
+            <button class="btn btn-link" onclick="togglePrivate()">Toggle Private API</button>
+          </div>
+        </div>
+
+        <div class="categoryHeader">
+          class documentation
+        </div>
+
+        <div class="extrasDocstring">
+          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">QtDialog</span>: <a href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L23" class="sourceLink">(source)</a></code></p><p><a href="classIndex.html#dialog_qt.QtDialog">View In Hierarchy</a></p>
+        </div>
+
+        <div class="moduleDocstring">
+          <div><p>Provides a simple interface for the display of some basic dialogs to collect information from the user.</p>
+<p>This version uses KDialog to integrate well with KDE. To pass additional arguments to KDialog that are
+not specifically handled, use keyword arguments. For example, to pass the --geometry argument to KDialog
+to specify the desired size of the dialog, pass C{geometry="700x400"} as one of the parameters. All
+keyword arguments must be given as strings.</p>
+<p>A note on exit codes: an exit code of 0 indicates that the user clicked OK.</p>
+</div>
+        </div>
+
+        <div id="split-tables">
+          <table class="children sortable" id="id17">
+  
+  
+  <tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#calendar" class="internal-link" title="dialog_qt.QtDialog.calendar">calendar</a></code></td>
+    <td>Show a calendar dialog</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#choose_colour" class="internal-link" title="dialog_qt.QtDialog.choose_colour">choose<wbr></wbr>_colour</a></code></td>
+    <td>Show a Colour Chooser dialog</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#choose_directory" class="internal-link" title="dialog_qt.QtDialog.choose_directory">choose<wbr></wbr>_directory</a></code></td>
+    <td>Show a Directory Chooser dialog</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#combo_menu" class="internal-link" title="dialog_qt.QtDialog.combo_menu">combo<wbr></wbr>_menu</a></code></td>
+    <td>Show a combobox menu</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#info_dialog" class="internal-link" title="dialog_qt.QtDialog.info_dialog">info<wbr></wbr>_dialog</a></code></td>
+    <td>Show an information dialog</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#input_dialog" class="internal-link" title="dialog_qt.QtDialog.input_dialog">input<wbr></wbr>_dialog</a></code></td>
+    <td>Show an input dialog</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#list_menu" class="internal-link" title="dialog_qt.QtDialog.list_menu">list<wbr></wbr>_menu</a></code></td>
+    <td>Show a single-selection list menu</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#list_menu_multi" class="internal-link" title="dialog_qt.QtDialog.list_menu_multi">list<wbr></wbr>_menu<wbr></wbr>_multi</a></code></td>
+    <td>Show a multiple-selection list menu</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#open_file" class="internal-link" title="dialog_qt.QtDialog.open_file">open<wbr></wbr>_file</a></code></td>
+    <td>Show an Open File dialog</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#password_dialog" class="internal-link" title="dialog_qt.QtDialog.password_dialog">password<wbr></wbr>_dialog</a></code></td>
+    <td>Show a password input dialog</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#save_file" class="internal-link" title="dialog_qt.QtDialog.save_file">save<wbr></wbr>_file</a></code></td>
+    <td>Show a Save As dialog</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#send_notification" class="internal-link" title="dialog_qt.QtDialog.send_notification">send<wbr></wbr>_notification</a></code></td>
+    <td>Sends a passive popup (notification) using C{kdialog}</td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><code><a href="#_run_kdialog" class="internal-link" title="dialog_qt.QtDialog._run_kdialog">_run<wbr></wbr>_kdialog</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr>
+</table>
+          
+
+            
+        </div>
+
+        <div id="child-list">
+          <div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.calendar">
+    
+  </a>
+  <a name="calendar">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">calendar</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Choose a date</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">format_str=<span class="rst-variable-quote">'</span><span class="rst-variable-string">%Y-%m-%d</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">date=<span class="rst-variable-quote">'</span><span class="rst-variable-string">today</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L253">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#calendar" title="dialog_qt.QtDialog.calendar">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show a calendar dialog</p>
+<p>Usage: C{dialog.calendar_dialog(title="Choose a date", format="%Y-%m-%d", date="YYYY-MM-DD", **kwargs)}</p>
+<p>Note: the format and date parameters are not currently used</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">format<wbr></wbr>_str</span></td><td class="fieldArgDesc">format of date to be returned</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">date</span></td><td class="fieldArgDesc">initial date as YYYY-MM-DD, otherwise today</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and date</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.choose_colour">
+    
+  </a>
+  <a name="choose_colour">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">choose_colour</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Select Colour</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L237">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#choose_colour" title="dialog_qt.QtDialog.choose_colour">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show a Colour Chooser dialog</p>
+<p>Usage: C{dialog.choose_colour(title="Select Colour")}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and colour</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.choose_directory">
+    
+  </a>
+  <a name="choose_directory">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">choose_directory</span><span class="function-signature long-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Select Directory</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">initialDir=<span class="rst-variable-quote">'</span><span class="rst-variable-string">~</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">rememberAs=None, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L220">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#choose_directory" title="dialog_qt.QtDialog.choose_directory">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show a Directory Chooser dialog</p>
+<p>Usage: C{dialog.choose_directory(title="Select Directory", initialDir="~", rememberAs=None, **kwargs)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">initial<wbr></wbr>Dir</span></td><td class="fieldArgDesc">starting directory for the directory chooser dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">remember<wbr></wbr>As</span></td><td class="fieldArgDesc">gives an ID to this file dialog, allowing it to open at the last used path next time</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and chosen path</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.combo_menu">
+    
+  </a>
+  <a name="combo_menu">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">combo_menu</span><span class="function-signature long-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">options, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Choose an option</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">message=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Choose an option</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L102">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#combo_menu" title="dialog_qt.QtDialog.combo_menu">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show a combobox menu</p>
+<p>Usage: C{dialog.combo_menu(options, title="Choose an option", message="Choose an option", **kwargs)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">options</span></td><td class="fieldArgDesc">list of options (strings) for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">message</span></td><td class="fieldArgDesc">message displayed above the combobox</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and user choice</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.info_dialog">
+    
+  </a>
+  <a name="info_dialog">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">info_dialog</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Information</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">message=<span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L62">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#info_dialog" title="dialog_qt.QtDialog.info_dialog">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show an information dialog</p>
+<p>Usage: C{dialog.info_dialog(title="Information", message="", **kwargs)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">message</span></td><td class="fieldArgDesc">message displayed in the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and user input</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.input_dialog">
+    
+  </a>
+  <a name="input_dialog">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">input_dialog</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Enter a value</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">message=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Enter a value</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">default=<span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L75">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#input_dialog" title="dialog_qt.QtDialog.input_dialog">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show an input dialog</p>
+<p>Usage: C{dialog.input_dialog(title="Enter a value", message="Enter a value", default="", **kwargs)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">message</span></td><td class="fieldArgDesc">message displayed above the input box</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">default</span></td><td class="fieldArgDesc">default value for the input box</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and user input</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.list_menu">
+    
+  </a>
+  <a name="list_menu">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">list_menu</span><span class="function-signature long-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">options, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Choose a value</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">message=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Choose a value</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">default=None, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L116">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#list_menu" title="dialog_qt.QtDialog.list_menu">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show a single-selection list menu</p>
+<p>Usage: C{dialog.list_menu(options, title="Choose a value", message="Choose a value", default=None, **kwargs)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">options</span></td><td class="fieldArgDesc">list of options (strings) for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">message</span></td><td class="fieldArgDesc">message displayed above the list</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">default</span></td><td class="fieldArgDesc">default value to be selected</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and user choice</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.list_menu_multi">
+    
+  </a>
+  <a name="list_menu_multi">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">list_menu_multi</span><span class="function-signature long-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">options, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Choose one or more values</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">message=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Choose one or more values</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">defaults: <code>list</code> = None, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L149">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#list_menu_multi" title="dialog_qt.QtDialog.list_menu_multi">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show a multiple-selection list menu</p>
+<p>Usage: C{dialog.list_menu_multi(options, title="Choose one or more values", message="Choose one or more values", defaults=[], **kwargs)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">options</span></td><td class="fieldArgDesc">list of options (strings) for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">message</span></td><td class="fieldArgDesc">message displayed above the list</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">defaults:</span><code>list</code></td><td class="fieldArgDesc">list of default values to be selected</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, List[str])}</td><td class="fieldArgDesc">a tuple containing the exit code and user choice</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.open_file">
+    
+  </a>
+  <a name="open_file">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">open_file</span><span class="function-signature long-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Open File</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">initialDir=<span class="rst-variable-quote">'</span><span class="rst-variable-string">~</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">fileTypes=<span class="rst-variable-quote">'</span><span class="rst-variable-string">*|All Files</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">rememberAs=None, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L184">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#open_file" title="dialog_qt.QtDialog.open_file">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show an Open File dialog</p>
+<p>Usage: C{dialog.open_file(title="Open File", initialDir="~", fileTypes="*|All Files", rememberAs=None, **kwargs)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">initial<wbr></wbr>Dir</span></td><td class="fieldArgDesc">starting directory for the file dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">file<wbr></wbr>Types</span></td><td class="fieldArgDesc">file type filter expression</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">remember<wbr></wbr>As</span></td><td class="fieldArgDesc">gives an ID to this file dialog, allowing it to open at the last used path next time</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and file path</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.password_dialog">
+    
+  </a>
+  <a name="password_dialog">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">password_dialog</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Enter password</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">message=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Enter password</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L89">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#password_dialog" title="dialog_qt.QtDialog.password_dialog">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show a password input dialog</p>
+<p>Usage: C{dialog.password_dialog(title="Enter password", message="Enter password", **kwargs)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">message</span></td><td class="fieldArgDesc">message displayed above the password input box</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and user input</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.save_file">
+    
+  </a>
+  <a name="save_file">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">save_file</span><span class="function-signature long-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title=<span class="rst-variable-quote">'</span><span class="rst-variable-string">Save As</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">initialDir=<span class="rst-variable-quote">'</span><span class="rst-variable-string">~</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">fileTypes=<span class="rst-variable-quote">'</span><span class="rst-variable-string">*|All Files</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">rememberAs=None, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L202">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#save_file" title="dialog_qt.QtDialog.save_file">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Show a Save As dialog</p>
+<p>Usage: C{dialog.save_file(title="Save As", initialDir="~", fileTypes="*|All Files", rememberAs=None, **kwargs)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">window title for the dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">initial<wbr></wbr>Dir</span></td><td class="fieldArgDesc">starting directory for the file dialog</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">file<wbr></wbr>Types</span></td><td class="fieldArgDesc">file type filter expression</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">remember<wbr></wbr>As</span></td><td class="fieldArgDesc">gives an ID to this file dialog, allowing it to open at the last used path next time</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">a tuple containing the exit code and file path</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="dialog_qt.QtDialog.send_notification">
+    
+  </a>
+  <a name="send_notification">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">send_notification</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title, </span><span class="rst-sig-param">message, </span><span class="rst-sig-param">icon=<span class="rst-variable-quote">'</span><span class="rst-variable-string">autokey</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">timeout=<span class="rst-variable-quote">'</span><span class="rst-variable-string">10</span><span class="rst-variable-quote">'</span>, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L49">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#send_notification" title="dialog_qt.QtDialog.send_notification">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Sends a passive popup (notification) using C{kdialog}</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title</span></td><td class="fieldArgDesc">Title to be used in the notification</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">message</span></td><td class="fieldArgDesc">Message to be displayed in the notification</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">icon</span></td><td class="fieldArgDesc">Icon to be used in the notification (Defaults to "autokey")</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">timeout</span></td><td class="fieldArgDesc">How long the notification will be on screen (Defaults to 10)</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{DialogData(int, str)}</td><td class="fieldArgDesc">A tuple containing the exit code and user input</td></tr></table></div>
+  </div>
+</div><div class="basemethod private">
+  
+  
+  <a name="dialog_qt.QtDialog._run_kdialog">
+    
+  </a>
+  <a name="_run_kdialog">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">_run_kdialog</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title, </span><span class="rst-sig-param">args, </span><span class="rst-sig-param">kwargs</span>) -&gt; <code>DialogData</code>:</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/dialog_qt.py#L35">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_run_kdialog" title="dialog_qt.QtDialog._run_kdialog">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+  </div>
+</div>
+        </div>
+      
+      </main>
+    </div>
+
+    <footer class="navbar navbar-default">
+
+  
+  <div class="container-fluid">
+    <a href="index.html">API Documentation</a> for <a href="https://github.com/dlk3/autokey-wayland" class="projecthome">AutoKey Script</a>,
+  generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a>
+    25.10.1 at 2026-02-21 11:17:44.
+  </div>
+
+  <!-- Search related scripts needs to be loaded at the end of HTML 
+    parsing not to introduce overhead and display HTML data asap -->
+  <script src="ajax.js" type="text/javascript"></script>
+  <script src="searchlib.js" type="text/javascript"></script>
+  <script src="search.js" type="text/javascript"></script>
+
+</footer>
+  
+    <script src="pydoctor.js" type="text/javascript"></script>
+
+  </body>
+</html>

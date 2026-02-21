@@ -1,0 +1,1649 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "DTD/xhtml1-strict.dtd">
+<html>
+  
+
+  <head>
+    
+    <title>engine.Engine</title>
+    <meta name="generator" content="pydoctor 25.10.1"> 
+        
+    </meta>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1" />
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="apidocs.css" />
+    <link rel="stylesheet" type="text/css" href="extra.css" />
+    
+</head>
+
+  <body>
+
+    
+
+    <nav class="navbar navbar-default mainnavbar">
+      
+  
+  <div class="container-fluid">
+
+
+    <div class="navbar-header">
+      
+      <div class="navlinks">
+        <span class="navbar-brand">
+          <a href="https://github.com/dlk3/autokey-wayland" class="projecthome">AutoKey Script</a> <a href="index.html">API Documentation</a>
+        </span>
+
+        <a href="moduleIndex.html">
+          Modules
+        </a>
+
+        <a href="classIndex.html">
+          Classes
+        </a>
+
+        <a href="nameIndex.html">
+          Names
+        </a>
+
+        <div id="search-box-container">
+          <div class="input-group">
+            <input id="search-box" type="search" name="search-query" placeholder="Search..." aria-label="Search" minlength="2" class="form-control" autocomplete="off" />
+            
+            <span class="input-group-btn">
+              <a style="display: none;" class="btn btn-default" id="search-clear-button" title="Clear" onclick="clearSearch()"><img src="fonts/x-circle.svg" alt="Clear" /></a>
+              <a class="btn btn-default" id="apidocs-help-button" title="Help" href="apidocs-help.html"><img src="fonts/info.svg" alt="Help" /></a>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="search-results-container" style="display: none;">
+        
+        <div id="search-buttons">
+          <span class="label label-default" id="search-docstrings-button">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="toggle-search-in-docstrings-checkbox" value="false" onclick="toggleSearchInDocstrings()">
+              search in docstrings
+            </input>
+          </label>
+          </span>
+          
+        </div>
+        
+        <noscript>
+            <h1>Cannot search: JavaScript is not supported/enabled in your browser.</h1>
+        </noscript>
+
+        <div id="search-status"> </div>
+
+        <div class="warning" id="search-warn-box" style="display: none;">
+          <p class="rst-last"><span id="search-warn"></span></p>
+        </div>
+
+        <table id="search-results">
+          <!-- Filled dynamically by JS -->
+        </table>
+        
+        <div style="margin-top: 10px;">
+          <p>For more information on the search, visit the <a href="apidocs-help.html#rst-search">help page</a>.</p>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</nav>
+    
+    <div class="container-fluid">
+
+      <!-- Side navigation -->
+      <div class="sidebarcontainer" style="display: none;">
+        
+        <div class="sidebar"><nav class="sidebar">
+  
+
+  <div>
+
+      <div class="thingTitle">
+        <span>Class</span>
+        <code class="thisobject"><a href="engine.Engine.html" class="internal-link" title="This class"><wbr></wbr>Engine</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        
+        
+
+        <div class="childrenKindTitle">Methods</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__init__" class="internal-link" title="engine.Engine.__init__">__init__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#create_abbreviation" class="internal-link" title="engine.Engine.create_abbreviation">create<wbr></wbr>_abbreviation</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#create_folder" class="internal-link" title="engine.Engine.create_folder">create<wbr></wbr>_folder</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#create_hotkey" class="internal-link" title="engine.Engine.create_hotkey">create<wbr></wbr>_hotkey</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#create_phrase" class="internal-link" title="engine.Engine.create_phrase">create<wbr></wbr>_phrase</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#get_folder" class="internal-link" title="engine.Engine.get_folder">get<wbr></wbr>_folder</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#get_item_with_hotkey" class="internal-link" title="engine.Engine.get_item_with_hotkey">get<wbr></wbr>_item<wbr></wbr>_with<wbr></wbr>_hotkey</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#get_macro_arguments" class="internal-link" title="engine.Engine.get_macro_arguments">get<wbr></wbr>_macro<wbr></wbr>_arguments</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#get_script_arguments" class="internal-link" title="engine.Engine.get_script_arguments">get<wbr></wbr>_script<wbr></wbr>_arguments</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#get_script_keyword_arguments" class="internal-link" title="engine.Engine.get_script_keyword_arguments">get<wbr></wbr>_script<wbr></wbr>_keyword<wbr></wbr>_arguments</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#get_triggered_abbreviation" class="internal-link" title="engine.Engine.get_triggered_abbreviation">get<wbr></wbr>_triggered<wbr></wbr>_abbreviation</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#remove_all_temporary" class="internal-link" title="engine.Engine.remove_all_temporary">remove<wbr></wbr>_all<wbr></wbr>_temporary</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#run_script" class="internal-link" title="engine.Engine.run_script">run<wbr></wbr>_script</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#run_script_from_macro" class="internal-link" title="engine.Engine.run_script_from_macro">run<wbr></wbr>_script<wbr></wbr>_from<wbr></wbr>_macro</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#run_system_command_from_macro" class="internal-link" title="engine.Engine.run_system_command_from_macro">run<wbr></wbr>_system<wbr></wbr>_command<wbr></wbr>_from<wbr></wbr>_macro</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#set_return_value" class="internal-link" title="engine.Engine.set_return_value">set<wbr></wbr>_return<wbr></wbr>_value</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__clear_existing_hotkey" class="internal-link" title="engine.Engine.__clear_existing_hotkey">__clear<wbr></wbr>_existing<wbr></wbr>_hotkey</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_get_return_value" class="internal-link" title="engine.Engine._get_return_value">_get<wbr></wbr>_return<wbr></wbr>_value</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_set_triggered_abbreviation" class="internal-link" title="engine.Engine._set_triggered_abbreviation">_set<wbr></wbr>_triggered<wbr></wbr>_abbreviation</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+
+        <div class="childrenKindTitle">Attributes</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#configManager" class="internal-link" title="engine.Engine.configManager">config<wbr></wbr>Manager</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#monitor" class="internal-link" title="engine.Engine.monitor">monitor</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#runner" class="internal-link" title="engine.Engine.runner">runner</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_macro_args" class="internal-link" title="engine.Engine._macro_args">_macro<wbr></wbr>_args</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_return_value" class="internal-link" title="engine.Engine._return_value">_return<wbr></wbr>_value</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_script_args" class="internal-link" title="engine.Engine._script_args">_script<wbr></wbr>_args</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_script_kwargs" class="internal-link" title="engine.Engine._script_kwargs">_script<wbr></wbr>_kwargs</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_triggered_abbreviation" class="internal-link" title="engine.Engine._triggered_abbreviation">_triggered<wbr></wbr>_abbreviation</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_triggered_character" class="internal-link" title="engine.Engine._triggered_character">_triggered<wbr></wbr>_character</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div><div>
+
+      <div class="thingTitle">
+        <span>Module</span>
+        <code><a href="engine.html" class="internal-link" title="The parent of this class">engine</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        <div class="childrenKindTitle">Classes</div>
+        <ul>
+    
+    <li class=" thisobject">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="engine.Engine.html" class="internal-link" title="engine.Engine"><wbr></wbr>Engine</a></code>
+            </div>
+        
+
+    </li>
+</ul>
+
+        <div class="childrenKindTitle">Functions</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="engine.html#check_abbreviation_unique" class="internal-link" title="engine.check_abbreviation_unique">check<wbr></wbr>_abbreviation<wbr></wbr>_unique</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="engine.html#check_hotkey_unique" class="internal-link" title="engine.check_hotkey_unique">check<wbr></wbr>_hotkey<wbr></wbr>_unique</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="engine.html#isValidHotkeyType" class="internal-link" title="engine.isValidHotkeyType">is<wbr></wbr>Valid<wbr></wbr>Hotkey<wbr></wbr>Type</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="engine.html#validateAbbreviations" class="internal-link" title="engine.validateAbbreviations">validate<wbr></wbr>Abbreviations</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="engine.html#validateArguments" class="internal-link" title="engine.validateArguments">validate<wbr></wbr>Arguments</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="engine.html#validateHotkey" class="internal-link" title="engine.validateHotkey">validate<wbr></wbr>Hotkey</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="engine.html#validateType" class="internal-link" title="engine.validateType">validate<wbr></wbr>Type</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+
+        <div class="childrenKindTitle">Variables</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="engine.html#logger" class="internal-link" title="engine.logger">logger</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div>
+
+</nav>
+        </div>
+        <div id="collapse-sidebar">
+          <a class="btn btn-link" onclick="toggleSideBarCollapse()" title="Toggle Sidebar Collapse">
+          </a>
+        </div> 
+        <script src="sidebartoggle.js" type="text/javascript"></script>
+       
+      </div>
+
+      <main class="">
+        
+
+        
+
+        <div class="page-header">
+          <h1 class="class"><code><code><a href="engine.html" class="internal-link">engine</a></code><wbr></wbr>.<code><a href="engine.Engine.html" class="internal-link" title="engine.Engine">Engine</a></code></code></h1>
+          <div id="show-private">
+            <button class="btn btn-link" onclick="togglePrivate()">Toggle Private API</button>
+          </div>
+        </div>
+
+        <div class="categoryHeader">
+          class documentation
+        </div>
+
+        <div class="extrasDocstring">
+          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">Engine</span>: <a href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L35" class="sourceLink">(source)</a></code></p><p>Constructor: <code><a href="#__init__" class="internal-link" title="engine.Engine.__init__">Engine(config_manager, runner)</a></code></p><p><a href="classIndex.html#engine.Engine">View In Hierarchy</a></p>
+        </div>
+
+        <div class="moduleDocstring">
+          <div><p>Provides access to the internals of AutoKey.</p>
+<p>Note that any configuration changes made using this API while the configuration window
+is open will not appear until it is closed and re-opened.</p>
+</div>
+        </div>
+
+        <div id="split-tables">
+          <table class="children sortable" id="id19">
+  
+  
+  <tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__init__" class="internal-link" title="engine.Engine.__init__">__init__</a></code></td>
+    <td><span class="rst-undocumented">No summary</span></td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#create_abbreviation" class="internal-link" title="engine.Engine.create_abbreviation">create<wbr></wbr>_abbreviation</a></code></td>
+    <td>DEPRECATED. Use engine.create_phrase() with appropriate keyword arguments instead. Create a new text phrase inside the given folder and assign the abbreviation given.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#create_folder" class="internal-link" title="engine.Engine.create_folder">create<wbr></wbr>_folder</a></code></td>
+    <td>Create and return a new folder.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#create_hotkey" class="internal-link" title="engine.Engine.create_hotkey">create<wbr></wbr>_hotkey</a></code></td>
+    <td>DEPRECATED. Use engine.create_phrase() with appropriate keyword arguments instead. Create a text hotkey</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#create_phrase" class="internal-link" title="engine.Engine.create_phrase">create<wbr></wbr>_phrase</a></code></td>
+    <td>Create a new text phrase inside the given folder. Use C{engine.get_folder(folder_name)} to retrieve the folder you wish to create the Phrase in. If the folder is a temporary one, the phrase will be created as temporary.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#get_folder" class="internal-link" title="engine.Engine.get_folder">get<wbr></wbr>_folder</a></code></td>
+    <td>Retrieve a folder by its title</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#get_item_with_hotkey" class="internal-link" title="engine.Engine.get_item_with_hotkey">get<wbr></wbr>_item<wbr></wbr>_with<wbr></wbr>_hotkey</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#get_macro_arguments" class="internal-link" title="engine.Engine.get_macro_arguments">get<wbr></wbr>_macro<wbr></wbr>_arguments</a></code></td>
+    <td>Get the arguments supplied to the current script via its macro</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#get_script_arguments" class="internal-link" title="engine.Engine.get_script_arguments">get<wbr></wbr>_script<wbr></wbr>_arguments</a></code></td>
+    <td>Get the arguments supplied to the current script via the scripting api</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#get_script_keyword_arguments" class="internal-link" title="engine.Engine.get_script_keyword_arguments">get<wbr></wbr>_script<wbr></wbr>_keyword<wbr></wbr>_arguments</a></code></td>
+    <td>Get the arguments supplied to the current script via the scripting api as keyword args.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#get_triggered_abbreviation" class="internal-link" title="engine.Engine.get_triggered_abbreviation">get<wbr></wbr>_triggered<wbr></wbr>_abbreviation</a></code></td>
+    <td>This function can be queried by a script to get the abbreviation text that triggered it's execution.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#remove_all_temporary" class="internal-link" title="engine.Engine.remove_all_temporary">remove<wbr></wbr>_all<wbr></wbr>_temporary</a></code></td>
+    <td>Removes all temporary folders and phrases, as well as any within temporary folders. Useful for rc-style scripts that want to change a set of keys.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#run_script" class="internal-link" title="engine.Engine.run_script">run<wbr></wbr>_script</a></code></td>
+    <td>Run an existing script using its description or path to look it up</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#run_script_from_macro" class="internal-link" title="engine.Engine.run_script_from_macro">run<wbr></wbr>_script<wbr></wbr>_from<wbr></wbr>_macro</a></code></td>
+    <td>Used internally by AutoKey for phrase macros</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#run_system_command_from_macro" class="internal-link" title="engine.Engine.run_system_command_from_macro">run<wbr></wbr>_system<wbr></wbr>_command<wbr></wbr>_from<wbr></wbr>_macro</a></code></td>
+    <td>Used internally by AutoKey for system macros</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#set_return_value" class="internal-link" title="engine.Engine.set_return_value">set<wbr></wbr>_return<wbr></wbr>_value</a></code></td>
+    <td>Store a return value to be used by a phrase macro</td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#configManager" class="internal-link" title="engine.Engine.configManager">config<wbr></wbr>Manager</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#monitor" class="internal-link" title="engine.Engine.monitor">monitor</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#runner" class="internal-link" title="engine.Engine.runner">runner</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><code><a href="#__clear_existing_hotkey" class="internal-link" title="engine.Engine.__clear_existing_hotkey">__clear<wbr></wbr>_existing<wbr></wbr>_hotkey</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><code><a href="#_get_return_value" class="internal-link" title="engine.Engine._get_return_value">_get<wbr></wbr>_return<wbr></wbr>_value</a></code></td>
+    <td>Used internally by AutoKey for phrase macros</td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><code><a href="#_set_triggered_abbreviation" class="internal-link" title="engine.Engine._set_triggered_abbreviation">_set<wbr></wbr>_triggered<wbr></wbr>_abbreviation</a></code></td>
+    <td>Used internally by AutoKey to provide the abbreviation and trigger that caused the script to execute. :param abbreviation: Abbreviation that caused the script to execute :param trigger_character: Possibly empty "trigger character"...</td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_macro_args" class="internal-link" title="engine.Engine._macro_args">_macro<wbr></wbr>_args</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_return_value" class="internal-link" title="engine.Engine._return_value">_return<wbr></wbr>_value</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_script_args" class="internal-link" title="engine.Engine._script_args">_script<wbr></wbr>_args</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_script_kwargs" class="internal-link" title="engine.Engine._script_kwargs">_script<wbr></wbr>_kwargs</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_triggered_abbreviation" class="internal-link" title="engine.Engine._triggered_abbreviation">_triggered<wbr></wbr>_abbreviation</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_triggered_character" class="internal-link" title="engine.Engine._triggered_character">_triggered<wbr></wbr>_character</a></code></td>
+    <td><span class="rst-undocumented">Undocumented</span></td>
+  </tr>
+</table>
+          
+
+            
+        </div>
+
+        <div id="child-list">
+          <div class="basemethod">
+  
+  
+  <a name="engine.Engine.__init__">
+    
+  </a>
+  <a name="__init__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__init__</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">config_manager, </span><span class="rst-sig-param">runner</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L45">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#__init__" title="engine.Engine.__init__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.create_abbreviation">
+    
+  </a>
+  <a name="create_abbreviation">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">create_abbreviation</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">folder, </span><span class="rst-sig-param">description, </span><span class="rst-sig-param">abbr, </span><span class="rst-sig-param">contents</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L281">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#create_abbreviation" title="engine.Engine.create_abbreviation">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>DEPRECATED. Use engine.create_phrase() with appropriate keyword arguments instead.
+Create a new text phrase inside the given folder and assign the abbreviation given.</p>
+<p>Usage: C{engine.create_abbreviation(folder, description, abbr, contents)}</p>
+<p>When the given abbreviation is typed, it will be replaced with the given
+text.</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">folder</span></td><td class="fieldArgDesc">folder to place the abbreviation in, retrieved using C{engine.get_folder()}</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">description</span></td><td class="fieldArgDesc">description for the phrase</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">abbr</span></td><td class="fieldArgDesc">the abbreviation that will trigger the expansion</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">contents</span></td><td class="fieldArgDesc">the expansion text</td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Raises</td></tr><tr><td class="fieldArgContainer"><code>Exception</code></td><td>if the specified abbreviation is not unique</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.create_folder">
+    
+  </a>
+  <a name="create_folder">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">create_folder</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title: <code>str</code>, </span><span class="rst-sig-param">parent_folder=None, </span><span class="rst-sig-param">temporary=False</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L72">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#create_folder" title="engine.Engine.create_folder">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Create and return a new folder.</p>
+<p>Usage: C{engine.create_folder("new folder"), parent_folder=folder, temporary=True}</p>
+<p>Descriptions for the optional arguments:</p>
+<p>If a folder of that name already exists, this will return it unchanged.
+If the folder wasn't already added to autokey, it will be.
+The 'temporary' property is not touched to avoid deleting an existing
+folder.
+Note that if more than one folder has the same title, only the first match will be
+returned.</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">title:</span><code>str</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">parent<wbr></wbr>_folder</span></td><td class="fieldArgDesc">Folder to make this folder a subfolder of. If
+passed as a folder, it will be that folder within AutoKey.
+If passed as pathlib.Path, it will be created or added at that path.
+Paths expand ~ to $HOME.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">temporary</span></td><td class="fieldArgDesc">Folders created with temporary=True are
+not persisted.
+Used for single-source rc-style scripts.
+Cannot be used if parent_folder is a Path.</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.create_hotkey">
+    
+  </a>
+  <a name="create_hotkey">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">create_hotkey</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">folder, </span><span class="rst-sig-param">description, </span><span class="rst-sig-param">modifiers, </span><span class="rst-sig-param">key, </span><span class="rst-sig-param">contents</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L309">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#create_hotkey" title="engine.Engine.create_hotkey">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>DEPRECATED. Use engine.create_phrase() with appropriate keyword arguments instead.
+Create a text hotkey</p>
+<p>Usage: C{engine.create_hotkey(folder, description, modifiers, key, contents)}</p>
+<p>When the given hotkey is pressed, it will be replaced with the given
+text. Modifiers must be given as a list of strings, with the following
+values permitted:</p>
+<ul class="rst-simple">
+<li>&lt;ctrl&gt;</li>
+<li>&lt;alt&gt;</li>
+<li>&lt;super&gt;</li>
+<li>&lt;hyper&gt;</li>
+<li>&lt;meta&gt;</li>
+<li>&lt;shift&gt;</li>
+</ul>
+<p>The key must be an unshifted character (i.e. lowercase)</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">folder</span></td><td class="fieldArgDesc">folder to place the abbreviation in, retrieved using C{engine.get_folder()}</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">description</span></td><td class="fieldArgDesc">description for the phrase</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">modifiers</span></td><td class="fieldArgDesc">modifiers to use with the hotkey (as a list)</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">key</span></td><td class="fieldArgDesc">the hotkey</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">contents</span></td><td class="fieldArgDesc">the expansion text</td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Raises</td></tr><tr><td class="fieldArgContainer"><code>Exception</code></td><td>if the specified hotkey is not unique</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.create_phrase">
+    
+  </a>
+  <a name="create_phrase">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">create_phrase</span><span class="function-signature long-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">folder, </span><span class="rst-sig-param">name: <code>str</code>, </span><span class="rst-sig-param">contents: <code>str</code>, </span><span class="rst-sig-param">abbreviations: <code>str | list[<wbr></wbr>str]</code> = None, </span><span class="rst-sig-param">hotkey: <code>tuple[<wbr></wbr>list[<wbr></wbr>Key | str], <wbr></wbr>Key | str]</code> = None, </span><span class="rst-sig-param">send_mode: <code>autokey.model.phrase.SendMode</code> = autokey.model.phrase.SendMode.CB_CTRL_V, </span><span class="rst-sig-param">window_filter: <code>str</code> = None, </span><span class="rst-sig-param">show_in_system_tray: <code>bool</code> = False, </span><span class="rst-sig-param">always_prompt: <code>bool</code> = False, </span><span class="rst-sig-param">temporary=False, </span><span class="rst-sig-param">replace_existing_hotkey=False</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L141">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#create_phrase" title="engine.Engine.create_phrase">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Create a new text phrase inside the given folder. Use C{engine.get_folder(folder_name)} to retrieve the folder
+you wish to create the Phrase in. If the folder is a temporary
+one, the phrase will be created as temporary.</p>
+<p>The first three arguments (folder, name and contents) are required. All further arguments are optional and
+considered to be keyword-argument only. Do not rely on the order of the optional arguments.
+The optional parameters can be used to configure the newly created Phrase.</p>
+<p>Usage (minimal example): C{engine.create_phrase(folder, name, contents)}</p>
+<p>Further concrete examples:
+C{
+engine.create_phrase(folder, "My new Phrase", "This is the Phrase content", abbreviations=["abc", "def"],
+hotkey=([engine.Key.SHIFT], engine.Key.NP_DIVIDE), send_mode=engine.SendMode.CB_CTRL_SHIFT_V,
+window_filter="konsole.Konsole", show_in_system_tray=True)
+}</p>
+<p>Descriptions for the optional arguments:</p>
+<p>abbreviations may be a single string or a list of strings. Each given string is assigned as an abbreviation
+to the newly created phrase.</p>
+<p>hotkey parameter: The hotkey parameter accepts a 2-tuple, consisting of a list of modifier keys in the first
+element and an unshifted (lowercase) key as the second element.
+Modifier keys must be given as a list of strings (or Key enum instances), with the following
+values permitted:</p>
+<ul class="rst-simple">
+<li>&lt;ctrl&gt;</li>
+<li>&lt;alt&gt;</li>
+<li>&lt;super&gt;</li>
+<li>&lt;hyper&gt;</li>
+<li>&lt;meta&gt;</li>
+<li>&lt;shift&gt;</li>
+</ul>
+<p>The key must be an unshifted character (i.e. lowercase) or a Key enum instance. Modifier keys from the list
+above are NOT allowed here. Example: (["&lt;ctrl&gt;", "&lt;alt&gt;"], "9") to assign "&lt;Ctrl&gt;+&lt;Alt&gt;+9" as a hotkey.
+The Key enum contains objects representing various special keys and is available as an attribute of the "engine"
+object, named "Key". So to access a function key, you can use the string "&lt;f12&gt;" or engine.Key.F12
+See the AutoKey Wiki for an overview of all available keys in the enumeration.</p>
+<p>send_mode: This parameter configures how AutoKey sends the phrase content, for example by typing or by pasting
+using the clipboard. It accepts items from the SendMode enumeration, which is also available from the engine
+object as engine.SendMode. The parameter defaults to
+engine.SendMode.KEYBOARD. Available send modes are:</p>
+<ul class="rst-simple">
+<li>KEYBOARD</li>
+<li>CB_CTRL_V</li>
+<li>CB_CTRL_SHIFT_V</li>
+<li>CB_SHIFT_INSERT</li>
+<li>SELECTION</li>
+</ul>
+<p>To paste the Phrase using "&lt;shift&gt;+&lt;insert&gt;, set send_mode=engine.SendMode.CB_SHIFT_INSERT</p>
+<p>window_filter: Accepts a string which will be used as a regular expression to match window titles or
+applications using the WM_CLASS attribute.</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">folder</span></td><td class="fieldArgDesc">folder to place the abbreviation in, retrieved using C{engine.get_folder()}</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">name:</span><code>str</code></td><td class="fieldArgDesc">Name/description for the phrase.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">contents:</span><code>str</code></td><td class="fieldArgDesc">the expansion text</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">abbreviations:</span><code>str | list[<wbr></wbr>str]</code></td><td class="fieldArgDesc">Can be a single string or a list (or other iterable) of strings. Assigned to the Phrase</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">hotkey:</span><code>tuple[<wbr></wbr>list[<wbr></wbr>Key | str], <wbr></wbr>Key | str]</code></td><td class="fieldArgDesc">A tuple containing a keyboard combination that will be assigned as a hotkey.
+First element is a list of modifiers, second element is the key.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">send<wbr></wbr>_mode:</span><code>autokey.model.phrase.SendMode</code></td><td class="fieldArgDesc">The pasting mode that will be used to expand the Phrase.
+Used to configure, how the Phrase is expanded. Defaults to typing using the "CTRL+V" method.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">window<wbr></wbr>_filter:</span><code>str</code></td><td class="fieldArgDesc">A string containing a regular expression that will be used as the window filter.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">show<wbr></wbr>_in<wbr></wbr>_system<wbr></wbr>_tray:</span><code>bool</code></td><td class="fieldArgDesc">A boolean defaulting to False.
+If set to True, the new Phrase will be shown in the tray icon context menu.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">always<wbr></wbr>_prompt:</span><code>bool</code></td><td class="fieldArgDesc">A boolean defaulting to False. If set to True,
+the Phrase expansion has to be manually confirmed, each time it is triggered.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">temporary</span></td><td class="fieldArgDesc">Hotkeys created with temporary=True are
+not persisted as .jsons, and are replaced if the description is not
+unique within the folder.
+Used for single-source rc-style scripts.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">replace<wbr></wbr>_existing<wbr></wbr>_hotkey</span></td><td class="fieldArgDesc">If true, instead of warning if the hotkey
+is already in use by another phrase or folder, it removes the hotkey
+from those clashes and keeps this phrase's hotkey.</td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td colspan="2">The created Phrase object. This object is NOT considered part of the public API and exposes the raw
+internals of AutoKey. Ignore it, if you don't need it or don't know what to do with it.
+It can be used for _really_ advanced use cases, where further customizations are desired. Use at your own
+risk. No guarantees are made about the object's structure. Read the AutoKey source code for details.</td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Raises</td></tr><tr><td class="fieldArgContainer"><code>ValueError</code></td><td>If a given abbreviation or hotkey is already in use or parameters are otherwise invalid</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.get_folder">
+    
+  </a>
+  <a name="get_folder">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">get_folder</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">title: <code>str</code></span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L57">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#get_folder" title="engine.Engine.get_folder">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Retrieve a folder by its title</p>
+<p>Usage: C{engine.get_folder(title)}</p>
+<p>Note that if more than one folder has the same title, only the first match will be
+returned.</p>
+</div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.get_item_with_hotkey">
+    
+  </a>
+  <a name="get_item_with_hotkey">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">get_item_with_hotkey</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">hotkey</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L494">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#get_item_with_hotkey" title="engine.Engine.get_item_with_hotkey">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.get_macro_arguments">
+    
+  </a>
+  <a name="get_macro_arguments">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">get_macro_arguments</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L424">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#get_macro_arguments" title="engine.Engine.get_macro_arguments">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Get the arguments supplied to the current script via its macro</p>
+<p>Usage: C{engine.get_macro_arguments()}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{list(str())}</td><td class="fieldArgDesc">the arguments</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.get_script_arguments">
+    
+  </a>
+  <a name="get_script_arguments">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">get_script_arguments</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L401">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#get_script_arguments" title="engine.Engine.get_script_arguments">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Get the arguments supplied to the current script via the scripting api</p>
+<p>Usage: C{engine.get_script_arguments()}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{list[Any]}</td><td class="fieldArgDesc">the arguments</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.get_script_keyword_arguments">
+    
+  </a>
+  <a name="get_script_keyword_arguments">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">get_script_keyword_arguments</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L412">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#get_script_keyword_arguments" title="engine.Engine.get_script_keyword_arguments">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Get the arguments supplied to the current script via the scripting api
+as keyword args.</p>
+<p>Usage: C{engine.get_script_keyword_arguments()}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{Dict[str, Any]}</td><td class="fieldArgDesc">the arguments</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.get_triggered_abbreviation">
+    
+  </a>
+  <a name="get_triggered_abbreviation">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">get_triggered_abbreviation</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>) -&gt; <code>tuple[<wbr></wbr>str | None, <wbr></wbr>str | None]</code>:</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L462">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#get_triggered_abbreviation" title="engine.Engine.get_triggered_abbreviation">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>This function can be queried by a script to get the abbreviation text that triggered it's execution.</p>
+<p>If a script is triggered by an abbreviation, this function returns a tuple containing two strings. First element
+is the abbreviation text. The second element is the trigger character that finally caused the execution. It is
+typically some whitespace character, like ' ', '        ' or a newline character. It is empty, if the abbreviation was
+configured to "trigger immediately".</p>
+<p>If the script execution was triggered by a hotkey, a call to the DBus interface, the tray icon, the "Run"
+button in the main window or any other means, this function returns a tuple containing two None values.</p>
+<p>Usage: C{abbreviation, trigger_character = engine.get_triggered_abbreviation()}
+You can determine if the script was triggered by an abbreviation by simply testing the truth value of the first
+returned value.</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer">C{Tuple[Optional[str], Optional[str]]}</td><td class="fieldArgDesc">Abbreviation that triggered the script execution, if any.</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.remove_all_temporary">
+    
+  </a>
+  <a name="remove_all_temporary">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">remove_all_temporary</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">folder=None, </span><span class="rst-sig-param">in_temp_parent=False</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L484">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#remove_all_temporary" title="engine.Engine.remove_all_temporary">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Removes all temporary folders and phrases, as well as any within
+temporary folders.
+Useful for rc-style scripts that want to change a set of keys.</p></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.run_script">
+    
+  </a>
+  <a name="run_script">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">run_script</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">description, </span><span class="rst-sig-param">*args, </span><span class="rst-sig-param">**kwargs</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L349">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#run_script" title="engine.Engine.run_script">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Run an existing script using its description or path to look it up</p>
+<p>Usage: C{engine.run_script(description, 'foo', 'bar', foobar='foobar'})}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">description</span></td><td class="fieldArgDesc">description of the script to run. If parsable as
+an absolute path to an existing file, that will be run instead.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">*args</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">**kwargs</span></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Raises</td></tr><tr><td class="fieldArgContainer"><code>Exception</code></td><td>if the specified script does not exist</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.run_script_from_macro">
+    
+  </a>
+  <a name="run_script_from_macro">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">run_script_from_macro</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">args</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L378">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#run_script_from_macro" title="engine.Engine.run_script_from_macro">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Used internally by AutoKey for phrase macros</p></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.run_system_command_from_macro">
+    
+  </a>
+  <a name="run_system_command_from_macro">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">run_system_command_from_macro</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">args</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L391">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#run_system_command_from_macro" title="engine.Engine.run_system_command_from_macro">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Used internally by AutoKey for system macros</p></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="engine.Engine.set_return_value">
+    
+  </a>
+  <a name="set_return_value">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">set_return_value</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">val</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L435">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#set_return_value" title="engine.Engine.set_return_value">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Store a return value to be used by a phrase macro</p>
+<p>Usage: C{engine.set_return_value(val)}</p>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">val</span></td><td class="fieldArgDesc">value to be stored</td></tr></table></div>
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="engine.Engine.configManager">
+    
+  </a>
+  <a name="configManager">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">configManager</span> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L48">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#configManager" title="engine.Engine.configManager">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="engine.Engine.monitor">
+    
+  </a>
+  <a name="monitor">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">monitor</span> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L50">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#monitor" title="engine.Engine.monitor">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="engine.Engine.runner">
+    
+  </a>
+  <a name="runner">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">runner</span> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L49">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#runner" title="engine.Engine.runner">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="basemethod private">
+  
+  
+  <a name="engine.Engine.__clear_existing_hotkey">
+    
+  </a>
+  <a name="__clear_existing_hotkey">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">__clear_existing_hotkey</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">hotkey, </span><span class="rst-sig-param">window_filter</span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L275">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#__clear_existing_hotkey" title="engine.Engine.__clear_existing_hotkey">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+  </div>
+</div><div class="basemethod private">
+  
+  
+  <a name="engine.Engine._get_return_value">
+    
+  </a>
+  <a name="_get_return_value">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">_get_return_value</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span></span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L445">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_get_return_value" title="engine.Engine._get_return_value">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Used internally by AutoKey for phrase macros</p></div>
+  </div>
+</div><div class="basemethod private">
+  
+  
+  <a name="engine.Engine._set_triggered_abbreviation">
+    
+  </a>
+  <a name="_set_triggered_abbreviation">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span>&#160;<span class="py-defname">_set_triggered_abbreviation</span><span class="function-signature">(<span class="rst-sig-param"><span class="rst-undocumented">self</span>, </span><span class="rst-sig-param">abbreviation: <code>str</code>, </span><span class="rst-sig-param">trigger_character: <code>str</code></span>):</span>
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L453">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_set_triggered_abbreviation" title="engine.Engine._set_triggered_abbreviation">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Used internally by AutoKey to provide the abbreviation and trigger that caused the script to execute.
+:param abbreviation: Abbreviation that caused the script to execute
+:param trigger_character: Possibly empty "trigger character". As defined in the abbreviation configuration.</p></div>
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="engine.Engine._macro_args">
+    
+  </a>
+  <a name="_macro_args">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_macro_args</span> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L51">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_macro_args" title="engine.Engine._macro_args">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="engine.Engine._return_value">
+    
+  </a>
+  <a name="_return_value">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_return_value</span>: <code>str</code> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L54">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_return_value" title="engine.Engine._return_value">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="engine.Engine._script_args">
+    
+  </a>
+  <a name="_script_args">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_script_args</span> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L52">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_script_args" title="engine.Engine._script_args">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="engine.Engine._script_kwargs">
+    
+  </a>
+  <a name="_script_kwargs">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_script_kwargs</span> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L53">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_script_kwargs" title="engine.Engine._script_kwargs">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="engine.Engine._triggered_abbreviation">
+    
+  </a>
+  <a name="_triggered_abbreviation">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_triggered_abbreviation</span>: <code>str | None</code> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L55">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_triggered_abbreviation" title="engine.Engine._triggered_abbreviation">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="engine.Engine._triggered_character">
+    
+  </a>
+  <a name="_triggered_character">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_triggered_character</span> =
+    <a class="sourceLink" href="https://github.com/dlk3/autokey-wayland/tree/v0.97.2/lib/autokey/scripting/engine.py#L460">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_triggered_character" title="engine.Engine._triggered_character">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div>
+        </div>
+      
+      </main>
+    </div>
+
+    <footer class="navbar navbar-default">
+
+  
+  <div class="container-fluid">
+    <a href="index.html">API Documentation</a> for <a href="https://github.com/dlk3/autokey-wayland" class="projecthome">AutoKey Script</a>,
+  generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a>
+    25.10.1 at 2026-02-21 11:17:44.
+  </div>
+
+  <!-- Search related scripts needs to be loaded at the end of HTML 
+    parsing not to introduce overhead and display HTML data asap -->
+  <script src="ajax.js" type="text/javascript"></script>
+  <script src="searchlib.js" type="text/javascript"></script>
+  <script src="search.js" type="text/javascript"></script>
+
+</footer>
+  
+    <script src="pydoctor.js" type="text/javascript"></script>
+
+  </body>
+</html>
