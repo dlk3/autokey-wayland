@@ -7,12 +7,13 @@ import os
 if os.environ['XDG_SESSION_TYPE'] == 'wayland':
 
     # then it can output a string containing a Unicode character like this:
-    keyboard.send_keys('This the "ninja" character: ') 
     character = '🥷'
     escape_code = character.encode('unicode_escape').decode('utf-8').lstrip('\\U0')
-    keyboard.send_keys(f'<ctrl>+<shift>+u{escape_code} ', delay=50)  # The space at the end of the string is critical
+    keyboard.send_keys(f'This is the "ninja" character: <ctrl>+<shift>+u{escape_code} ', delay=50)
+    time.sleep(0.3)   # Typing thread needs time to finish up before we send more
+    keyboard.send_keys(' Scary!')
      
 else:
 
     #  otherwise, this must be an X11 environment and the script can simply do this: 
-    keyboard.send_keys('This the "ninja" character: 🥷')
+    keyboard.send_keys('This the "ninja" character: 🥷 Scary!')
