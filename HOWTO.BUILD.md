@@ -6,7 +6,7 @@ There are two different scripts:
     debian/mkpackage - Builds the AutoKey debs by running debian/build.sh in an  
                        Ubuntu container.  It will also send the debs to my PPA.
                        I made this so that I could do builds from my Fedora 
-		               workstation without restorting to an Ubuntu KVM.
+		               workstation without resorting to an Ubuntu KVM.
 
 # Fedora
 
