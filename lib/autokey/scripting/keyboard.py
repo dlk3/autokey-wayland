@@ -57,7 +57,7 @@ class Keyboard:
             raise TypeError("Only strings can be sent using this function")
         send_mode = _validate_send_mode(send_mode)
 
-	#  @dlk3 Fix for #19 - Temporarily change the setting for the uinput keystoke delay
+        #  @dlk3 Fix for #19 - Temporarily change the setting for the uinput keystoke delay
         if delay > 0:
             saved_delay = cm.ConfigManager.SETTINGS[cm_constants.DELAY] 
             cm.ConfigManager.SETTINGS[cm_constants.DELAY] = saved_delay + delay
@@ -71,7 +71,7 @@ class Keyboard:
         finally:
             self.mediator.finish_send()
         
-	#  @dlk3 Fix for #19 - Temporarily change the setting for the uinput keystoke delay
+        #  @dlk3 Fix for #19 - Temporarily change the setting for the uinput keystoke delay
         if delay > 0:
             time.sleep(len(key_string) * delay / 1000)    # Give the thread that does the typing time to complete
             cm.ConfigManager.SETTINGS[cm_constants.DELAY] = saved_delay
