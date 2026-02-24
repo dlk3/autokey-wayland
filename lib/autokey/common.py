@@ -43,12 +43,13 @@ MAINTAINER = 'dlk3'
 MAINTAINER_EMAIL = 'dave@daveking.com'
 BUG_EMAIL = ""
 COPYRIGHT = """
+(c) 2008 Sam Peterson
 (c) 2009-2012 Chris Dekter
-(c) 2014, GuoCi
-(c) 2017, 2018 Thomas Hess
-(c) 2020, 2021 BlueDrink9
-(c) 2024, sebastiansam55
-(c) 2026, David King
+(c) 2014 GuoCi
+(c) 2017-2018 Thomas Hess
+(c) 2020-2021 Silico Biomancer
+(c) 2024 Sam Sebastian
+(c) 2026 David King
 """
 
 AuthorData = NamedTuple("AuthorData", (("name", str), ("role", str), ("email", str)))
@@ -64,9 +65,10 @@ AboutData = NamedTuple("AboutData", (
 ))
 author_data = (
     AuthorData("Sam Peterson", "Original developer", "peabodyenator@gmail.com"),
-    AuthorData("Thomas Hess", "PyKDE4 to PyQt5 port", "thomas.hess@udo.edu"),
-    AuthorData("GuoCi", "Python 3 port maintainer", "guociz@gmail.com"),
     AuthorData("Chris Dekter", "Developer", "cdekter@gmail.com"),
+    AuthorData("GuoCi", "Python 3 port maintainer", "guociz@gmail.com"),
+    AuthorData("Thomas Hess", "PyKDE4 to PyQt5 port", "thomas.hess@udo.edu"),
+    AuthorData("Silico Biomancer", "Developer", ""),
     AuthorData("Sam Sebastian", "Wayland port", "sebastiansam55@gmail.com"),
     AuthorData("David King", "Wayland enhancements", "dave@daveking.com")
 )
