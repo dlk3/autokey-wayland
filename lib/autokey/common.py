@@ -71,7 +71,7 @@ author_data = (
     AuthorData("David King", "Wayland enhancements", "dave@daveking.com")
 )
 about_data = AboutData(
-   program_name="AutoKey",
+   program_name="AutoKey for Wayland",
    version=VERSION,
    program_description="Desktop automation utility",
    license_text="GPL v3",  # TODO: load actual license text from disk somewhere

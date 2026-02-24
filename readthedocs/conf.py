@@ -14,15 +14,10 @@ import os
 import sys
 import re
 
+# -- Project information -----------------------------------------------------
+
 sys.path.append('../lib')
 from autokey import common
-
-#TODO this needs to be dealt with for github actions
-# different local path for master documentation
-# sys.path.insert(0, os.path.abspath('/home/sam/git/ak/lib'))
-# sys.path.insert(0, os.path.abspath('./ak_temp/lib'))
-
-# -- Project information -----------------------------------------------------
 
 project = common.about_data.program_name
 author = common.AUTHOR
