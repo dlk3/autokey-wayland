@@ -14,44 +14,20 @@ import os
 import sys
 import re
 
-# pulled from autokey/setup.py
-def get_autokey_version():
-    sys.path.append('../lib')
-    from autokey import common
-    return common.VERSION
-#   source_file_name = "../lib/autokey/common.py"
-#   with open(source_file_name, "r") as metadata_source_file:
-#       source = metadata_source_file.read()
-#   if not source:
-#       print("Cannot read AutoKey source file containing required information. Unreadable: {}".format(
-#           source_file_name))
-#       sys.exit(1)
-#
-#   def search_for(pattern: str) -> str:
-#       return re.search(
-#           r"""^{}\s*=\s*('(.*)'|"(.*)")""".format(pattern),  # Search for assignments: VAR = 'VALUE' or VAR = "VALUE"
-#           source,
-#           re.M
-#       ).group(1)[1:-1]  # Cut off outer quotation marks
-#
-#   return search_for("VERSION")
-
-
+sys.path.append('../lib')
+from autokey import common
 
 #TODO this needs to be dealt with for github actions
 # different local path for master documentation
 # sys.path.insert(0, os.path.abspath('/home/sam/git/ak/lib'))
-sys.path.insert(0, os.path.abspath('./ak_temp/lib'))
-
+# sys.path.insert(0, os.path.abspath('./ak_temp/lib'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'AutoKey for Wayland'
-copyright = '2011-2026 Chris Dekter, Thomas Hess, Silico Biomancer, Sam Sebastian, and David King'
-author = 'Chris Dekter, Thomas Hess, Silico Biomancer, Sam Sebastian, David King'
-
-# The full version, including alpha/beta/rc tags
-release = version = get_autokey_version()
+project = common.about_data.program_name
+author = common.AUTHOR
+copyright = common.COPYRIGHT.replace('\n', ', ').strip(', ')
+release = version = common.VERSION
 
 # -- General configuration ---------------------------------------------------
 

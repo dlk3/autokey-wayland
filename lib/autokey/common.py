@@ -36,18 +36,19 @@ LOCK_FILE = os.path.join(RUN_DIR, "autokey.pid")
 APP_NAME = "autokey"
 CATALOG = ""
 VERSION = "0.97.2"
-HOMEPAGE = "https://github.com/autokey/autokey"
+HOMEPAGE = "https://github.com/dlk3/autokey-wayland"
 AUTHOR = 'Chris Dekter'
 AUTHOR_EMAIL = 'cdekter@gmail.com'
-MAINTAINER = 'sebastiansam55'
-MAINTAINER_EMAIL = 'sebastiansam55@gmail.com'
+MAINTAINER = 'dlk3'
+MAINTAINER_EMAIL = 'dave@daveking.com'
 BUG_EMAIL = ""
 COPYRIGHT = """
 (c) 2009-2012 Chris Dekter
-(c) 2014 GuoCi
+(c) 2014, GuoCi
 (c) 2017, 2018 Thomas Hess
 (c) 2020, 2021 BlueDrink9
-(c) 2024 sebastiansam55
+(c) 2024, sebastiansam55
+(c) 2026, David King
 """
 
 AuthorData = NamedTuple("AuthorData", (("name", str), ("role", str), ("email", str)))
@@ -62,11 +63,12 @@ AboutData = NamedTuple("AboutData", (
     ("author_list", Iterable[AuthorData])
 ))
 author_data = (
+    AuthorData("Sam Peterson", "Original developer", "peabodyenator@gmail.com"),
     AuthorData("Thomas Hess", "PyKDE4 to PyQt5 port", "thomas.hess@udo.edu"),
     AuthorData("GuoCi", "Python 3 port maintainer", "guociz@gmail.com"),
     AuthorData("Chris Dekter", "Developer", "cdekter@gmail.com"),
-    AuthorData("Sam Peterson", "Original developer", "peabodyenator@gmail.com"),
-    AuthorData("Sam Sebastian", "Wayland port", "sebastiansam55@gmail.com")
+    AuthorData("Sam Sebastian", "Wayland port", "sebastiansam55@gmail.com"),
+    AuthorData("David King", "Wayland enhancements", "dave@daveking.com")
 )
 about_data = AboutData(
    program_name="AutoKey",
@@ -80,9 +82,9 @@ about_data = AboutData(
 )
 
 
-FAQ_URL = "https://github.com/autokey/autokey/wiki/FAQ"
-API_URL = "https://autokey.github.io/"
-HELP_URL = "https://github.com/autokey/autokey/wiki/Troubleshooting"
+FAQ_URL = HOMEPAGE + "/wiki"
+HELP_URL = "https://autokey-wayland.readthedocs.io/en/latest/"
+API_URL = HELP_URL + "/api.html"
 BUG_URL = HOMEPAGE + "/issues"
 
 ICON_FILE = "autokey"
