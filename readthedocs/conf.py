@@ -44,9 +44,15 @@ sys.path.insert(0, os.path.abspath('./ak_temp/lib'))
 # -- Project information -----------------------------------------------------
 
 project = 'AutoKey for Wayland'
-# is there some way to have this be a link to github authors page?
-copyright = '2023, Various'
-author = 'Various'
+copyright = [
+    '2011 Chris Dekter',
+    '2017-2020 Thomas Hess',
+    '2021 Silico Biomancer',
+    '2023-2024 Sam Sebastian',
+    '2026 David King'
+]
+
+author = 'Chris Dekter, Thomas Hess, Silico Biomancer, Sam Sebastian, David King'
 
 # The full version, including alpha/beta/rc tags
 release = version = get_autokey_version()
