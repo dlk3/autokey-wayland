@@ -112,7 +112,7 @@ html_context = {
     'display_github': True,
     'github_user': 'dlk3',
     'github_repo': 'autokey-wayland',
-    'github_version': 'main/',
+    'github_version': 'main/readthedocs/',
 }
 
 autodoc_mock_imports = [
