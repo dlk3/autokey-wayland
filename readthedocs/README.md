@@ -10,6 +10,6 @@ The rest of the documentation source is located here in this directory tree.  It
 
 Configuration files:
 
-    - ```.readthedocs.yml``` - Located in the root of this project.  Provides configuration for the ReadtheDocs builder.  [ReadtheDocs configuration file reference](https://docs.readthedocs.io/page/config-file/index.html).
-    - ```readthedocs/conf.py``` Sphinx configuration file.  [Sphinx configuration file reference](https://www.sphinx-doc.org/en/master/usage/configuration.html).
+- ```.readthedocs.yml``` - Located in the root of this project.  Provides configuration for the ReadtheDocs builder.  [ReadtheDocs configuration file reference](https://docs.readthedocs.io/page/config-file/index.html).
+- ```readthedocs/conf.py``` - Sphinx configuration file.  [Sphinx configuration file reference](https://www.sphinx-doc.org/en/master/usage/configuration.html).
 
