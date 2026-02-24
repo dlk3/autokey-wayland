@@ -47,14 +47,7 @@ sys.path.insert(0, os.path.abspath('./ak_temp/lib'))
 # -- Project information -----------------------------------------------------
 
 project = 'AutoKey for Wayland'
-copyright = [
-    '2011 Chris Dekter',
-    '2017-2020 Thomas Hess',
-    '2021 Silico Biomancer',
-    '2023-2024 Sam Sebastian',
-    '2026 David King'
-]
-
+copyright = '2011-2026 Chris Dekter, Thomas Hess, Silico Biomancer, Sam Sebastian, and David King'
 author = 'Chris Dekter, Thomas Hess, Silico Biomancer, Sam Sebastian, David King'
 
 # The full version, including alpha/beta/rc tags
