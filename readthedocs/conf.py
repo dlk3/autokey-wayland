@@ -16,22 +16,25 @@ import re
 
 # pulled from autokey/setup.py
 def get_autokey_version():
-    source_file_name = "../lib/autokey/common.py"
-    with open(source_file_name, "r") as metadata_source_file:
-        source = metadata_source_file.read()
-    if not source:
-        print("Cannot read AutoKey source file containing required information. Unreadable: {}".format(
-            source_file_name))
-        sys.exit(1)
-
-    def search_for(pattern: str) -> str:
-        return re.search(
-            r"""^{}\s*=\s*('(.*)'|"(.*)")""".format(pattern),  # Search for assignments: VAR = 'VALUE' or VAR = "VALUE"
-            source,
-            re.M
-        ).group(1)[1:-1]  # Cut off outer quotation marks
-
-    return search_for("VERSION")
+    sys.path.append('../lib')
+    from autokey import common
+    return common.VERSION
+#   source_file_name = "../lib/autokey/common.py"
+#   with open(source_file_name, "r") as metadata_source_file:
+#       source = metadata_source_file.read()
+#   if not source:
+#       print("Cannot read AutoKey source file containing required information. Unreadable: {}".format(
+#           source_file_name))
+#       sys.exit(1)
+#
+#   def search_for(pattern: str) -> str:
+#       return re.search(
+#           r"""^{}\s*=\s*('(.*)'|"(.*)")""".format(pattern),  # Search for assignments: VAR = 'VALUE' or VAR = "VALUE"
+#           source,
+#           re.M
+#       ).group(1)[1:-1]  # Cut off outer quotation marks
+#
+#   return search_for("VERSION")
 
 
 
