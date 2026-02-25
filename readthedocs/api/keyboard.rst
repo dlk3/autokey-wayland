@@ -7,7 +7,7 @@ Keyboard API
    :no-members:
 .. automodule:: autokey.scripting
    :no-members:
-.. autoclass:: autokey.scripting.keyboard.Keyboard
+.. autoclass:: Keyboard
    :members:
    :exclude-members: mediator
 
