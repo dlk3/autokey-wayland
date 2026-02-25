@@ -1,7 +1,13 @@
 Keyboard API
 ============
 
-.. automodule:: autokey.scripting.keyboard
+.. automodule:: autokey.common
+   :no-members:
+   
+.. automodule:: autokey.gtkapp
+   :no-members:
+
+.. automodule:: autokey.scripting
    :no-members:
 
 .. autoclass:: Keyboard

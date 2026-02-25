@@ -4,12 +4,13 @@ sphinx-epytext
 recommonmark
 enum-tools[sphinx]
 dbus-python
-pyinotify
-python-xlib
-PyGObject==3.50
-PyQt5
-QScintilla
-pyhamcrest
-python-magic
-pyudev
 evdev
+pyasyncore; python_version>="3.12"
+PyGObject==3.50
+pyhamcrest
+pyinotify
+PyQt5
+python-magic
+python-xlib
+pyudev
+QScintilla
