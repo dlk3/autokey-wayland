@@ -9,7 +9,7 @@ This project is still in development, and the code is unstable.  Use it at your 
 
 AutoKey, X11 and Wayland
 ------------------------
-Wayland_ is a new desktop protocol that has been slowly replacing X11_ in many distributions.  It offers additional security in desktop environments by controlling the degree to which applications can interact with desktop windows that are not their own.  This new level of security has had an impact on AutoKey.  Specifically, AutoKey's ability to modify desktop windows and read/write the contents of the clipboard has been affected.  See the `What Works & What Does Not`_ section for more specific details on the differences in capabilities across the two environments.
+Wayland_ is a new desktop protocol that has been slowly replacing X11_ in many distributions.  It offers additional security in desktop environments by controlling the degree to which applications can interact with desktop windows that are not their own.  This new level of security has had an impact on AutoKey.  Specifically, AutoKey's ability to modify desktop windows and read/write the contents of the clipboard has been affected.  Also, since the xrecord and xautomation utilities are only available on X11 systems, AutoKey cannot record and playback mouse movements under Wayland like it can on X11.  See the `What Works & What Does Not`_ section for more specific details on the differences in capabilities across the two environments.
 
 .. _AutoKey: https://github.com/autokey/autokey
 .. _Wayland: https://en.wikipedia.org/wiki/Wayland_(protocol)
