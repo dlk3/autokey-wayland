@@ -1329,7 +1329,7 @@ class ConfigWindow:
     def on_show_about(self, widget, data=None):
         dlg = Gtk.AboutDialog()
         dlg.set_name("AutoKey")
-        dlg.set_comments(_("A desktop automation utility for Linux and X11."))
+        dlg.set_comments(_("A desktop automation utility for Linux, Wayland and X11."))
         dlg.set_version(common.VERSION)
         p = Gtk.IconTheme.get_default().load_icon(common.ICON_FILE, 100, 0)
         dlg.set_logo(p)
