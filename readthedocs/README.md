@@ -1,6 +1,6 @@
 # AutoKey for Wayland Documentation
 
-The [doumentation for this project](https://autokey-wayland.readthedocs.io) is published via [ReadtheDocs.org](https://docs.readthedocs.com/platform/stable/index.html).
+The [doumentation for this project](https://autokey-wayland.readthedocs.io) is published via [ReadtheDocs.org](https://readthedocs.org).
 
 ReadtheDocs uses Sphinx to generate the AutoKey for Wayland documentation.  The documentation is automatically updated every time a change is pushed to the ```main``` branch of this repository.  No manual intervention is required, other than to verify the quality of the generated content.
 
