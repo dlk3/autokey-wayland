@@ -12,16 +12,17 @@ build:
   apt_packages:
     - cmake
     - dbus
-    - libcairo-dev
-    - libdbus-1-dev
-    - libpython3-dev
-    - libdbus-glib-1-dev
-    - libgirepository1.0-dev
     - gir1.2-gtk-3.0
     - gir1.2-gtksource-3.0
     - gir1.2-appindicator3-0.1
     - gir1.2-glib-2.0
     - gir1.2-notify-0.7
+    - graphicsmagick-imagemagick-compat
+    - libcairo-dev
+    - libdbus-1-dev
+    - libpython3-dev
+    - libdbus-glib-1-dev
+    - libgirepository1.0-dev
     - pyqt5-dev-tools
 
 # Build documentation in the "docs/" directory with Sphinx
