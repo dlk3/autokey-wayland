@@ -14,4 +14,4 @@ Wayland_ is a new desktop protocol that has been slowly replacing X11_ in many d
 
 .. _Wayland: https://en.wikipedia.org/wiki/Wayland_(protocol)
 .. _X11: https://en.wikipedia.org/wiki/X_Window_System
-.. _What Works & What Does Not:
+.. _What Works & What Does Not: whatworks
