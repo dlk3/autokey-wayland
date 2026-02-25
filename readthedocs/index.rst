@@ -8,6 +8,8 @@ Welcome to AutoKey for Wayland!
 
 .. toctree::
    intro
+   installation
+   whatworks
    api
 
 
