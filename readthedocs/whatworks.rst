@@ -26,21 +26,23 @@ What Behaves Differently Under Wayland
 What Does Not Work Under Wayland
 --------------------------------
 
-- As described above, the clipboard API methods will not work in scripts that are executed using abbreviations or hot keys.
+- As described above, the "clipboard" API methods will not work in scripts that are executed using abbreviations or hot keys.
 - Sending phrases using the <ctrl-v> method will not work when using abbreviations or hotkeys.
 - Some of the script API methods do not work under Wayland.  See `this table`_ for a list of which APIs work and which do not.
+- The "highlevel" API methods are not supported.  These were implemented in X11 using the xautomation utility, which is not available under Wayland.
+- Recording and playing back mouse movements is not supported on Wayland.  This was implemented in X11 using the xrecord utility, which is not available under Wayland.
 
 Which Desktops Support Wayland
 ------------------------------
 
-Updated: February 22, 2025
+Updated: February 22, 2026
 
 +--------------+-------------------+-----------------+
 | Desktop / WM | Wayland Support   | AutoKey Support |
 +==============+===================+=================+
-| GNOME Shell  | ✔️ Default        | ✔️              |
+| GNOME Shell  | ✔️  Default        | ✔️               |
 +--------------+-------------------+-----------------+
-| KDE Plasma   | ✔️ Stable         |                 |
+| KDE Plasma   | ✔️  Stable         |                 |
 +--------------+-------------------+-----------------+
 | XFCE         | 🚧 Experimental   |                 |
 +--------------+-------------------+-----------------+
@@ -48,13 +50,13 @@ Updated: February 22, 2025
 +--------------+-------------------+-----------------+
 | MATE         | 🚧 In development |                 |
 +--------------+-------------------+-----------------+
-| Sway         | ✔️ Native         |                 |
+| Sway         | ✔️  Native         |                 |
 +--------------+-------------------+-----------------+
-| River        | ✔️ Native         |                 |
+| River        | ✔️  Native         |                 |
 +--------------+-------------------+-----------------+
-| Hyprland     | ✔️ Native         |                 |
+| Hyprland     | ✔️  Native         |                 |
 +--------------+-------------------+-----------------+
-| Wayfire      | ✔️ Native         |                 |
+| Wayfire      | ✔️  Native         |                 |
 +--------------+-------------------+-----------------+
-| Weston       | ✔️ Reference      |                 |
+| Weston       | ✔️  Reference      |                 |
 +--------------+-------------------+-----------------+
