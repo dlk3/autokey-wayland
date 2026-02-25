@@ -11,6 +11,10 @@ If you already have a "production" instance of AutoKey installed on your system 
 
 If things go horribly wrong, you can always move the backup back into place and return to using your "production" instance.
 
+After you have finished the install, see `Getting Started With AutoKey on Wayland`_ for help with issues specific to the Wayland environment that may affect you when you first start using AutoKey on Wayland.
+
+.. _Getting Started With AutoKey on Wayland: gettingstarted.html
+
 1) Clone the AutoKey for Wayland repository locally
 ---------------------------------------------------
 
