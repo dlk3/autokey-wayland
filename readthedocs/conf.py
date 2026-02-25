@@ -24,6 +24,8 @@ author = common.AUTHOR
 copyright = common.COPYRIGHT.replace('\n', ', ').strip(', ')
 release = version = common.VERSION
 
+export
+
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
