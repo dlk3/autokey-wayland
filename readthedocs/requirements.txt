@@ -6,7 +6,7 @@ enum-tools[sphinx]
 dbus-python
 pyinotify
 python-xlib
-PyGObject
+PyGObject==3.50
 PyQt5
 QScintilla
 pyhamcrest

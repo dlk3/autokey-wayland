@@ -22,9 +22,6 @@ build:
     - gir1.2-appindicator3-0.1
     - gir1.2-glib-2.0
     - gir1.2-notify-0.7
-    - python3-dbus
-    - python3-gi
-    - python3-pyudev
     - pyqt5-dev-tools
 
 # Build documentation in the "docs/" directory with Sphinx
