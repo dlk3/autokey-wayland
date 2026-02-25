@@ -55,7 +55,7 @@ b) Installing Fedora system prereqs::
 ---------------------------------------
 **NOTE:** If you are installing AutoKey just for X11 and you don't need Wayland support, you can skip all of step 3 and jump down to step 4, "Installing the AutoKey icons".
 
-a) Install the autokey-gnome-extension@autokey Gnome Shell extension
+a) Install the autokey-gnome-extension\@autokey Gnome Shell extension
 
    Enter these three commands to build and install AutoKey's Gnome Shell extension::
 
