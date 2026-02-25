@@ -26,9 +26,11 @@ release = version = common.VERSION
 
 #  Need this value set in order for the windows script API to be loaded
 #  by lib/autokey/scripting/__init__.py
-print(f'common.SESSION_TYPE = {common.SESSION_TYPE}')
-common.SESSION_TYPE = 'x11'
-print(f'common.SESSION_TYPE = {common.SESSION_TYPE}')
+if not common.SESSION_TYPE:
+    common.SESSION_TYPE = 'x11'
+    print(f"Set common.SESSION_TYPE = '{common.SESSION_TYPE}'")
+else:
+    print(f"common.SESSION_TYPE = '{common.SESSION_TYPE}'")
 
 # -- General configuration ---------------------------------------------------
 

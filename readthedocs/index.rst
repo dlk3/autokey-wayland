@@ -9,8 +9,10 @@ Welcome to AutoKey for Wayland!
 .. toctree::
    intro
    installation
+   gettingstarted
    whatworks
    api
+   apitable
    troubleshoot
 
 
