@@ -11,6 +11,7 @@ Welcome to AutoKey for Wayland!
    installation
    whatworks
    api
+   troubleshoot
 
 
 
