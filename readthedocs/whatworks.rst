@@ -26,6 +26,8 @@ What Behaves Differently Under Wayland
 What Does Not Work Under Wayland
 --------------------------------
 
+- As described above, the clipboard API methods will not work in scripts that are executed using abbreviations or hot keys.
+- Sending phrases using the <ctrl-v> method will not work when using abbreviations or hotkeys.
 - Some of the script API methods do not work under Wayland.  See `this table`_ for a list of which APIs work and which do not.
 
 Which Desktops Support Wayland
