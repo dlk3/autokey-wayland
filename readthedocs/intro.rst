@@ -1,7 +1,7 @@
 Introduction to Autokey for Wayland
 ===================================
 
-AutoKey is a keyboard automation utility for the Linux desktop.  It can be used to automate repetitive keyboard and mouse tasks.  When hotkeys are pressed, or short abbreviations are typed, AutoKey assists the user by performing predefined actions with the keyboard or mouse.  When more complex action sequences are required, a script can be executed from a hotkey or abbreviation to perform a series of actions.
+AutoKey is a keyboard automation utility for the Linux desktop.  It can be used to automate repetitive keyboard and mouse tasks.  When hotkeys are pressed, or short abbreviations are typed, AutoKey assists the user by performing predefined actions with the keyboard or mouse.  When more complex action sequences are required, a Python script can be executed from a hotkey or abbreviation to perform a series of actions.
 
 A version of AutoKey_ that runs on X11_ has been available as a supported package for most Linux distributions for a number of years.  The goal of the AutoKey for Wayland project is to provide a version of AutoKey that will function on systems that use the Wayland_ protocol and on systems that use the X11_ protocol.  
 
