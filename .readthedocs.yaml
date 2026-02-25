@@ -17,9 +17,9 @@ build:
     - gir1.2-appindicator3-0.1
     - gir1.2-glib-2.0
     - gir1.2-notify-0.7
-    - graphicsmagick-imagemagick-compat
     - libcairo-dev
     - libdbus-1-dev
+    - ligmagic-dev
     - libpython3-dev
     - libdbus-glib-1-dev
     - libgirepository1.0-dev
