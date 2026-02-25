@@ -5,9 +5,9 @@ Keyboard API
    :no-members:
 .. automodule:: autokey.gtkapp
    :no-members:
-.. automodule:: autokey.scripting
+.. automodule:: autokey.scripting.keyboard
    :no-members:
-.. autoclass:: autokey.scripting.keyboard.Keyboard
+.. autoclass:: Keyboard
    :members:
    :exclude-members: mediator
 
