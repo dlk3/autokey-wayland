@@ -1,1 +1,1 @@
-apt install cmake
+sudo apt install cmake
