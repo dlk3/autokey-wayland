@@ -24,8 +24,11 @@ author = common.AUTHOR
 copyright = common.COPYRIGHT.replace('\n', ', ').strip(', ')
 release = version = common.VERSION
 
-for name, value in os.environ.items():
-    print(f'{name}={value}')
+#  Need this value set in order for the windows script API to be loaded
+#  by lib/autokey/scripting/__init__.py
+print(f'common.SESSION_TYPE = {common.SESSION_TYPE}')
+autokey.common.SESSION_TYPE = 'x11'
+print(f'common.SESSION_TYPE = {common.SESSION_TYPE}')
 
 # -- General configuration ---------------------------------------------------
 
