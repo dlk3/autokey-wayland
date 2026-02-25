@@ -10,6 +10,7 @@ AutoKey for Wayland can also be installed by cloning the source from the GitHub 
 Basic testing of these installation instructions has been performed on Debian 13.3, Kubuntu 24.10, Ubuntu 24.04 LTS and Fedora 41/42/43.
 
 .. toctree::
+   :maxdepth: 1
     fedora
     ubuntu
     github
