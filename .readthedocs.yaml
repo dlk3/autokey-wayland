@@ -9,12 +9,8 @@ build:
   os: ubuntu-24.04
   tools:
     python: "3.13"
-  apt-packages:
+  apt_packages:
     - cmake
-     
-  #jobs:
-  #  pre_create_environment:
-  #    - sh .readthedocs.prep.sh
 
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
