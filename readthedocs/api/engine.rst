@@ -11,6 +11,7 @@ Engine API
 
 .. automodule:: autokey.scripting
    :no-members:
+   :no-index:
 
 .. autoclass:: Engine
    :members:

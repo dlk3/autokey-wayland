@@ -1,7 +1,9 @@
 Availability of the AutoKey Scripting API Methods Under X11 and Wayland
 =======================================================================
 
-The following tables list the AutoKey script API methods and indicate whether or not they are supported in the X11 and Wayland environments.  See the [API documentation](https://autokey-wayland.readthedocs.io/en/latest/api.html) for information on using these methods.
+The following tables list the AutoKey script API methods and indicate whether or not they are supported in the X11 and Wayland environments.  See the `API documentation`_ for information on using these methods.
+
+.. _API documentation: https://autokey-wayland.readthedocs.io/en/latest/api.html
 
 +--------------------------------------------+-----+---------+
 | Keyboard API                               | X11 | Wayland |
