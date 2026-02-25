@@ -1,19 +1,7 @@
 Autokey Scripting API
 =====================
 
-Note that the `class` paths are not relevant to everyday autokey scripting. Generally speaking you can call all of these modules directly;
-::
-
-  keyboard.send_keys("example document")
-  clipboard.set_content("update clipboard")
-
-Is all that you need to call a method in the keyboard/clipboard API, note that you do not have to worry about import statements.
-
-For the Qt/Gtk pages, these are abstracted, Autokey will select the UI framework most appropriate, you only need to reference these in your scripts as;
-::
-
-  dialog.info_dialog("Info dialog", "Test info dialog")
-  clipboard.set_content("clipboard content")
+The following collection of methods and properties are available for your use in AutoKey scripts.  The class names shown here come from the program source files.  They do not accurately represent the class names that you should use when calling these methods in a script. for example:
 
 .. toctree::
    api/keyboard.rst
