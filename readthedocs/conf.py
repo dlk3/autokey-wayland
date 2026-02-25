@@ -24,7 +24,8 @@ author = common.AUTHOR
 copyright = common.COPYRIGHT.replace('\n', ', ').strip(', ')
 release = version = common.VERSION
 
-export
+for name, value in os.environ.items():
+    print(f'{name}={value}')
 
 # -- General configuration ---------------------------------------------------
 
