@@ -3,3 +3,13 @@ sphinx_rtd_theme
 sphinx-epytext
 recommonmark
 enum-tools[sphinx]
+dbus-python
+pyinotify
+python-xlib
+PyGObject
+PyQt5
+QScintilla
+pyhamcrest
+python-magic
+pyudev
+evdev
