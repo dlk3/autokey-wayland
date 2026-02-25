@@ -1,4 +1,5 @@
 Installing AutoKey for Wayland
+==============================
 
 .. toctree::
     fedora
