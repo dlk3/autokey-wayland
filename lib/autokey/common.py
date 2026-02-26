@@ -41,7 +41,7 @@ AUTHOR = 'Chris Dekter'
 AUTHOR_EMAIL = 'cdekter@gmail.com'
 MAINTAINER = 'dlk3'
 MAINTAINER_EMAIL = 'dave@daveking.com'
-BUG_EMAIL = ""
+BUG_EMAIL = "autokey-wayland@fire.fundersclub.com"
 COPYRIGHT = """
 (c) 2008 Sam Peterson
 (c) 2009-2012 Chris Dekter
@@ -96,11 +96,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    author_list=author_data
 )
 
-
-FAQ_URL = HOMEPAGE + "/wiki"
-HELP_URL = "https://autokey-wayland.readthedocs.io/en/latest/"
+FAQ_URL = 'https://autokey-wayland.readthedocs.io/en/latest/'
+HELP_URL = 'https://autokey-wayland.readthedocs.io/en/latest/'
 API_URL = HELP_URL + "/api.html"
-BUG_URL = HOMEPAGE + "/issues"
+BUG_URL = "https://github.com/dlk3/autokey-wayland/issues"
 
 ICON_FILE = "autokey"
 ICON_FILE_NOTIFICATION = "autokey-status"
@@ -113,3 +112,15 @@ USED_UI_TYPE = "headless"
 # Share parsed command line arguments between modules, Namespace object content 
 # set by argument_parser.py
 ARGS = None
+
+# A list of text strings that are the names of the keyboard and mouse devices 
+# that we want to recognize automatically during system startup under Wayland.
+# There is no need to add names that include the words "keyboard" or "mouse" to
+# these lists.  AutoKey will recognize those without them being here.
+WAYLAND_KEYBOARD_DEVICE_LIST = (
+    'Logitech K270',
+    'Logitech K400'
+)
+WAYLAND_MOUSE_DEVICE_LIST = (
+    'Logitech MX Ergo'
+)

@@ -112,7 +112,7 @@ def __show_popup(title, message):
             except Exception:
                 logger.critical(message)
 
-#  For testing purposes
+#  For standalone testing purposes
 if __name__ == '__main__':
     if not waylandChecks():
         print('waylandChecks() returned False')

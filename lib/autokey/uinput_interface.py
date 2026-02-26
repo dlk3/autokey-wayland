@@ -44,6 +44,9 @@ from evdev import ecodes as e
 
 from autokey.autokey_app import AutokeyApplication
 
+#  @dlk3 - support multiple keyboards/mice
+from . import common
+
 logger = __import__("autokey.logger").logger.get_logger(__name__)
 
 from autokey.sys_interface.abstract_interface import AbstractSysInterface, AbstractMouseInterface, queue_method
@@ -275,6 +278,27 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
         self.udev_observer.start()
 
     #  @dlk3 - support multiple keyboards/mice
+    def __grab_keyboard(self, devices, device):
+        try:
+            #logger.debug("Device has the word \"keyboard\" as part of its name, grabbing it.")
+            keyboard = self.grab_device(devices, device.name)
+            keyboard.grab()
+            self.keyboards.append(keyboard)
+            self.device_paths.append(keyboard.path)
+            #logger.debug("Keyboard: {}, Path: {}".format(keyboard.name, keyboard.path))
+        except Exception as error:
+            logger.error(f"Could not grab keyboard device \"{dev.name}\" from list of devices found on system: {error}")
+            
+    def __grab_mouse(self, devices, device):
+        try:
+            #logger.debug("Device has the word \"mouse\" as part of its name, grabbing it.")
+            mouse = self.grab_device(devices, device.name)
+            self.mice.append(mouse)
+            self.device_paths.append(mouse.path)
+            #logger.debug("Mouse: {}, Path: {}".format(mouse.name, mouse.path))
+        except Exception as error:
+            logger.error(f"Could not grab mouse device  \"{dev.name}\" from list of devices found on system: {error}")
+        
     def grab_multiple_devices(self):
         ### UINPUT Listener one for keyboard and eventually one for mouse
         # creating this before creating the new uinput device !important
@@ -293,43 +317,17 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
                 continue
 
             if re.search("keyboard", dev.name, re.IGNORECASE):
-                try:
-                    #logger.debug("Device has the word \"keyboard\" as part of its name, grabbing it.")
-                    keyboard = self.grab_device(devices, dev.name)
-                    keyboard.grab()
-                    self.keyboards.append(keyboard)
-                    self.device_paths.append(keyboard.path)
-                    #logger.debug("Keyboard: {}, Path: {}".format(keyboard.name, keyboard.path))
-                except Exception as error:
-                    logger.error(f"Could not grab keyboard device \"{dev.name}\" from list of devices found on system: {error}")
+                self.__grab_keyboard(devices, dev)
             elif re.search("mouse", dev.name, re.IGNORECASE):
-                try:
-                    #logger.debug("Device has the word \"mouse\" as part of its name, grabbing it.")
-                    mouse = self.grab_device(devices, dev.name)
-                    self.mice.append(mouse)
-                    self.device_paths.append(mouse.path)
-                    #logger.debug("Mouse: {}, Path: {}".format(mouse.name, mouse.path))
-                except Exception as error:
-                    logger.error(f"Could not grab mouse device  \"{dev.name}\" from list of devices found on system: {error}")
+                self.__grab_mouse(devices, dev)
             elif dev.name in cm.ConfigManager.SETTINGS[cm_constants.KEYBOARD]:
-                try:
-                    #logger.debug("Device name matches a keyboard listed in the config file, grabbing it.")
-                    keyboard = self.grab_device(devices, dev.name)
-                    keyboard.grab()
-                    self.keyboards.append(keyboard)
-                    self.device_paths.append(keyboard.path)
-                    #logger.debug("Keyboard: {}, Path: {}".format(keyboard.name, keyboard.path))
-                except Exception as error:
-                    logger.error(f"Could not grab keyboard device \"{dev.name}\" from configuration settings: {error}")
+                self.__grab_keyboard(devices, dev)
             elif dev.name in cm.ConfigManager.SETTINGS[cm_constants.MOUSE]:
-                try:
-                    #logger.debug("Device name matches a mouse listed in the config file, grabbing it.")
-                    mouse = self.grab_device(devices, dev.name)
-                    self.mice.append(mouse)
-                    self.device_paths.append(mouse.path)
-                    #logger.debug("Mouse: {}, Path: {}".format(mouse.name, mouse.path))
-                except Exception as error:
-                    logger.error(f"Could not grab mouse device \"{dev.name}\" from configuration settings: {error}")
+                self.__grab_mouse(devices, dev)
+            elif dev.name in common.WAYLAND_KEYBOARD_DEVICE_LIST:
+                self.__grab_keyboard(devices, dev)
+            elif dev.name in common.WAYLAND_MOUSE_DEVICE_LIST:
+                self.__grab_mouse(devices, dev)
 
         dev_list = "\n(I could not get the list of devices.  Please press \"Esc\", log off and back on, and try running AutoKey again."
         if len(self.keyboards) == 0:

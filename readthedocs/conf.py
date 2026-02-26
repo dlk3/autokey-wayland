@@ -20,8 +20,8 @@ sys.path.append('../lib')
 from autokey import common
 
 project = common.about_data.program_name
-author = common.AUTHOR
-copyright = common.COPYRIGHT.replace('\n', ', ').strip(', ')
+author = 'David King'
+copyright = '2026, David King'
 release = version = common.VERSION
 
 #  Need this value set in order for the windows script API to be loaded
