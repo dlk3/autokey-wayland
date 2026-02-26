@@ -10,9 +10,14 @@ abbreviation to perform a series of actions.
 
 A version of AutoKey_ that runs on X11_ has been available as a supported 
 package for most Linux distributions for a number of years.  The goal of the 
-AutoKey for Wayland project is to provide a version of AutoKey that will 
+`AutoKey for Wayland`_ project is to provide a version of AutoKey that will 
 function on systems that use the Wayland_ protocol as well as on those that use 
 X11_.  
+
+The `AutoKey for Wayland`_ project is a fork of the AutoKey project.  It builds 
+on work done in the develop branch of that project to create the facilities 
+that AutoKey needs to operate in a Wayland environment.  An "official" version 
+of AutoKey based on that that work has not yet been released.
 
 This project is still in development, and the code is unstable.  Use it at your 
 own risk.  
@@ -38,6 +43,7 @@ differences.  See the `Technical Details`_ page for a brief discussion of these
 changes.
 
 .. _AutoKey: https://github.com/autokey/autokey
+.. _AutoKey for Wayland: https://github.com/dlk3/autokey-wayland
 .. _Wayland: https://en.wikipedia.org/wiki/Wayland_(protocol)
 .. _X11: https://en.wikipedia.org/wiki/X_Window_System
 .. _What Works & What Does Not: whatworks.html
