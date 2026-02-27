@@ -34,13 +34,22 @@ from .system import System
 
 # Platform abstraction; Allows code like `import scripting.Dialog`
 if autokey.common.USED_UI_TYPE == "QT":
-    from .clipboard_qt import QtClipboard as Clipboard
+    if autokey.common.SESSION_TYPE == "wayland":
+        from .clipboard_wayland import WaylandClipboard as Clipboard
+    else:
+        from .clipboard_qt import QtClipboard as Clipboard
     from .dialog_qt import QtDialog as Dialog
 elif autokey.common.USED_UI_TYPE == "GTK":
-    from .clipboard_gtk import GtkClipboard as Clipboard
+    if autokey.common.SESSION_TYPE == "wayland":
+        from .clipboard_wayland import WaylandClipboard as Clipboard
+    else:
+        from .clipboard_gtk import GtkClipboard as Clipboard
     from .dialog_gtk import GtkDialog as Dialog
 elif autokey.common.USED_UI_TYPE == "headless":
-    from .clipboard_tkinter import TkClipboard as Clipboard
+    if autokey.common.SESSION_TYPE == "wayland":
+        from .clipboard_wayland import WaylandClipboard as Clipboard
+    else:
+        from .clipboard_tkinter import TkClipboard as Clipboard
     # Doesn't actually use anything gtk-specific.
     from .dialog_gtk import GtkDialog as Dialog
 

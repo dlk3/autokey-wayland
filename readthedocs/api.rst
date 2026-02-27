@@ -25,8 +25,8 @@ the API classes documented here.
    api/mouse.rst
    api/store.rst
    api/qtdialog.rst
-   api/qtclipboard.rst
    api/gtkdialog.rst
+   api/qtclipboard.rst
    api/gtkclipboard.rst
    api/system.rst
    api/window.rst

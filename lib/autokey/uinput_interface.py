@@ -547,7 +547,6 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
         for key in self.held_keys:
             self.ui.write(e.EV_KEY, key, 1)
 
-
     @queue_method(queue)
     def send_string(self, string):
         """
@@ -569,10 +568,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
 
         for key in string:
             self.__send_key(key)
-
-    def paste_string(self, string, paste_command: SendMode):
-        raise NotImplementedError
-
+        
     @queue_method(queue)
     def send_key(self, key_name):
         self.__send_key(key_name)

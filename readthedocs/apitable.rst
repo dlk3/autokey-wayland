@@ -102,18 +102,16 @@ The following tables list the AutoKey script API methods and indicate whether or
 +--------------------------------------------+-----+---------+
 | Clipboard API                              | X11 | Wayland |
 +============================================+=====+=========+
-| clipboard.fill_clipboard()                 | ✔️  | ✔️¹     |
+| clipboard.fill_clipboard()                 | ✔️  | ✔️      |
 +--------------------------------------------+-----+---------+
-| clipboard.fill_selection()                 | ✔️  | ✔️¹     |
+| clipboard.fill_selection()                 | ✔️  |         |
 +--------------------------------------------+-----+---------+
-| clipboard.get_clipboard()                  | ✔️  | ✔️¹     |
+| clipboard.get_clipboard()                  | ✔️  | ✔️      |
 +--------------------------------------------+-----+---------+
-| clipboard.get_selection()                  | ✔️  | ✔️¹     |
+| clipboard.get_selection()                  | ✔️  |         |
 +--------------------------------------------+-----+---------+
-| clipboard.set_clipboard_image()            | ✔️  | ✔️¹     |
+| clipboard.set_clipboard_image()            | ✔️  | ✔️      |
 +--------------------------------------------+-----+---------+
-
-¹ These methods only work in a script that is run from AutoKey's notification menu.  Wayland only allows applications with a window open and in focus on the desktop to interact with the clipboard.  Applications running in the background are not allowed access.
 
 +--------------------------------------------+-----+---------+
 | System API                                 | X11 | Wayland |
