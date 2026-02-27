@@ -1,7 +1,9 @@
 Availability of the AutoKey Scripting API Methods Under X11 and Wayland
 =======================================================================
 
-The following tables list the AutoKey script API methods and indicate whether or not they are supported in the X11 and Wayland environments.  See the `API documentation`_ for information on using these methods.
+The following tables list the AutoKey script API methods and indicate whether 
+or not they are supported in the X11 and Wayland environments.  See the 
+`API documentation`_ for information on using these methods.
 
 .. _API documentation: https://autokey-wayland.readthedocs.io/en/latest/api.html
 
@@ -104,11 +106,11 @@ The following tables list the AutoKey script API methods and indicate whether or
 +============================================+=====+=========+
 | clipboard.fill_clipboard()                 | ✔️  | ✔️      |
 +--------------------------------------------+-----+---------+
-| clipboard.fill_selection()                 | ✔️  |         |
+| clipboard.fill_selection()                 | ✔️  | ✔️      |
 +--------------------------------------------+-----+---------+
 | clipboard.get_clipboard()                  | ✔️  | ✔️      |
 +--------------------------------------------+-----+---------+
-| clipboard.get_selection()                  | ✔️  |         |
+| clipboard.get_selection()                  | ✔️  | ✔️      |
 +--------------------------------------------+-----+---------+
 | clipboard.set_clipboard_image()            | ✔️  | ✔️      |
 +--------------------------------------------+-----+---------+
@@ -124,7 +126,7 @@ The following tables list the AutoKey script API methods and indicate whether or
 +--------------------------------------------+-----+---------+
 | Window API                                 | X11 | Wayland |
 +============================================+=====+=========+
-| window.activate()                          | ✔️  | ✔️²     |
+| window.activate()                          | ✔️  | ✔️¹     |
 +--------------------------------------------+-----+---------+
 | window.center_window()                     | ✔️  |         |
 +--------------------------------------------+-----+---------+
@@ -151,7 +153,7 @@ The following tables list the AutoKey script API methods and indicate whether or
 | window.wait_for_focus()                    | ✔️  |         |
 +--------------------------------------------+-----+---------+
 
-² the ```switchDesktop``` and ```by_hex``` options are not supported
+¹ the ```switchDesktop``` and ```by_hex``` options are not supported
 
 +--------------------------------------------+-----+---------+
 | Engine API                                 | X11 | Wayland |

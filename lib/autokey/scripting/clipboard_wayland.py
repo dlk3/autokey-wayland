@@ -79,10 +79,13 @@ class WaylandClipboard(AbstractClipboard):
         try:
             proc = subprocess.run(['wl-paste'], check=True, capture_output=True)
             if proc.stdout is not None:
-                return re.sub(b'[\r\n]$', b'', proc.stdout)
+                return re.sub(b'[\r\n]*$', b'', proc.stdout)
             else: 
-                logger.warning("No text found in X selection")
-        except subprocess.CalledProcessError:
+                logger.warning("No content available from the clipboard")
+        except subprocess.CalledProcessError as e:
+            if e.returncode == 1:
+                logger.warning("No content available from the clipboard")
+                return ""
             logger.exception('Unexpected error running wl-copy program.  AutoKey continues.')
         return ""
 
@@ -90,13 +93,15 @@ class WaylandClipboard(AbstractClipboard):
         """
         Copy text into the selection
         
-        **Notice:**  This is not possible under Wayland.
-
         Usage: C{clipboard.fill_selection(contents)}
 
         :param contents: string to be placed in the selection
         """
-        raise NotImplementedError
+        try:
+            subprocess.run(['wl-copy', '--primary', contents], check=True)
+        except subprocess.CalledProcessError:
+            logger.exception('Unexpected error running wl-copy program.  AutoKey continues.')
+        return
 
     def get_selection(self):
         """
@@ -110,7 +115,18 @@ class WaylandClipboard(AbstractClipboard):
         :return: text contents of the mouse selection
         :rtype: C{str}
         """
-        raise NotImplementedError
+        try:
+            proc = subprocess.run(['wl-paste', '--primary'], check=True, capture_output=True)
+            if proc.stdout is not None:
+                return re.sub(b'[\r\n]*$', b'', proc.stdout)
+            else: 
+                logger.warning("No content selected on desktop")
+        except subprocess.CalledProcessError as e:
+            if e.returncode == 1:
+                logger.warning("No content selected on desktop")
+                return ""
+            logger.exception('Unexpected error running wl-copy program.  AutoKey continues.')
+        return ""
 
     def set_clipboard_image(self, path: str):
         """
@@ -135,15 +151,29 @@ if __name__ == '__main__':
     
     logger.debug('Instantiating clipboard')
     clipboard = WaylandClipboard()
-    logger.debug(f'The clipboard\'s current content = "{clipboard.get_clipboard()}"')    
+
+    logger.debug('Testing the regular clipboard')
+    logger.debug(f'\tThe clipboard\'s current content = "{clipboard.get_clipboard()}"')   
     test_content = f'The current date and time are {datetime.datetime.now()}'
-    logger.debug('Pushing test string onto clipboard')
+    logger.debug('\tPushing test string onto clipboard')
     clipboard.fill_clipboard(test_content)
-    logger.debug('Pulling text from clipboard')
+    logger.debug('\tPulling text from clipboard')
     result = clipboard.get_clipboard()
     if result == test_content:
-        logger.debug('The text pulled matches the text pushed')
+        logger.debug('\tThe text pulled matches the text pushed')
     else:
-        logger.error(f'The text pushed, "{test_content}", does not match the text pulled, "{result}"')
-    logger.debug('Pushing image file to clipboard, try creating a new image from the cliboard with a tool like GIMP')
+        logger.error(f'\tThe text pushed, "{test_content}", does not match the text pulled, "{result}"')
+    logger.debug('\tPushing image file to clipboard, try creating a new image from the cliboard with a tool like GIMP')
     clipboard.set_clipboard_image('~/src/autokey-wayland/readthedocs/editconfig.jpg')
+
+    logger.debug('Testing the primary (selection) clipboard')
+    logger.debug(f'\tThe primary clipboard\'s current content = "{clipboard.get_selection()}"')   
+    test_content = f'The current date and time are {datetime.datetime.now()}'
+    logger.debug('\tPushing test string onto primary clipboard')
+    clipboard.fill_selection(test_content)
+    logger.debug('\tPulling text from primary clipboard')
+    result = clipboard.get_selection()
+    if result == test_content:
+        logger.debug('\tThe text pulled matches the text pushed')
+    else:
+        logger.error(f'\tThe text pushed, "{test_content}", does not match the text pulled, "{result}"')
