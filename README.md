@@ -37,8 +37,9 @@ scripts and the like.  Make use of it.
 You may post questions or bug reports to this project's 
 [Issues](https://github.com/dlk3/autokey-wayland/issues) tracker, and I will do 
 my best to address them.  As always, questions that could be answered by 
-reading documentation or by using a search engine will not receive much/any 
-attention.  Problem reports should always be accompanied by a full copy of your 
+reading [documentation](https://autokey-wayland.readthedocs.io/en/latest) 
+or by using a search engine, will not receive much/any attention.  Problem 
+reports should always include a full copy of a 
 <code>~/.local/share/autokey/autokey.log</code> file that captures the problem 
 while running autokey with the verbose ("-v") command line option.  See the 
 [debug log](https://autokey-wayland.readthedocs.io/en/latest/debuglog.html) section 
