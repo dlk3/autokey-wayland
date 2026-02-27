@@ -1,6 +1,8 @@
 HighLevel API
 =============
 
+This class is invoked as the "highlevel" class in AutoKey scripts.  These class methods are only available in an X11 environment.
+
 .. automodule:: autokey.scripting.highlevel
    :no-members:
 .. autoclass:: PatternNotFound

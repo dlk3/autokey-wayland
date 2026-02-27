@@ -28,8 +28,10 @@ the API classes documented here.
    api/gtkdialog.rst
    api/qtclipboard.rst
    api/gtkclipboard.rst
+   api/waylandclipboard.rst
    api/system.rst
    api/window.rst
+   api/windowgnome.rst
    api/engine.rst
    api/highlevel.rst
    api/common.rst
