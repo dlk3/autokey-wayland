@@ -1,9 +1,18 @@
+Select Emojis From A Push-Button Pop-Up Menu
+=============================================
+
 This script will display a pop-up menu on your screen that looks like this:
 
 .. image:: emoji_popup.jpg
 
 When you click a button, the emoji on that button will be sent to the active 
-desktop window, via the keyboard, and the pop-up will close. 
+desktop window, via the keyboard, and the pop-up will close.
+
+This script demonstrates the use of Python libraries that are not part of
+AutoKey.  In this case that's the Python tkinter GUI-building package.  If you 
+use this script you may need to install the tkinter package on your system.
+On Debian-based systems that package is called "python3-tk."  On Fedora it is 
+"python3-tkinter."
 
 ::
 
@@ -51,8 +60,8 @@ desktop window, via the keyboard, and the pop-up will close.
         #  After you have run this script, search the ~/.local/share/autokey/autokey.log
         #  for lines containing "emoji.script".  One of those lines will be a message
         #  telling you which font the script has found to use to display the emoji
-        #  characters.  Putting that name here will dramatically speed up the script by
-        #  avoiding the font search step below.
+        #  characters.  Putting that name here will speed up the script by avoiding the
+        #  font search step that follows.
         emoji_font = ''
     
         #  Search for an acceptable font for display of the emoji unicode characters.
