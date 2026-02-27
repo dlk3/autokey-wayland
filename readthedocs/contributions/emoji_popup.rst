@@ -55,7 +55,7 @@ On Debian-based systems that package is called "python3-tk."  On Fedora it is
     
         #  Establish popup window
         root = tk.Tk()
-        root.title('Emojis, Fractions, Superscripts, and Arrows')
+        root.title('Select An Emoji')
     
         #  After you have run this script, search the ~/.local/share/autokey/autokey.log
         #  for lines containing "emoji.script".  One of those lines will be a message
