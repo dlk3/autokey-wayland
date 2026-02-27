@@ -8,9 +8,9 @@ enhancements, to make AutoKey function properly in both the X11 and
 Gnome/Wayland environments.  
 
 **Important:** This version of AutoKey currently only works with Gnome desktops 
-under Wayland.  Under X11, it continues to work with any desktop environment.  
-I hope to extend Wayland support to KDE shortly, and to other desktop 
-environments in the future.
+under Wayland.  Under X11, it continues to work with any desktop environment. 
+I hope to extend Wayland support to KDE shortly, and to other desktop environments 
+in the future.
 
 ## Project Documentation
 
@@ -28,21 +28,21 @@ system.
 
 Read the 
 [Troubleshooting](https://autokey-wayland.readthedocs.io/en/latest/troubleshoot.html) 
-section of the documentation web site.
+section of the documentation website.
 
 The [official AutoKey wiki](http://github.com/autokey/autokey/wiki) contains a 
 lot of useful information about how to use AutoKey, including many example 
 scripts and the like.  Make use of it.
 
 You may post questions or bug reports to this project's 
-[Issues](https://github.com/dlk3/autokey-wayland/issues) tracker and I will do 
+[Issues](https://github.com/dlk3/autokey-wayland/issues) tracker, and I will do 
 my best to address them.  As always, questions that could be answered by 
 reading documentation or by using a search engine will not receive much/any 
 attention.  Problem reports should always be accompanied by a full copy of your 
 <code>~/.local/share/autokey/autokey.log</code> file that captures the problem 
 while running autokey with the verbose ("-v") command line option.  See the 
-[FAQ](https://github.com/dlk3/autokey-wayland/wiki/FAQ-%E2%80%90-Frequently-Asked-Questions#attaching-an-autokey-debug-log-to-a-problem-issues-report) 
-for instructions.
+[debug log](https://autokey-wayland.readthedocs.io/en/latest/debuglog.html) section 
+of the documentation for instructions.
 
 ## Project Branches
 
