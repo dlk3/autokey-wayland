@@ -10,6 +10,7 @@ Welcome to AutoKey for Wayland!
    apitable
    troubleshoot
    technical
+   contributions
 
 Indices and tables
 ==================
