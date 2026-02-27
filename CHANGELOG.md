@@ -13,7 +13,7 @@
     only be created on new installs where no ```~/.config/autokey``` directory
     already exists.  Others can copy the script source from [here](https://github.com/dlk3/autokey-wayland/blob/main/lib/autokey/configmanager/predefined_user_scripts/unicode_strings_in_scripts.pyi). 
 
-    This script works in both an X11 and a Wayland environment.  If you have problems with this script,
+    This script works in both X11 and Wayland environments.  If you have problems with this script,
     please don't be shy about opening an [issue](https://github.com/dlk3/autokey-wayland/issues).  I
     already have #22 open to try to make the Wayland-side code simpler than it currently is.
     
