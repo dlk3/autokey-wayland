@@ -41,7 +41,7 @@ reading [documentation](https://autokey-wayland.readthedocs.io/en/latest)
 or by using a search engine, will not receive much/any attention.  Problem 
 reports should always include a full copy of a 
 <code>~/.local/share/autokey/autokey.log</code> file that captures the problem 
-while running autokey with the verbose ("-v") command line option.  See the 
+while running AutoKey with the verbose ("-v") command line option.  See the 
 [debug log](https://autokey-wayland.readthedocs.io/en/latest/debuglog.html) section 
 of the documentation for instructions.
 
