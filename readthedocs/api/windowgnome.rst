@@ -1,7 +1,7 @@
 Window API on Wayland/Gnome
 ===========================
 
-This class is invoked as the "clipboard" class in AutoKey scripts.  These are the class methods available when running the GNOME desktop on a Wayland system.
+This class is invoked as the "window" class in AutoKey scripts.  These are the class methods available when running the GNOME desktop on a Wayland system.
 
 .. automodule:: autokey.common
    :no-members:
