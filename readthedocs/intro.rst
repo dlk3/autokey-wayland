@@ -2,7 +2,7 @@ Introduction to Autokey for Wayland
 ===================================
 
 AutoKey is a keyboard automation utility for the Linux desktop.  It can be used 
-to automate repetitive keyboard and mouse tasks.  When hotkeys are pressed, or 
+to automate repetitive keyboard and mouse tasks.  When hotkeys are pressed or 
 short abbreviations are typed, AutoKey assists the user by performing 
 predefined actions with the keyboard or mouse.  When more complex action 
 sequences are required, a Python script can be executed from a hotkey or 
@@ -14,10 +14,10 @@ package for most Linux distributions for a number of years.  The goal of the
 function on systems that use the Wayland_ protocol as well as on those that use 
 X11_.  
 
-The `AutoKey for Wayland`_ project is a fork of the AutoKey project.  It builds 
-on work done in the develop branch of that project to create the facilities 
+The `AutoKey for Wayland`_ project is a fork of the AutoKey_ project.  It builds 
+on work done in the "develop" branch of that project to create the facilities 
 that AutoKey needs to operate in a Wayland environment.  An "official" version 
-of AutoKey based on that that work has not yet been released.
+of AutoKey based on that work has not yet been released.
 
 This project is still in development, and the code is unstable.  Use it at your 
 own risk.  
@@ -29,18 +29,18 @@ Wayland_ is a new desktop protocol that has been slowly replacing X11_ in many
 distributions.  It offers additional security in desktop environments by 
 severely restricting the degree to which applications can interact with desktop 
 windows that are not their own.  This new level of security has had an impact 
-on AutoKey.  Specifically, AutoKey's ability to modify desktop windows and 
-read/write the contents of the clipboard has been affected.  Also, since the 
-xrecord and xautomation utilities are only available on X11 systems, AutoKey 
-cannot record and playback mouse movements under Wayland like it can on X11.  
-See the `What Works & What Does Not`_ section for more specific details on the 
-differences in capabilities across the two environments.
+on AutoKey.  Specifically, AutoKey's ability to modify desktop windows has 
+been affected.  Also, since the xrecord and xautomation utilities are only
+available on X11 systems, AutoKey cannot record and playback mouse movements 
+under Wayland like it can on X11.  See the `What Works & What Does Not`_ 
+section for more specific details on the differences in capability across 
+the two environments.
 
 AutoKey uses completely different techniques under Wayland to communicate with 
-the keyboard/mouse and to get window information.  This is largely transparent 
-to the general AutoKey user but power users may encounter some of these 
-differences.  See the `Technical Details`_ page for a brief discussion of these 
-changes.
+the keyboard/mouse, the clipboard, and to get window information.  This is 
+largely transparent to the general AutoKey user, but power users may encounter 
+some of these differences.  See the `Technical Details`_ page for a brief 
+discussion of these changes.
 
 .. _AutoKey: https://github.com/autokey/autokey
 .. _AutoKey for Wayland: https://github.com/dlk3/autokey-wayland
