@@ -3,6 +3,9 @@
 ## AutoKey 0.97.3
 
 ### New Features
+  * The clipboard API methods have now been implemented using the
+    [wl-clipboard](https://github.com/bugaevc/wl-clipboard) utility.  They
+    should all work as expected now.
 
   * A new sample script demonstrating how to send strings containing Unicode
     via the keyboard using the ```keyboard.send_keys()``` method.  This will
