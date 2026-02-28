@@ -1,8 +1,7 @@
 Common API
 ==========
 
-This class is invoked as the "common" class in AutoKey scripts.  These class methods are available in all environments.
-
+These are data types for data returned from calls made to various dialog API methods.  In AutoKey scripts they can be referenced as ColourData() and DialogData().
 
 .. automodule:: autokey.scripting
    :no-members:

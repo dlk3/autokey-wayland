@@ -1,7 +1,11 @@
-Engine API
+engine API
 ==========
 
-This class is invoked as the "engine" class in AutoKey scripts.  These class methods are available in all environments.
+These API methods are available in all environments.
+
+This class is invoked as the "engine" class in AutoKey scripts.  For example, the
+"autokey.scripting.Engine.create_abbreviation()" method documented below is
+called as "engine.create_abbreviation()" in an AutoKey script.
 
 .. automodule:: autokey.common
    :no-members:

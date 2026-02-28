@@ -1,7 +1,11 @@
-Mouse API
+mouse API
 =========
 
-This class is invoked as the "mouse" class in AutoKey scripts.  These class methods are available in all environments.
+These API methods are available in all environments.
+
+This class is invoked as the "mouse" class in AutoKey scripts.  For example, the
+"autokey.scripting.Mouse.click_absolute()" method documented below is
+called as "mouse.click_absolute()" in an AutoKey script.
 
 .. automodule:: autokey.common
    :no-members:

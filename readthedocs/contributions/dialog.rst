@@ -9,7 +9,7 @@ AutoKey has a set of "dialog_" script API methods that can be used to display po
 The Dialog Script
 -----------------
 
-::
+.. code:: python
 
     #  Select license blocks from a menu
     
@@ -61,7 +61,7 @@ It's not important to the dialog, but I have defined an abbreviation for each of
 The "Copyright" Script
 ^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code:: python
 
     import datetime
     keyboard.send_keys(f'# Copyright (C) {datetime.datetime.now().year} David King <dave@daveking.com>')
@@ -69,7 +69,7 @@ The "Copyright" Script
 The "GPLv2" Script
 ^^^^^^^^^^^^^^^^^^
 
-::
+.. code:: python
 
     import datetime
     keyboard.send_keys(f"""#  Copyright (C) {datetime.datetime.now().year} David King <dave@daveking.com>
@@ -93,7 +93,7 @@ The "GPLv2" Script
 The "GPLv3" Script
 ^^^^^^^^^^^^^^^^^^
 
-::
+.. code:: python
 
     import datetime
     keyboard.send_keys(f"""#  Copyright (C) {datetime.datetime.now().year} David King <dave@daveking.com>
@@ -117,7 +117,7 @@ The "GPLv3" Script
 The "MIT" Script
 ^^^^^^^^^^^^^^^^
 
-::
+.. code:: python
 
     import datetime
     keyboard.send_keys(f"""#  MIT License
@@ -146,7 +146,7 @@ The "MIT" Script
 The "MPLv2.0" Script
 ^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code:: python
 
     import datetime
     keyboard.send_keys(f"""#  Copyright (C) {datetime.datetime.now().year} David King <dave@daveking.com>

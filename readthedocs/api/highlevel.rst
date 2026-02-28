@@ -1,7 +1,11 @@
-HighLevel API
+highLevel API
 =============
 
-This class is invoked as the "highlevel" class in AutoKey scripts.  These class methods are only available in an X11 environment.
+These API methods are only available in an X11 system.
+
+This class is invoked as the "highlevel" class in AutoKey scripts.  For example, the
+"autokey.scripting.highlevel.visgrep()" method documented below is
+called as "highlevel.visgrep()" in an AutoKey script.
 
 .. automodule:: autokey.scripting.highlevel
    :no-members:

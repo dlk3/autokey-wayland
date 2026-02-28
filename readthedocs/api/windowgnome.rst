@@ -1,7 +1,13 @@
-Window API on Wayland/Gnome
+window API on Wayland/Gnome
 ===========================
 
-This class is invoked as the "window" class in AutoKey scripts.  These are the class methods available when running the GNOME desktop on a Wayland system.
+These API methods are available when running in a Wayland environment using the GNOME desktop.
+
+This class is invoked as the "window" class in AutoKey scripts.  For example, the
+"autokey.scripting.window_gnome.Window.activate()" method documented below is
+called as "window.get_activate()" in an AutoKey script.
+
+The Wayland environment does not allow AutoKey to control the windows on the desktop.  There are, therefore, fewer methods available in the Wayland version of this API class.  These methods are implemented through GNOME's extension API, not directly to X11, as is done in the X11 version of this API.
 
 .. automodule:: autokey.common
    :no-members:

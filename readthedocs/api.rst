@@ -26,9 +26,7 @@ the API classes documented here.
    api/store.rst
    api/qtdialog.rst
    api/gtkdialog.rst
-   api/qtclipboard.rst
    api/gtkclipboard.rst
-   api/waylandclipboard.rst
    api/system.rst
    api/window.rst
    api/windowgnome.rst

@@ -14,7 +14,7 @@ use this script you may need to install the tkinter package on your system.
 On Debian-based systems that package is called "python3-tk."  On Fedora it is 
 "python3-tkinter."
 
-::
+.. code:: python
 
     # This script demonstrates the use of the Python tkinter package 
     # to display a pop-up window showing a set of buttons which send 
