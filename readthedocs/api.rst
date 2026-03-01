@@ -6,10 +6,10 @@ available for your use in AutoKey scripts.  They expose AutoKey-specific
 features for your use.  
 
 AutoKey scripts are Python scripts, so almost any Python library can be 
-imported to add additional capabilities when writng an AutoKey script.
+imported to add additional capabilities when writing an AutoKey script.
 
 The class names shown in these pages are extracted from the program source code 
-during the autogeneration of these documentation pages..  These class names 
+during the auto generation of these documentation pages..  These class names 
 have been "aliased" in the AutoKey API to make them easier for you to use when 
 writing a script.  For example, the `keyboard API page`_ describes a class 
 called ``autokey.scripting.Keyboard``.  When this class is used in a script it 
