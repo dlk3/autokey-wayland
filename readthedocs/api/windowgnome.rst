@@ -20,4 +20,4 @@ The Wayland environment does not allow AutoKey to control the windows on the des
 
 .. autoclass:: Window
    :members:
-   :exclude-members: center_window, get_active_geometry, move_to_desktop, resize_move, set_property, switch_desktop, wait_for_exist, wait_for_focus
+   :exclude-members: activate, set_property
