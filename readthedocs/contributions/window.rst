@@ -3,6 +3,8 @@ Window API Script
 
 I created this script to test the all of the methods in the window API.  It might be useful as a demonstration of some of the things that are possible.
 
+.. code:: python
+
     #  A script that tests (and demonstrates) the window API methods
     
     #  Enable script output to the Autokey application log,

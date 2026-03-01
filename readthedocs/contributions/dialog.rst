@@ -14,8 +14,8 @@ The Dialog Script
     #  Select license blocks from a menu
     
     #  Enable this script to write messages in the Autokey log, 
-	#  ~/.local/share/autokey/autokey.log
-	logger = __import__("autokey.logger").logger.get_logger(__name__ + ".emoji.script")
+    #  ~/.local/share/autokey/autokey.log
+    logger = __import__("autokey.logger").logger.get_logger(__name__ + ".emoji.script")
     
     #  We'll use this later
     window_class = window.get_active_class()

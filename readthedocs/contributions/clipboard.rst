@@ -3,6 +3,7 @@ Clipboard API Script
 
 I created this script to test the all of the methods in the clipboard API.  It might be useful as a demonstration of some of the things that are possible.
 
+.. code:: python
 
     #  A script that tests (and demonstrates) the clipboard API methods
     
