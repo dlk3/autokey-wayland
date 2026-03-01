@@ -11,14 +11,14 @@ imported to add additional capabilities when writng an AutoKey script.
 The class names shown in these pages are extracted from the program source code 
 during the autogeneration of these documentation pages..  These class names 
 have been "aliased" in the AutoKey API to make them easier for you to use when 
-writing a script.  For example, the `Keyboard class page`_ documents a class 
+writing a script.  For example, the `keyboard API page`_ describes a class 
 called ``autokey.scripting.Keyboard``.  When this class is used in a script it 
 can be called as just ``keyboard``.  So the 
 ``autokey.scripting.Keyboard.press_key()`` method is actually called in a 
 script as ``keyboard.press_key()``.  This same approach applies across all of 
 the API classes documented here.
 
-.. _Keyboard class page: keyboard.html
+.. _keyboard API page: keyboard.html
 
 .. toctree::
    api/keyboard.rst

@@ -13,14 +13,13 @@ The Dialog Script
 
     #  Select license blocks from a menu
     
-    #  Enable script output to the Autokey application log
-    import logging
-    from autokey.common import APP_NAME
-    script_logger = logging.getLogger(APP_NAME + ".license.script")
+    #  Enable this script to write messages in the Autokey log, 
+	#  ~/.local/share/autokey/autokey.log
+	logger = __import__("autokey.logger").logger.get_logger(__name__ + ".emoji.script")
     
     #  We'll use this later
     window_class = window.get_active_class()
-    script_logger.debug(f'window_class = {window_class}')
+    logger.debug(f'window_class = {window_class}')
     
     licenses = (
         'GNU General Public License v2 (GPLv2)',
@@ -36,7 +35,7 @@ The Dialog Script
         default='GNU General Public License v3 (GPLv3)',
         height='400'
     )
-    script_logger.debug(f'License menu returned RC = {rc} and menu_choice = "{menu_choice}"')
+    logger.debug(f'License menu returned RC = {rc} and menu_choice = "{menu_choice}"')
     
     #  Need to send a key to wake up geany windows
     if rc == 0 and window_class == 'geany':

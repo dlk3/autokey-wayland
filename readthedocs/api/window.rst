@@ -10,8 +10,10 @@ called as "window.activate()" in an AutoKey script.
 
 .. automodule:: autokey.common
    :no-members:
+   :no-index:
 .. automodule:: autokey.gtkapp
    :no-members:
+   :no-index:
 .. automodule:: autokey.scripting.window
    :no-members:
 .. autoclass:: Window
