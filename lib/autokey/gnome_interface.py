@@ -1,20 +1,20 @@
-#  Copyright (C) 2023  @sebastiansam55 on GitHub.com
-#  Copyright (C) 2026  David King <dave@daveking.com>
+#  Copyright (C) 2023 Sam Sebastian
 #
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License,
-#  version 2, as published by the Free Software Foundation.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
-#  You should have received a copy of the GNU General Public License,
-#  version 2, along with this program; if not, see 
-#  <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #####################################################################
+
 
 import dbus
 import json
@@ -33,7 +33,7 @@ class DBusInterface:
 
         version = self.dbus_interface.CheckVersion()
         logger.debug("AutoKey Gnome Extension version: %s" % version)
-        if version == "0.1":
+        if version == "0.2":
             pass
         else:
             raise Exception("Incompatible version of AutoKey Gnome Extension")
@@ -57,7 +57,7 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
         x,y = self.dbus_interface.ScreenSize()
         return [int(x), int(y)]
 
-    def  get_active_window(self):
+    def get_active_window(self):
         return self._active_window()
 
     def get_window_info(self, window=None, traverse: bool=True) -> WindowInfo:
@@ -85,6 +85,18 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
 
     def activate_window(self, window_id):
         self._dbus_activate_window(window_id)
+        
+    def move_resize_window(self, window_id, x, y , width, height):
+        self._dbus_move_resize_window(window_id, x, y, width, height)
+
+    def get_screensize(self):
+        return self._dbus_get_screensize()
+
+    def move_to_workspace(self, window_id, workspace_number):
+        self._dbus_move_to_workspace(window_id, workspace_number)
+    
+    def switch_workspace(self, workspace_number):
+        self._dbus_switch_workspace(workspace_number)
 
     def _active_window(self):
         #TODO probably can be done more efficiently with an additional dbus method in the gnome extension
@@ -144,6 +156,13 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
             self.__init__()
             self.dbus_interface.Activate(window_id)
 
+    def _dbus_move_resize_window(self, window_id, x, y, width, height):
+        try:
+            self.dbus_interface.MoveResize(window_id, x, y, width, height)
+        except dbus.exceptions.DBusException as e:
+            self.__init__()
+            self.dbus_interface.MoveResize(window_id, x, y, width, height)
+
     def _dbus_move_window(self, window_id, x, y):
         try:
             self.dbus_interface.Move(window_id, x, y)
@@ -157,3 +176,24 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
         except dbus.exceptions.DBusException as e:
             self.__init__()
             self.dbus_interface.Resize(window_id, width, height)
+
+    def _dbus_move_to_workspace(self, window_id, workspace_number):
+        try:
+            self.dbus_interface.MoveToWorkspace(window_id, workspace_number)
+        except dbus.exceptions.DBusException as e:
+            self.__init__()
+            self.dbus_interface.MoveToWorkspace(window_id, workspace_number)
+
+    def _dbus_get_screensize(self):
+        try:
+            return self.dbus_interface.ScreenSize()
+        except dbus.exceptions.DBusException as e:
+            self.__init__()
+            return self.dbus_interface.ScreenSize()
+
+    def _dbus_switch_workspace(self, workspace_number):
+        try:
+            return self.dbus_interface.SwitchWorkspace(workspace_number)
+        except dbus.exceptions.DBusException as e:
+            self.__init__()
+            return self.dbus_interface.SwitchWorkspace(workspace_number)

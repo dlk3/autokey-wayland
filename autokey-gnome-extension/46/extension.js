@@ -70,6 +70,12 @@ const MR_DBUS_IFACE = `
       <method name="Activate">
          <arg type="u" direction="in" name="winid" />
       </method>
+      <method name="Focus">
+         <arg type="u" direction="in" name="winid" />
+      </method>
+      <method name="SwitchWorkspace">
+         <arg type="u" direction="in" name="wksid" />
+      </method>
       <method name="Close">
          <arg type="u" direction="in" name="winid" />
       </method>
@@ -103,6 +109,15 @@ export default class Extension {
     _get_window_by_wid(winid) {
         let win = global.get_window_actors().find(w => w.meta_window.get_id() == winid);
         return win;
+    }
+    
+    _get_workspace_by_wks(wksid) {
+        let mgr = global.workspace_manager;
+        if (mgr) {
+            let wks = mgr.get_workspace_by_index(wksid);
+            return wks;
+        }
+        return;
     }
 
     List() {
@@ -262,7 +277,23 @@ export default class Extension {
     Activate(winid) {
         let win = this._get_window_by_wid(winid).meta_window;
         if (win)
-            win.activate(0);
+            win.activate(global.get_current_time());
+        else
+            throw new Error('Not found');
+    }
+
+    SwitchWorkspace(wksid) {
+        let wks = this._get_workspace_by_wks(wksid);
+        if (wks)
+            wks.activate(global.get_current_time());
+        else
+            throw new Error('Not found');
+    }
+
+    Focus(winid) {
+        let win = this._get_window_by_wid(winid).meta_window;
+        if (win)
+            win.focus(global.get_current_time());
         else
             throw new Error('Not found');
     }
@@ -288,7 +319,7 @@ export default class Extension {
     }
 
     CheckVersion() {
-        return '0.1';
+        return '0.2';
     }
 }
 

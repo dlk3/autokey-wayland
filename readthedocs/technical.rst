@@ -30,15 +30,16 @@ group.  The AutoKey user is added to that group.
 Manipulating Desktop Windows
 ----------------------------
 
-The Wayland protocol does not allow applications to interact with desktop 
-windows as X11 did.  There are no Wayland facilities that allow an application 
-to move, resize, close, or otherwise interact with a window.  Some DTE (desktop 
-environment) software, like GNOME or KDE, provides an API that will return 
-basic information about windows on the desktop.  GNOME, for example, makes this 
-information available to its desktop extensions.  AutoKey for Wayland, 
-therefore, installs an AutoKey-specific GNOME Shell extension and uses its 
-capabilities to implement a limited windows API.  A similar solution may be 
-available for KDE, so AutoKey may add support for KDE in the future.
+The Wayland protocol does not provide an interface for manipulating windows on 
+the desktop like X11 did. Those actions must now be accomplished through 
+integration with the compositor components in desktop software like Gnome and 
+KDE. GNOME uses the mutter compositor.  It provides an API for GNOME Shell 
+extensions that we used to reimplement almost all of the window control 
+functions in AutoKey. A custom AutoKey GNOME Shell extension is now installed 
+alongside AutoKey to enable this integration. Unfortunately two of the window 
+API methods implemented in AutoKey are still locked out by Wayland security.  
+For details on those methods, and the rest, see the `window API`_ section of 
+the documentation.
 
 Clipboard Integration
 ---------------------
@@ -49,9 +50,11 @@ like AutoKey does most of the time, are prohibited from accessing the
 clipboard. Fortunately the developers of a utility called wl-clipboard_ have 
 found a way around this restriction.  You can visit their site it you want the 
 details, suffice it to say that AutoKey now uses wl-clipboard to integrate with 
-the clipboard on Wayland systems.
+the clipboard on Wayland systems.  As a result, all of clipboard functionality
+we're used to now works on Wayland just as it does on X11.
 
 .. _Wayland: https://en.wikipedia.org/wiki/Wayland_(protocol)
 .. _evdev: https://en.wikipedia.org/wiki/Evdev
 .. _UDEV: https://www.man7.org/linux/man-pages/man7/udev.7.html
+.. _window API: api/windowgnome.html
 .. _wl-clipboard: https://github.com/bugaevc/wl-clipboard
