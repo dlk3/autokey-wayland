@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+SRCDIR=~/src/autokey-wayland/readthedocs
+OUTDIR=/tmp/autokey-docs
+VENVDIR=/tmp/sphinx-venv
+
+rm -fr $OUTDIR
+rm -fr $VENVDIR
+python -m venv $VENVDIR
+pushd $VENVDIR
+source bin/activate
+python -m pip install --upgrade --no-cache-dir pip setuptools 
+python -m pip install --upgrade --no-cache-dir sphinx 
+python -m pip install --exists-action=w --no-cache-dir -r ${SRCDIR}/requirements.txt
+python -m sphinx -T -b html -d _build/doctrees -D language=en $SRCDIR $OUTDIR
+RC=$?
+deactivate
+popd
+if [ $RC == 0 ]; then
+    /usr/bin/brave-browser file:${OUTDIR}/index.html
+fi
