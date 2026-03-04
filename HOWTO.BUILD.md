@@ -1,13 +1,15 @@
 # Ubuntu
 
-There are two different scripts:
+There are three scripts:
 
-    debian/build.sh  - Builds the AutoKey debs on an Ubuntu system
-    debian/mkpackage - Builds the AutoKey debs by running debian/build.sh in an  
-                       Ubuntu container.  It will also send the debs to my PPA.
-                       I made this so that I could do builds from my Fedora 
-		               workstation without resorting to an Ubuntu KVM.
-
+    debian/build.sh   - Builds the AutoKey debs on an Ubuntu system
+    debian/mkpackage  - Builds the AutoKey debs by running debian/build.sh in an  
+                        Ubuntu container.  It will also send the debs to my PPA.
+                        I made this so that I could do builds from my Fedora 
+		                workstation without resorting to an Ubuntu KVM.
+    debian/update-ppa - Updates the PPA with the ```~/Downloads/autokey*.deb``` 
+                        files produced by the mkpackage script with the testing 
+                        ("-t") option
 # Fedora
 
 The <code>fedora/mkpackage</code> script builds a source RPM and sends it to COPR to be built.
@@ -16,10 +18,10 @@ The <code>fedora/mkpackage</code> script builds a source RPM and sends it to COP
 
 - Update debian/changelog and copy text over into CHANGELOG.md and fedora/autokey.spec
 - Update AutoKey version number in:
-  - PKG-INFO
   - lib/autokey/common.py
   - fedora/autokey.spec
 - git tag $VERSION
+- pytest ~/src/autokey-wayland
 - git commit -a -m "a comment"
 - git push
 

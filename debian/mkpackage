@@ -96,6 +96,7 @@ if [ ! $container ]; then
 		#  Update PPA
 		rm -fr /tmp/ppa &>/dev/null || true
 		rsync --archive --partial --progress $PPA_DIR /tmp/ppa/
+		rm /tmp/ppa/autokey*.deb &>/dev/null || true
 		mv ${HOME}/Downloads/autokey*.deb /tmp/ppa/
 		cd /tmp/ppa
 
