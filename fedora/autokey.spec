@@ -1,6 +1,6 @@
 %{?python_enable_dependency_generator}
 Name:		autokey
-Version:	0.97.2
+Version:	0.97.3
 Release:	0%{?dist}
 Summary:	Desktop automation utility
 
@@ -28,9 +28,9 @@ Requires:	gnome-extensions-app
 Requires:	python3-dbus
 Requires:	python3-evdev
 Requires:	python3-pyudev
-Requires:	wmctrl
 Requires:	ImageMagick
-Requires:	xautomation
+Recommends:	wmctrl
+Recommends:	xautomation
 Recommends:	wl-clipboard
 Provides:	autokey = %{version}-%{release}
 %description common
@@ -94,9 +94,9 @@ Summary:	AutoKey GTK+ front end
 Requires:	gtksourceview3
 Requires:	libappindicator-gtk3
 Requires:	python3-gobject
-Requires:	zenity
 Requires:	autokey-common = %{version}-%{release}
 Provides:	autokey = %{version}-%{release}
+Requires:	zenity
 %description gtk
 This package contains the GTK+ front end for autokey
 
@@ -193,6 +193,11 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-exten
 %{_mandir}/man1/autokey-qt.1*
 
 %changelog
+* Wed Mar 4 2026 David King <dave@daveking.com> - 0.97.3-0
+- Change X11 utilities from Depends to Recommends packages so that the 
+  installation does not fail if these packages are not available
+- Add wl-clipboard as Reccomends package for Wayland environments
+
 * Fri Feb 20 2026 David King <dave@daveking.com> - 0.97.2-0
 - See /usr/share/doc/CHANGELOG.md for list of changes
 

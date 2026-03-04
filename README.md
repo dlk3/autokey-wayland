@@ -39,11 +39,9 @@ You may post questions or bug reports to this project's
 my best to address them.  As always, questions that could be answered by 
 reading [documentation](https://autokey-wayland.readthedocs.io/en/latest) 
 or by using a search engine, will not receive much/any attention.  Problem 
-reports should always include a full copy of a 
-<code>~/.local/share/autokey/autokey.log</code> file that captures the problem 
-while running AutoKey with the verbose ("-v") command line option.  See the 
-[debug log](https://autokey-wayland.readthedocs.io/en/latest/debuglog.html) section 
-of the documentation for instructions.
+reports should always include a console log that captures the debug output from AutoKey
+when the problem occurs.  See the 
+[issue reporting](https://autokey-wayland.readthedocs.io/en/latest/troubleshoot/issues.html) section of the documentation for guidance.
 
 ## Project Branches
 

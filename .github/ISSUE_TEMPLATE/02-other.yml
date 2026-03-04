@@ -1,5 +1,5 @@
 name: Other Type Of Issue
-description: Create a new, non-bug, issue like a new feature request.
+description: Create a new, non-bug issue like a new feature request.
 title: "[Other]: "
 labels: []
 projects: []
@@ -10,6 +10,6 @@ body:
     id: what-happened
     attributes:
       label: Add a description
-      placeholder: Type your description here...
+      placeholder: Type your description here ...
     validations:
       required: true

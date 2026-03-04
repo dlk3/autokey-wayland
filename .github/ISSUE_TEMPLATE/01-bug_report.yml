@@ -41,11 +41,10 @@ body:
     id: what-happened
     attributes:
       label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-      value: "A bug happened!"
+      description: Also tell us what you expected to happen?
+      placeholder: Tell us what you saw!
     validations:
       required: true
   - type: markdown
     attributes:
-      value: If applicable, please follow the intructions in [this entry](https://github.com/dlk3/autokey-wayland/wiki/FAQ-%E2%80%90-Frequently-Asked-Questions#attaching-an-autokey-debug-log-to-a-problem-issues-report) in the FAQ to create a debug log that captures this bug, and attach it to this bug report.
+      value: If applicable, please follow the instructions in [the documentation](https://autokey-wayland.readthedocs.io/en/latest/troubleshoot/issues.html) and create a debug log that captures the bug, and attach that to this bug report.

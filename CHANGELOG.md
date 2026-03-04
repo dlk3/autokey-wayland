@@ -4,23 +4,23 @@
 
 ### New Features
 
-  * All of the clipboard API methods have now been implemented using the
-    [wl-clipboard](https://github.com/bugaevc/wl-clipboard) utility.  They
-    should all work as expected.
+  * I have created a new [documentation website](https://autokey-wayland.readthedocs.io/) 
+    for AutoKey on ReadtheDocs.  This is intended to be the only source of information
+    concerning AutoKey for Wayland.  If you have suggestions for improvement, please
+    let me know by opening a documentation 
+    [issue](https://github.com/dlk3/autokey-wayland/issues). 
 
-  * A new sample script demonstrates how to send strings containing Unicode
-    via the keyboard using the ```keyboard.send_keys()``` method.  This will
-    only be created on new installs where no ```~/.config/autokey``` directory
-    already exists.  Others can copy the script source from [here](https://github.com/dlk3/autokey-wayland/blob/main/lib/autokey/configmanager/predefined_user_scripts/unicode_strings_in_scripts.pyi). 
+### Bug Fixes
 
-    This script works in both X11 and Wayland environments.  If you have problems with this script,
-    please don't be shy about opening an [issue](https://github.com/dlk3/autokey-wayland/issues).  I
-    already have #22 open to try to make the Wayland-side code simpler than it currently is.
-    
-  * I have created a new [documentation website](https://autokey-wayland.readthedocs.io/) for AutoKey on
-    ReadtheDocs.  All of the former GitHub wiki articles have been incorporated into this new site.
+  * All of the [window API methods](https://autokey-wayland.readthedocs.io/en/latest/api/windowgnome.html)
+    have now been implemented using a new version of the AutoKey GNOME Shell extension.  They
+    should all work in the same manner as users are familiar with from previous releases of
+    AutoKey.
 
- -- David King <dave@daveking.com>  Fri, 20 Feb 2026 21:11:00 -050
+  * All of the [clipboard API methods](https://autokey-wayland.readthedocs.io/en/latest/api/gtkclipboard.html)
+    have now been implemented using the [wl-clipboard](https://github.com/bugaevc/wl-clipboard)
+    utility.  They should all work in the same manner as users are familiar with from previous
+    releases of AutoKey.
 
 ## AutoKey 0.97.2
 
