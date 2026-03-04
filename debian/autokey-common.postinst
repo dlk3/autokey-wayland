@@ -15,7 +15,7 @@ if [ "$USER" = "root" ] && [ "$(logname)" != "root" ]; then
         usermod -a -G "input" "$(logname)"
     fi
     #  If Gnome is present, install the Gnome Shell extension
-    gnome-extensions &>/dev/null
+    gnome-extensions >/dev/null 2>&1
     if [ $? -ne 127 ]; then 
         su -c 'gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip' $(logname)
     fi
