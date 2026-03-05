@@ -3,19 +3,22 @@
 SRCDIR=~/src/autokey-wayland/readthedocs
 OUTDIR=/tmp/autokey-docs
 VENVDIR=/tmp/sphinx-venv
+LOGFILE=/tmp/sphinx.log
 
 rm -fr $OUTDIR
 rm -fr $VENVDIR
+rm $LOGFILE &>/dev/null || true
 python -m venv $VENVDIR
 pushd $VENVDIR
 source bin/activate
 python -m pip install --upgrade --no-cache-dir pip setuptools 
 python -m pip install --upgrade --no-cache-dir sphinx 
 python -m pip install --exists-action=w --no-cache-dir -r ${SRCDIR}/requirements.txt
-python -m sphinx -T -b html -d _build/doctrees -D language=en $SRCDIR $OUTDIR
+python -m sphinx -T -b html -d _build/doctrees -D language=en $SRCDIR $OUTDIR 2>&1 | tee $LOGFILE
 RC=$?
 deactivate
 popd
 if [ $RC == 0 ]; then
-    /usr/bin/brave-browser file:${OUTDIR}/index.html &
+    /usr/bin/brave-browser file:${OUTDIR}/index.html &>/dev/null &
 fi
+less $LOGFILE

@@ -1,5 +1,5 @@
-dialog API when running autokey-qt
-==================================
+dialog API implementation for autokey-qt
+========================================
 
 These API methods are available when running the "autokey-qt" front-end.
 

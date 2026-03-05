@@ -24,11 +24,10 @@ the API classes documented here.
    api/keyboard.rst
    api/mouse.rst
    api/store.rst
-   api/qtdialog.rst
-   api/gtkdialog.rst
-   api/gtkclipboard.rst
+   api/dialog.rst
+   api/clipboard.rst
    api/system.rst
-   api/windowgnome.rst
+   api/window.rst
    api/engine.rst
    api/highlevel.rst
    api/common.rst

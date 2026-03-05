@@ -1,5 +1,5 @@
-dialog API when running autokey-gtk
-===================================
+dialog API implementation for autokey-gtk
+=========================================
 
 These API methods are available when running the "autokey-gtk" front-end.
 
