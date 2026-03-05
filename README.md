@@ -45,6 +45,7 @@ when the problem occurs.  See the
 
 ## Project Branches
 
-[main](https://github.com/dlk3/autokey-wayland/tree/main) - the current development code.
+* [main](https://github.com/dlk3/autokey-wayland/tree/main) - the current release.
+* [develop](https://github.com/dlk3/autokey-wayland/tree/develop) - developing the next release.
 
-For more stable code, see the [Releases](https://github.com/dlk3/autokey-wayland/releases).
+See, also, [Releases](https://github.com/dlk3/autokey-wayland/releases).
