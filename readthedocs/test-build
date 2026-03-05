@@ -17,5 +17,5 @@ RC=$?
 deactivate
 popd
 if [ $RC == 0 ]; then
-    /usr/bin/brave-browser file:${OUTDIR}/index.html
+    /usr/bin/brave-browser file:${OUTDIR}/index.html &
 fi
