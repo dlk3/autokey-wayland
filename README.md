@@ -36,12 +36,10 @@ scripts and the like.  Make use of it.
 
 You may post questions or bug reports to this project's 
 [Issues](https://github.com/dlk3/autokey-wayland/issues) tracker, and I will do 
-my best to address them.  As always, questions that could be answered by 
-reading [documentation](https://autokey-wayland.readthedocs.io/en/latest) 
-or by using a search engine, will not receive much/any attention.  Problem 
-reports should always include a console log that captures the debug output from AutoKey
-when the problem occurs.  See the 
-[issue reporting](https://autokey-wayland.readthedocs.io/en/latest/troubleshoot/issues.html) section of the documentation for guidance.
+my best to address them.  Problem reports should always include a console log that
+captures the debug output from AutoKey when the problem occurs.  See the 
+[issue reporting](https://autokey-wayland.readthedocs.io/en/latest/troubleshoot/issues.html)
+section of the documentation for guidance.
 
 ## Project Branches
 
