@@ -24,6 +24,7 @@ XDG_CONFIG_HOME = os.environ.get('XDG_CONFIG_HOME', os.path.expanduser('~/.confi
 XDG_CACHE_HOME = os.environ.get('XDG_CACHE_HOME', os.path.expanduser('~/.cache'))
 XDG_DATA_HOME = os.environ.get('XDG_DATA_HOME', os.path.expanduser("~/.local/share"))
 SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE")
+DESKTOP = os.environ.get('XDG_CURRENT_DESKTOP')
 
 CONFIG_DIR = os.path.join(XDG_CONFIG_HOME, "autokey")
 RUN_DIR = os.path.join(os.environ.get('XDG_RUNTIME_DIR', XDG_CACHE_HOME), "autokey")
@@ -89,7 +90,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-""", 
+""",
    copyright_notice=COPYRIGHT,
    homepage_url=HOMEPAGE,
    bug_report_email=BUG_EMAIL,
@@ -109,11 +110,11 @@ ICON_FILE_NOTIFICATION_ERROR = "autokey-status-error"
 # Set at the top of each entrypoint app
 USED_UI_TYPE = "headless"
 
-# Share parsed command line arguments between modules, Namespace object content 
+# Share parsed command line arguments between modules, Namespace object content
 # set by argument_parser.py
 ARGS = None
 
-# A list of text strings that are the names of the keyboard and mouse devices 
+# A list of text strings that are the names of the keyboard and mouse devices
 # that we want to recognize automatically during system startup under Wayland.
 # There is no need to add names that include the words "keyboard" or "mouse" to
 # these lists.  AutoKey will recognize those without them being here.

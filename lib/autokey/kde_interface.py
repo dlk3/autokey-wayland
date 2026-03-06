@@ -15,11 +15,6 @@
 #
 #####################################################################
 
-#  For standalone testing
-if __name__ == "__main__":
-    import sys
-    sys.path.insert(0, '/home/dlk/src/autokey-wayland/lib')
-
 import dbus
 import dbus.service
 import dbus.mainloop.glib
@@ -33,13 +28,7 @@ import time
 
 from autokey.sys_interface.abstract_interface import AbstractSysInterface, AbstractMouseInterface, AbstractWindowInterface, WindowInfo
 
-try:
-    logger = __import__("autokey.logger").logger.get_logger(__name__)
-except Exception:
-    #  For standalone testing
-    import logging
-    logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.DEBUG)
-    logger = logging.getLogger(__name__)
+logger = __import__("autokey.logger").logger.get_logger(__name__)
 
 #  The name we use for our KWin listener dbus service.
 DBUS_SERVICE_NAME='com.autokey.KwinListener'
@@ -76,6 +65,7 @@ class KWinListener(dbus.service.Object):
         self._loop = GLib.MainLoop()
         logger.debug('KWinListener dbus service is ready to receive messages')
         self._loop.run()
+        dbus.service.Object.remove_from_connection(self)
         return self._result
 
     def _timeout(self):
@@ -198,26 +188,44 @@ class KWinInterface():
             #  Send the script without waiting for anything back
             KWinInterface.__send_kwin_script(script, DBUS_SERVICE_NAME)
 
-class KdeMouseReadInterface(DBusListener):
+class KdeMouseReadInterface():
     def __init__(self):
-        super().__init__()
+        pass
 
     def mouse_location(self):
-        [x, y] = self.dbus_interface.GetMouseLocation()
-        return [int(x), int(y)]
+        #[x, y] = self.dbus_interface.GetMouseLocation()
+        #return [int(x), int(y)]
+        raise NotImplementedError
 
-class KdeWindowInterface(DBusInterface, AbstractWindowInterface):
+class KdeWindowInterface(AbstractWindowInterface):
     def __init__(self):
         super().__init__()
 
     def get_window_info(self, window=None, traverse: bool=True) -> WindowInfo:
         """
-        Returns a WindowInfo object containing the class and title.
+        Ask KWin for title and class of the currently focused window.
+
+        :return: (wm_title, wm_class)
+        :rtype: WindowInfo
         """
-        window = self._active_window()
-        return WindowInfo(wm_class=window['wm_class'], wm_title=window['wm_title'])
+        kwin_script = """const w = workspace.activeWindow;
+result = {
+    'wm_class': w.resourceName,
+    'wm_title': w.caption
+};
+result = JSON.stringify(result, null, 4);"""
+        result = KWinInterface.run_kwin_script(kwin_script, response_expected=True)
+        if result:
+            result = json.loads(result)
+            return WindowInfo(wm_title=result['wm_title'], wm_class=result['wm_class'])
 
     def get_window_list(self):
+        """
+        Ask KWin for a list of all the windows on the desktop
+
+        :return: An array containing information about each window
+        :rtype: list of dictionaries
+        """
         kwin_script = """const windows = workspace.windowList();
 winJsonArr = [];
 windows.forEach(function(w) {
@@ -226,7 +234,7 @@ windows.forEach(function(w) {
             wm_class: w.resourceClass,
             wm_class_instance: null,
             wm_title: w.caption,
-            workspace: w.desktops[0].x11DesktopNumber,
+            workspace: w.desktops[0].x11DesktopNumber - 1,
             desktop: w.desktops[0].id,
             pid: w.pid,
             id: w.internalId,
@@ -242,80 +250,112 @@ windows.forEach(function(w) {
     }
 });
 result = JSON.stringify(winJsonArr, null, 0);"""
-        result = KWinInterface.run_kwin_script(script, response_expected=True)
+        result = KWinInterface.run_kwin_script(kwin_script, response_expected=True)
         if result:
-            result = json.load(result)
-        return result
+            result = json.loads(result)
+            return result
 
     def get_window_title(self, window=None, traverse=True) -> str:
         """
-        Returns the active window title
+        Returns the window title of the currently focused window.
+
+        :return: window title
+        :rtype: string
         """
-        return self._active_window()['wm_title']
+        result = self.get_window_info()
+        if result:
+            return result[0]
 
     def get_window_class(self, window=None, traverse=True) -> str:
         """
         Returns the window class of the currently focused window.
-        """
-        return self._active_window()['wm_class']
 
+        :return: window class
+        :rtype: string
+        """
+        result = self.get_window_info()
+        if result:
+            return result[1]
+
+    """
+    The rest of these methods support the window API
+    """
 
     def get_screen_size(self):
+        raise NotImplementedError
         x,y = self.dbus_interface.ScreenSize()
         return [int(x), int(y)]
 
     def get_active_window(self):
+        raise NotImplementedError
         return self._active_window()
 
     def get_active_desktop_index(self):
+        raise NotImplementedError
         return self._dbus_get_active_desktop_index()
 
     def close_window(self, window_id):
+        raise NotImplementedError
         self._dbus_close_window(window_id)
 
     def activate_window(self, window_id):
+        raise NotImplementedError
         self._dbus_activate_window(window_id)
 
     def move_resize_window(self, window_id, x, y , width, height):
+        raise NotImplementedError
         self._dbus_move_resize_window(window_id, x, y, width, height)
 
     def get_screensize(self):
+        raise NotImplementedError
         return self._dbus_get_screensize()
 
     def move_to_workspace(self, window_id, workspace_number):
+        raise NotImplementedError
         self._dbus_move_to_workspace(window_id, workspace_number)
 
     def switch_workspace(self, workspace_number):
+        raise NotImplementedError
         self._dbus_switch_workspace(workspace_number)
 
     def get_properties(self, window_id):
+        raise NotImplementedError
         return self._dbus_get_properties(window_id)
 
     def stick_window(self, window_id):
+        raise NotImplementedError
         self._dbus_stick_window(window_id)
 
     def unstick_window(self, window_id):
+        raise NotImplementedError
         self._dbus_unstick_window(window_id)
 
     def maximize_window(self, window_id, direction):
+        raise NotImplementedError
         self._dbus_maximize_window(window_id, direction)
 
     def unmaximize_window(self, window_id, direction):
+        raise NotImplementedError
         self._dbus_unmaximize_window(window_id, direction)
 
     def make_fullscreen_window(self, window_id):
+        raise NotImplementedError
         self._dbus_make_fullscreen_window(window_id)
 
     def unmake_fullscreen_window(self, window_id):
+        raise NotImplementedError
         self._dbus_unmake_fullscreen_window(window_id)
 
     def make_above_window(self, window_id):
+        raise NotImplementedError
         self._dbus_make_above_window(window_id)
 
     def unmake_above_window(self, window_id):
+        raise NotImplementedError
         self._dbus_unmake_above_window(window_id)
 
     def _active_window(self):
+        raise NotImplementedError
         #TODO probably can be done more efficiently with an additional dbus method in the gnome extension
         window_list = self._dbus_window_list()
         for window in window_list:
@@ -349,143 +389,3 @@ result = JSON.stringify(winJsonArr, null, 0);"""
             'in_current_workspace': False
         }
         return empty_window
-
-    def _dbus_get_active_desktop_index(self):
-        try:
-            return self.dbus_interface.GetActiveWorkspaceIndex()
-        except dbus.exceptions.DBusException as e:
-            self.__init__() #reconnect to dbus
-            return self.dbus_interface.GetActiveWorkspaceIndex()
-
-    def _dbus_window_list(self):
-        #TODO consider how/if error handling can be implemented
-        try:
-            return json.loads(self.dbus_interface.List())
-        except dbus.exceptions.DBusException as e:
-            self.__init__() #reconnect to dbus
-            return json.loads(self.dbus_interface.List())
-
-    def _dbus_close_window(self, window_id):
-        #TODO consider how/if error handling can be implemented
-        try:
-            self.dbus_interface.Close(window_id)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.Close(window_id)
-
-    def _dbus_activate_window(self, window_id):
-        try:
-            self.dbus_interface.Raise(window_id)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.Raise(window_id)
-
-    def _dbus_move_resize_window(self, window_id, x, y, width, height):
-        try:
-            self.dbus_interface.MoveResize(window_id, x, y, width, height)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.MoveResize(window_id, x, y, width, height)
-
-    def _dbus_move_window(self, window_id, x, y):
-        try:
-            self.dbus_interface.Move(window_id, x, y)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.Move(window_id, x, y)
-
-    def _dbus_resize_window(self, window_id, width, height):
-        try:
-            self.dbus_interface.Resize(window_id, width, height)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.Resize(window_id, width, height)
-
-    def _dbus_move_to_workspace(self, window_id, workspace_number):
-        try:
-            self.dbus_interface.MoveToWorkspace(window_id, workspace_number)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.MoveToWorkspace(window_id, workspace_number)
-
-    def _dbus_get_screensize(self):
-        try:
-            return self.dbus_interface.ScreenSize()
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            return self.dbus_interface.ScreenSize()
-
-    def _dbus_switch_workspace(self, workspace_number):
-        try:
-            return self.dbus_interface.SwitchWorkspace(workspace_number)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            return self.dbus_interface.SwitchWorkspace(workspace_number)
-
-    def _dbus_get_properties(self, window_id):
-        try:
-            return json.loads(self.dbus_interface.Properties(window_id))
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            return json.loads(self.dbus_interface.Properties(window_id))
-
-    def _dbus_stick_window(self, window_id):
-        try:
-            self.dbus_interface.Stick(window_id)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.Stick(window_id)
-
-    def _dbus_unstick_window(self, window_id):
-        try:
-            self.dbus_interface.UnStick(window_id)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.UnStick(window_id)
-
-    def _dbus_maximize_window(self, window_id, direction):
-        try:
-            self.dbus_interface.Maximize(window_id, direction)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.Maximize(window_id, direction)
-
-    def _dbus_unmaximize_window(self, window_id, direction):
-        try:
-            self.dbus_interface.UnMaximize(window_id, direction)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.UnMaximize(window_id, direction)
-
-    def _dbus_make_fullscreen_window(self, window_id):
-        try:
-            self.dbus_interface.MakeFullscreen(window_id)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.MakeFullscreen(window_id)
-
-    def _dbus_unmake_fullscreen_window(self, window_id):
-        try:
-            self.dbus_interface.UnMakeFullscreen(window_id)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.UnMakeFullscreen(window_id)
-
-    def _dbus_make_above_window(self, window_id):
-        try:
-            self.dbus_interface.MakeAbove(window_id)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.MakeAbove(window_id)
-
-    def _dbus_unmake_above_window(self, window_id):
-        try:
-            self.dbus_interface.UnMakeAbove(window_id)
-        except dbus.exceptions.DBusException as e:
-            self.__init__()
-            self.dbus_interface.UnMakeAbove(window_id)
-
-#  For standalone testing
-if __name__ == "__main__":
-    result = KdeWindowInterface.get_window_list()
-    print(result)
