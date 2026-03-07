@@ -193,9 +193,19 @@ class KdeMouseReadInterface():
         pass
 
     def mouse_location(self):
-        #[x, y] = self.dbus_interface.GetMouseLocation()
-        #return [int(x), int(y)]
-        raise NotImplementedError
+        """
+        Returns the x/y coordinates of the mouse pointer
+
+        :return: [x, y]
+        :rtype: list
+        """
+        kwin_script = """const x = workspace.cursorPos.x;
+const y = workspace.cursorPos.y;
+result = [x, y];
+result = JSON.stringify(result, null, 4);"""
+        result = KWinInterface.run_kwin_script(kwin_script, response_expected=True)
+        if result:
+            return result
 
 class KdeWindowInterface(AbstractWindowInterface):
     def __init__(self):
@@ -277,14 +287,23 @@ result = JSON.stringify(winJsonArr, null, 0);"""
         if result:
             return result[1]
 
+    def get_screen_size(self):
+        """
+        Returns the width and height of the display
+
+        :return: [width, height]
+        :rtype: list
+        """
+        kwin_script="""const w = workspace.activeScreen.geometry;
+result = [w.width, w.height];
+result = JSON.stringify(result, null, 4);"""
+        result = KWinInterface.run_kwin_script(kwin_script, response_expected=True)
+        if result:
+           return result
+
     """
     The rest of these methods support the window API
     """
-
-    def get_screen_size(self):
-        raise NotImplementedError
-        x,y = self.dbus_interface.ScreenSize()
-        return [int(x), int(y)]
 
     def get_active_window(self):
         raise NotImplementedError

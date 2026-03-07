@@ -22,8 +22,10 @@ import autokey
 from autokey import common
 from autokey.configmanager.configmanager import ConfigManager
 from autokey.configmanager.configmanager_constants import INTERFACE_TYPE
-from autokey.gnome_interface import GnomeExtensionWindowInterface
-from autokey.kde_interface import KdeWindowInterface
+if common.DESKTOP == 'KDE':
+    from autokey.kde_interface import KdeWindowInterface
+else:
+    from autokey.gnome_interface import GnomeExtensionWindowInterface
 from autokey.sys_interface.clipboard import Clipboard
 from autokey.model.phrase import SendMode
 

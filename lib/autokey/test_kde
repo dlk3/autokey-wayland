@@ -4,8 +4,10 @@ import sys
 sys.path.append('/home/dlk/src/autokey-wayland/lib')
 
 from kde_interface import KdeWindowInterface
+from kde_interface import KdeMouseReadInterface
 
-mediator = KdeWindowInterface();
+mouse = KdeMouseReadInterface()
+mediator = KdeWindowInterface()
 
 result = mediator.get_window_list()
 print(f'get_window_list = {result}\n')
@@ -18,3 +20,9 @@ print(f'get_window_title = {result}\n')
 
 result = mediator.get_window_class()
 print(f'get_window_class = {result}\n')
+
+result = mediator.get_screen_size()
+print(f'get_screen_size = {result}\n')
+
+result = mouse.mouse_location()
+print(f'mouse_location = {result}\n')

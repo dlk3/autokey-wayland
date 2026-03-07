@@ -10,13 +10,13 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License,
-#  version 2, along with this program; if not, see 
+#  version 2, along with this program; if not, see
 #  <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.
 #
 #####################################################################
 
 #  When running under Wayland, check to be sure we're running under a supported
-#  desktop environment and that the prereqs that desktop environment needs are 
+#  desktop environment and that the prereqs that desktop environment needs are
 #  in place.
 
 import grp
@@ -39,8 +39,7 @@ def waylandChecks():
             return True
 
         #  Check that we're running on a supported desktop environment
-        #  dlk3 for future reference, the check for KDE on Ubunntu is os.environ['KDE_FULL_SESSION']
-        if os.environ['XDG_SESSION_DESKTOP'] == 'gnome' or 'GNOME_DESKTOP_SESSION_ID' in os.environ:
+        if os.environ['XDG_SESSION_DESKTOP'] == 'gnome' or 'GNOME_DESKTOP_SESSION_ID' in os.environ or os.environ['XDG_SESSION_DESKTOP'] == 'KDE':
             logger.debug(f"waylandChecks() found AutoKey running under a supported desktop environment")
         else:
             logger.debug(f"waylandChecks() found AutoKey running under an unsupported desktop environment, displaying popup.")
@@ -54,19 +53,20 @@ def waylandChecks():
     show_popup = False
 
     #  Gnome check: is the Gnome Shell extension present?
-    ext_id = 'autokey-gnome-extension@autokey'
-    try:
-        proc = subprocess.run(f'gnome-extensions info {ext_id}', shell=True, capture_output=True, check=True)
-        if 'Enabled: Yes' in proc.stdout.decode('utf-8'):
-            logger.debug('waylandChecks() found the AutoKey Gnome Shell extension')
-        else:
-            logger.debug('waylandChecks() found the AutoKey Gnome Shell extension but it is disabled.  Attempting to enable it.')
-            subprocess.run(f'gnome-extensions enable {ext_id}', shell=True, capture_output=True, check=True)
-    except Exception:
-        logger.critical('waylandChecks() did not find the AutoKey Gnome Shell extension, displaying popup')
-        show_popup = True
+    if os.environ['XDG_SESSION_DESKTOP'] == 'gnome' or 'GNOME_DESKTOP_SESSION_ID' in os.environ:
+        ext_id = 'autokey-gnome-extension@autokey'
+        try:
+            proc = subprocess.run(f'gnome-extensions info {ext_id}', shell=True, capture_output=True, check=True)
+            if 'Enabled: Yes' in proc.stdout.decode('utf-8'):
+                logger.debug('waylandChecks() found the AutoKey Gnome Shell extension')
+            else:
+                logger.debug('waylandChecks() found the AutoKey Gnome Shell extension but it is disabled.  Attempting to enable it.')
+                subprocess.run(f'gnome-extensions enable {ext_id}', shell=True, capture_output=True, check=True)
+        except Exception:
+            logger.critical('waylandChecks() did not find the AutoKey Gnome Shell extension, displaying popup')
+            show_popup = True
 
-    #  Gnome check: is the user in the input user group"
+    #  Wayland check: is the user in the input user group"
     group = 'input'
     user = os.getlogin()
     input_group = grp.getgrnam(group)
@@ -76,7 +76,7 @@ def waylandChecks():
         logger.critical(f'waylandChecks() did not find the "{user}" userid in the "{group}" user group, displaying popup.')
         show_popup = True
 
-    #  Gnome check: do we have write access to the /dev/uinput device?
+    #  Wayland check: do we have write access to the /dev/uinput device?
     if os.access('/dev/uinput', os.W_OK):
         logger.debug(f'waylandChecks() found write access to the /dev/uinput device')
     else:
@@ -85,10 +85,13 @@ def waylandChecks():
 
     #  If there was a problem, throw up a popup box telling them what to do
     if show_popup:
-        #  This is Gnome-specific, other DTEs added in the future may need 
+        #  This is Gnome-specific, other DTEs added in the future may need
         #  different messages
         title = 'AutoKey System Configuration Needed'
-        message = f'Your user id is not configured to run AutoKey under Waland.  If this is your <b>first time</b> running AutoKey, try <b>rebooting</b> your system and starting AutoKey again.  Otherwise, try entering these two commands, then rebooting:<br /><br />sudo usermod -a -G "{group}" "{user}"<br /><br />gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip'
+        if os.environ['XDG_SESSION_DESKTOP'] == 'KDE':
+            message = f'Your user id is not configured to run AutoKey under Wayland.  If this is your <b>first time</b> running AutoKey, try <b>rebooting</b> your system and starting AutoKey again.  Otherwise, try entering this two command, then rebooting:<br /><br />sudo usermod -a -G "{group}" "{user}"'
+        else:
+            message = f'Your user id is not configured to run AutoKey under Wayland.  If this is your <b>first time</b> running AutoKey, try <b>rebooting</b> your system and starting AutoKey again.  Otherwise, try entering these two commands, then rebooting:<br /><br />sudo usermod -a -G "{group}" "{user}"<br /><br />gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip'
         __show_popup(title, message)
         return False
 
@@ -97,7 +100,7 @@ def waylandChecks():
 def __show_unsupported_desktop_popup():
         dte = os.environ['XDG_SESSION_DESKTOP']
         title = 'Unsupported Desktop Environment'
-        message = f'AutoKey does not support the "{dte}" desktop environment on a system that uses the Wayland window manageri like this one. The "{dte}" desktop environment is supported under X11, but not here under Wayland.  Future development may remove this restriction, please stay tuned.'
+        message = f'AutoKey does not support the "{dte}" desktop environment on a system that uses the Wayland window manager like this one. The "{dte}" desktop environment is supported under X11, but not here under Wayland.  Future development may remove this restriction, please stay tuned.'
         __show_popup(title, message)
 
 #  Show popup using kdialog, if it's installed, or zenity, otherwise write the

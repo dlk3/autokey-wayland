@@ -11,7 +11,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License,
-#  version 2, along with this program; if not, see 
+#  version 2, along with this program; if not, see
 #  <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.
 #
 #####################################################################
@@ -52,7 +52,10 @@ logger = __import__("autokey.logger").logger.get_logger(__name__)
 from autokey.sys_interface.abstract_interface import AbstractSysInterface, AbstractMouseInterface, queue_method
 import autokey.configmanager.configmanager as cm
 import autokey.configmanager.configmanager_constants as cm_constants
-from autokey.gnome_interface import GnomeMouseReadInterface
+if common.DESKTOP == 'KDE':
+    from autokey.kde_interface import KdeMouseReadInterface as MouseReadInterface
+else:
+    from autokey.gnome_interface import GnomeMouseReadInterface as MouseReadInterface
 
 #TODO when exiting the thread waits for one more signal and that signal repeats  for a bit during exit
 #  @dlk3 I put a timeout on the select in __flush_events() so that it would not
@@ -60,7 +63,7 @@ from autokey.gnome_interface import GnomeMouseReadInterface
 #  This matches how things are done in the equivalent function in the X11
 #  interface.py module.
 
-class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInterface):
+class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface):
     """
     god this is complicated lol
     """
@@ -241,7 +244,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
             raise Exception
             #print("Unable to create UInput device. {}".format(ex))
 
-        GnomeMouseReadInterface.__init__(self)
+        MouseReadInterface.__init__(self)
         logger.debug("Screen size: {}".format(self.mediator.windowInterface.get_screen_size()))
 
         self.inv_map = self.__reverse_mapping(e.keys)
@@ -288,7 +291,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
             #logger.debug("Keyboard: {}, Path: {}".format(keyboard.name, keyboard.path))
         except Exception as error:
             logger.error(f"Could not grab keyboard device \"{dev.name}\" from list of devices found on system: {error}")
-            
+
     def __grab_mouse(self, devices, device):
         try:
             #logger.debug("Device has the word \"mouse\" as part of its name, grabbing it.")
@@ -298,7 +301,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
             #logger.debug("Mouse: {}, Path: {}".format(mouse.name, mouse.path))
         except Exception as error:
             logger.error(f"Could not grab mouse device  \"{dev.name}\" from list of devices found on system: {error}")
-        
+
     def grab_multiple_devices(self):
         ### UINPUT Listener one for keyboard and eventually one for mouse
         # creating this before creating the new uinput device !important
@@ -436,7 +439,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
         self.ui.write(e.EV_KEY, keycode, 0)
         self.syn_raw()
 
-    # implemented in GnomeMouseReadInterface
+    # implemented in MouseReadInterface
     # def mouse_location(self):
     #     raise NotImplementedError
 
@@ -568,7 +571,7 @@ class UInputInterface(threading.Thread, GnomeMouseReadInterface, AbstractSysInte
 
         for key in string:
             self.__send_key(key)
-        
+
     @queue_method(queue)
     def send_key(self, key_name):
         self.__send_key(key_name)
