@@ -25,6 +25,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import uuid
 
 from autokey.sys_interface.abstract_interface import AbstractSysInterface, AbstractMouseInterface, AbstractWindowInterface, WindowInfo
 
@@ -43,11 +44,11 @@ class KWinListener(dbus.service.Object):
     Default is 5 seconds.
    :type timeout_seconds: integer
     """
-    def __init__(self, timeout_seconds=5):
+    def __init__(self, subdir, timeout_seconds=5):
         self._result = ''
         self._timeout_seconds = timeout_seconds
         self._service_name = DBUS_SERVICE_NAME
-        self._service_path = '/' + self._service_name.replace('.', '/')
+        self._service_path = '/' + self._service_name.replace('.', '/') + '/' + subdir
 
     def run(self):
         """
@@ -90,7 +91,7 @@ class KWinListener(dbus.service.Object):
 class KWinInterface():
 
     @staticmethod
-    def __send_kwin_script(script, service_name, response_expected=False):
+    def __send_kwin_script(script, service_name, service_path, response_expected=False):
         """
         Loads a KWin script and executes it.  If a response is expected
         to come back from the script via a bdus, a KWinListener dbus
@@ -140,7 +141,7 @@ class KWinInterface():
             #  Wait for KWinListener service to appear
             found = False
             while not found:
-                proc = subprocess.run(['dbus-send', '--session', '--print-reply', '--dest=' + service_name, '/' + service_name.replace('.', '/'), 'org.freedesktop.DBus.Introspectable.Introspect'], capture_output=True, check=True)
+                proc = subprocess.run(['dbus-send', '--session', '--print-reply', '--dest=' + service_name, service_path, 'org.freedesktop.DBus.Introspectable.Introspect'], capture_output=True, check=True)
                 if proc.returncode == 0:
                     found=True
                 time.sleep(0.1)
@@ -174,14 +175,24 @@ class KWinInterface():
         :type response_expected: boolean
         """
         if response_expected:
+            #  Generate a unique id for this listener (requests are issues
+            #  rapidly that we need to be able to unquely identify which
+            #  listener is waiting on a response from which script.
+            subdir = str(uuid.uuid4()).replace('-', '')
+            service_path = '/' + DBUS_SERVICE_NAME.replace('.', '/') + '/' + subdir
+
             #  Append the callDBus to the end of the script.  Make sure script
             #  has put the data it wants to send into the "result" variable.
-            script = script + f'\ncallDBus("{DBUS_SERVICE_NAME}", "{'/' + DBUS_SERVICE_NAME.replace('.', '/')}", "{DBUS_SERVICE_NAME}", "Response", result)'
-            #  Send the script to Kwin using a separate thread
-            t = threading.Thread(target=KWinInterface.__send_kwin_script, args=(script, DBUS_SERVICE_NAME,), kwargs={'response_expected': response_expected})
+            script = script + f'\ncallDBus("{DBUS_SERVICE_NAME}", "{service_path}", "{DBUS_SERVICE_NAME}", "Response", result)'
+
+            #  Start the thread that will wait for the listener to be
+            #  ready and then send the script to Kwin
+            t = threading.Thread(target=KWinInterface.__send_kwin_script, args=(script, DBUS_SERVICE_NAME, service_path,), kwargs={'response_expected': response_expected})
             t.start()
-            #  Start our dbus listener
-            result = KWinListener().run()
+
+            #  Start the listener
+            result = KWinListener(subdir).run()
+
             t.join()
             return result
         else:

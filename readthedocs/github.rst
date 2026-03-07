@@ -20,7 +20,7 @@ After you have finished the install, see `Getting Started With AutoKey on Waylan
 
 The following commands will download the AutoKey for Wayland code into the ${HOME}/src/autokey-wayland directory on your system::
 
-    mkdir -p ~/src
+    mkdir ~/src
     cd ~/src
     git clone https://github.com/dlk3/autokey-wayland
 

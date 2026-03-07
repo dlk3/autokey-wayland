@@ -12,6 +12,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import random
 
 #  For standalone testing
 import logging
@@ -25,7 +26,7 @@ logger = logging.getLogger(__name__)
 #  set up to listen for a message from KWin.
 
 #  Define the Kwin listening service.
-DBUS_SERVICE_NAME='com.autokey.KwinListener'
+DBUS_SERVICE_NAME='com.autokey.KWinListener'
 
 class KWinListener(dbus.service.Object):
     """
@@ -37,11 +38,11 @@ class KWinListener(dbus.service.Object):
     Default is 5 seconds.
    :type timeout_seconds: integer
     """
-    def __init__(self, timeout_seconds=5):
+    def __init__(self,  service_id, timeout_seconds=5):
         self._result = ''
         self._timeout_seconds = timeout_seconds
         self._service_name = DBUS_SERVICE_NAME
-        self._service_path = '/' + self._service_name.replace('.', '/')
+        self._service_path = '/' + self._service_name.replace('.', '/') + '/' + service_id
 
     def run(self):
         """
@@ -169,14 +170,16 @@ class KWinInterface():
         :type response_expected: boolean
         """
         if response_expected:
+            service_id = str(uuid.uuid4()).replace('-', '')
             #  Append the callDBus to the end of the script.  Make sure script
             #  has put the data it wants to send into the "result" variable.
-            script = script + f'\ncallDBus("{DBUS_SERVICE_NAME}", "{'/' + DBUS_SERVICE_NAME.replace('.', '/')}", "{DBUS_SERVICE_NAME}", "Response", result)'
+            script = script + f'\ncallDBus("{DBUS_SERVICE_NAME}", "{'/' + DBUS_SERVICE_NAME.replace('.', '/') + '/' + service_id}", "{DBUS_SERVICE_NAME}", "Response", result)'
+            print(script)
             #  Send the script to Kwin using a separate thread
             t = threading.Thread(target=KWinInterface.__send_kwin_script, args=(script, DBUS_SERVICE_NAME,), kwargs={'response_expected': response_expected})
             t.start()
             #  Start our dbus listener
-            result = KWinListener().run()
+            result = KWinListener(service_id).run()
             t.join()
             return result
         else:
