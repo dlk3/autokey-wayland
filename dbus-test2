@@ -2,53 +2,77 @@
 
 from gi.repository import GLib
 from pydbus import SessionBus
-from pydbus import SystemBus
-import random
+import tempfile
 import threading
 import time
-import subprocess
 
 class KWinListener(object):
-  """
-    <node>
-      <interface name='org.autokey.listener'>
-        <method name='Response'>
-          <arg type='s' name='message' direction='in'/>
-        </method>
-      </interface>
-    </node>
-  """
+    """
+        <node>
+            <interface name='org.autokey.kwinlistener'>
+                <method name='Response'>
+                    <arg type='s' name='response' direction='in'/>
+                </method>
+            </interface>
+        </node>
+    """
 
-  def Response(self, message):
-      print(message)
-      loop.quit()
+    def Response(self, message):
+        print(message)
+        loop.quit()
 
-class KWinInterface():
+    def _timeout():
+        print('timed out')
+        loop.quit()
 
-    def __init__(self):
-        pass
+def run_script(response_expected=False):
 
-    def _send_script_thread(self, script, subdir):
-        time.sleep(5)
-        proc = subprocess.run(f'dbus-send --print-reply --dest=org.autokey.listener /org/autokey/listener/{subdir} org.autokey.listener.Response string:"{script}"', shell=True, check=True)
+    kwin_script="""const w = workspace.activeScreen.geometry;
+result = [w.width, w.height];
+result = JSON.stringify(result, null, 4);"""
 
-    def send_script(self, script):
+    bus = SessionBus()
 
-        subdir = str(random.randint(0, 99999999))
-        print(subdir)
+    if response_expected:
+        time.sleep(120)
+        kwin_script = kwin_script + f'\ncallDBus("org.autokey.kwinlistener", "/org/autokey/kwinlistener", "org.autokey.kwinlistener", "Response", result)'
+        print(kwin_script)
 
-        t = threading.Thread(target=self._send_script_thread, args=(script, subdir,))
-        t.start()
+        #  Wait for KWinListener service to appear
+        found = False
+        while not found:
+            try:
+                obj = bus.get('org.autokey.kwinlistener')
+                result = obj.Introspect()
+                found = True
+            except Exception as e:
+                time.sleep(0.1)
 
-        loop = GLib.MainLoop()
-        bus = SessionBus()
-        bus.publish('org.autokey.listener', (subdir, KWinListener()))
-        loop.run
+    (f, fn) = tempfile.mkstemp(prefix='autokey.kwin.script', suffix='.js')
+    with open(fn, 'w') as script_file:
+        script_file.write(kwin_script)
 
-        t.join()
+    obj = bus.get('org.kde.KWin', '/Scripting')
+    script_id = str(obj.loadScript(fn))
+    print(f'loading = {script_id}')
 
-kwin = KWinInterface()
-result = kwin.send_script('Hello world')
-print(result)
+    obj = bus.get('org.kde.KWin', f'/Scripting/Script{script_id}')
+    result = obj.run()
+    print(f'running = {result}')
 
+    obj = bus.get('org.kde.KWin', '/Scripting')
+    result = obj.unloadScript(fn)
+    print(f'unloading = {result}')
+
+response_expected = True
+t = threading.Thread(target=run_script, kwargs={'response_expected': response_expected})
+t.start()
+
+loop = GLib.MainLoop()
+bus = SessionBus()
+bus.publish('org.autokey.kwinlistener', KWinListener())
+GLib.timeout_add_seconds(5, KWinListener._timeout)
+loop.run
+
+t.join()
 

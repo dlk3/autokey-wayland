@@ -64,7 +64,6 @@ class KWinListener(dbus.service.Object):
         dbus.service.Object.__init__(self, bus_name, self._service_path)
         GLib.timeout_add_seconds(self._timeout_seconds, self._timeout)
         self._loop = GLib.MainLoop()
-        logger.debug('KWinListener dbus service is ready to receive messages')
         self._loop.run()
         dbus.service.Object.remove_from_connection(self)
         return self._result
@@ -73,7 +72,6 @@ class KWinListener(dbus.service.Object):
         """
         This method is called to terminate the service when it times out,
         """
-        logger.debug('KWinListener timed out waiting for a message')
         self._loop.quit()
 
     @dbus.service.method(dbus_interface=DBUS_SERVICE_NAME, in_signature='s', out_signature='')
@@ -129,7 +127,6 @@ class KWinInterface():
                 logger.error('KWin script loaded, but I could not get the script_id')
                 try:
                     proc = subprocess.run(['dbus-send', '--print-reply', '--dest=org.kde.KWin', '/Scripting', 'org.kde.kwin.Scripting.unloadScript', f'string:{fn}'], capture_output=True, check=True)
-                    logger.debug(proc)
                 except subprocess.CalledProcessError:
                     logger.exception('Unexpected exception loading a KWin script')
                 return
@@ -149,7 +146,6 @@ class KWinInterface():
         #  Execute the KWin script
         try:
             proc = subprocess.run(['dbus-send', '--print-reply', '--dest=org.kde.KWin', f'/Scripting/Script{script_id}', 'org.kde.kwin.Script.run'], capture_output=True, check=True)
-            logger.debug(proc)
         except subprocess.CalledProcessError:
             logger.exception('Unexpected exception running a KWin script')
             return
@@ -157,7 +153,6 @@ class KWinInterface():
         #  Unload the script from KWin and erase the temporary file
         try:
             proc = subprocess.run(['dbus-send', '--print-reply', '--dest=org.kde.KWin', '/Scripting', 'org.kde.kwin.Scripting.unloadScript', f'string:{fn}'], capture_output=True, check=True)
-            logger.debug(proc)
             os.unlink(fn)
         except subprocess.CalledProcessError:
             logger.exception('Unexpected exception running a KWin script')
