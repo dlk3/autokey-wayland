@@ -15,13 +15,10 @@
 #
 #####################################################################
 
-import dbus
-import dbus.service
-import dbus.mainloop.glib
 from gi.repository import GLib
+from pydbus import SessionBus
 import json
 import os
-import subprocess
 import tempfile
 import threading
 import time
@@ -31,168 +28,148 @@ from autokey.sys_interface.abstract_interface import AbstractSysInterface, Abstr
 
 logger = __import__("autokey.logger").logger.get_logger(__name__)
 
-#  The name we use for our KWin listener dbus service.
-DBUS_SERVICE_NAME='com.autokey.KwinListener'
+#  The name of the KWinListener DBus service.
+DBUS_SERVICE_NAME='com.autokey.KWinListener'
 
-class KWinListener(dbus.service.Object):
+loop = GLib.MainLoop()
+
+#  The definition for a DBus service that listens for a message from a
+#  KWin script.
+class KWinListener(object):
     """
-    Create a DBus service that listens for one message, returns the
-    content of that message, and then quits.
-
-    :keyword timeout_seconds: how long, in seconds, the service should
-    wait to receive a message before it quits, returning nothing.
-    Default is 5 seconds.
-   :type timeout_seconds: integer
+        <node>
+            <interface name='com.autokey.KWinListener'>
+                <method name='Response'>
+                    <arg type='s' name='response' direction='in'/>
+                </method>
+            </interface>
+        </node>
     """
-    def __init__(self, subdir, timeout_seconds=5):
-        self._result = ''
-        self._timeout_seconds = timeout_seconds
-        self._service_name = DBUS_SERVICE_NAME
-        self._service_path = '/' + self._service_name.replace('.', '/') + '/' + subdir
+    def __init__(self):
+        self.result = None
 
-    def run(self):
-        """
-        Start the dbus service, wait for a message, and return the
-        content.
-
-        :return: the contents of the dbus message that was received, if
-        any.
-        :rtype: string
-        """
-        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-        bus_name = dbus.service.BusName(self._service_name, dbus.SessionBus())
-        dbus.service.Object.__init__(self, bus_name, self._service_path)
-        GLib.timeout_add_seconds(self._timeout_seconds, self._timeout)
-        self._loop = GLib.MainLoop()
-        self._loop.run()
-        dbus.service.Object.remove_from_connection(self)
-        return self._result
+    def Response(self, message):
+        self.result = message
+        loop.quit()
 
     def _timeout(self):
-        """
-        This method is called to terminate the service when it times out,
-        """
-        self._loop.quit()
-
-    @dbus.service.method(dbus_interface=DBUS_SERVICE_NAME, in_signature='s', out_signature='')
-    def Response(self, result):
-        """
-        This is the dbus service's sole method.
-
-        :param result: The contents of the message that was received from
-        the client, if any.
-        :type result: string
-        """
-        self._loop.quit()
-        self._result = result
+        loop.quit()
 
 class KWinInterface():
 
-    @staticmethod
-    def __send_kwin_script(script, service_name, service_path, response_expected=False):
+    def _run_script(self, kwin_script, response_expected=False, listener_timeout=5, unique_id=None):
         """
-        Loads a KWin script and executes it.  If a response is expected
-        to come back from the script via a bdus, a KWinListener dbus
-        service is used to collect that response.
+        Loads a KWin script into KWin and executes it.
 
         :param script: The KWin script's code
         :type script: string
-        :param service_name: The name of the KwinListener dbus service
-        :type service_name: string
         :keyword response_expected: Flag indicating whether or not a
         KWinListener service needs to be set up to collect data from the
         KWin script when it runs.
         :type response_expected: boolean
+        :keyword listener_timeout: The number of seconds to wait for the
+        KWinListener service to become ready. Only meaningful when
+        response_expected = True.
+        :keyword unigue_id:  A value used to associate this script with
+        the KWinLister DBus service that awaits it's response.  Only
+        meaningful when response_expected = True.
+        :type unique_id: string
         """
-        #  Write the script into a temporary file
-        (f, fn) = tempfile.mkstemp(prefix='autokey.kwin.script', suffix='.js')
-        with open(fn, 'w') as script_file:
-            script_file.write(script)
-        logger.debug(f'KWin script filename: {fn}')
 
-        #  Load the script in KWin
-        try:
-            proc = subprocess.run(['dbus-send', '--print-reply', '--dest=org.kde.KWin', '/Scripting', 'org.kde.kwin.Scripting.loadScript', f'string:{fn}'], capture_output=True, check=True)
-            logger.debug(proc)
-        except subprocess.CalledProcessError:
-            logger.exception('Unexpected exception loading a KWin script')
-            return
-        script_id = proc.stdout.decode('utf-8').split('\n')[1].strip().split(' ')[1]
-        if not script_id:
-            try:
-                script_id = print(proc.stdout.split('\n')[1].strip().split(' ')[1])
-            except TypeError:
-                pass
-            if not script_id:
-                logger.error('KWin script loaded, but I could not get the script_id')
-                try:
-                    proc = subprocess.run(['dbus-send', '--print-reply', '--dest=org.kde.KWin', '/Scripting', 'org.kde.kwin.Scripting.unloadScript', f'string:{fn}'], capture_output=True, check=True)
-                except subprocess.CalledProcessError:
-                    logger.exception('Unexpected exception loading a KWin script')
-                return
+        bus = SessionBus()
 
-        logger.debug(f'KWin script id number: {script_id}')
-
-        #  Wait for the listener to come up, but only if we're expecting a response
         if response_expected:
-            #  Wait for KWinListener service to appear
+            #  Wait for KWinListener service to be ready, or until
+            #  timeout expires
             found = False
+            start_time = time.time()
             while not found:
-                proc = subprocess.run(['dbus-send', '--session', '--print-reply', '--dest=' + service_name, service_path, 'org.freedesktop.DBus.Introspectable.Introspect'], capture_output=True, check=True)
-                if proc.returncode == 0:
-                    found=True
-                time.sleep(0.1)
+                try:
+                    service_path = '/' + DBUS_SERVICE_NAME.replace('.','/') + '/' + unique_id
+                    obj = bus.get(DBUS_SERVICE_NAME, service_path)
+                    obj.Introspect()
+                    found = True
+                except Exception as e:
+                    time.sleep(0.1)
+                if time.time() - listener_timeout > start_time:
+                    return
 
-        #  Execute the KWin script
-        try:
-            proc = subprocess.run(['dbus-send', '--print-reply', '--dest=org.kde.KWin', f'/Scripting/Script{script_id}', 'org.kde.kwin.Script.run'], capture_output=True, check=True)
-        except subprocess.CalledProcessError:
-            logger.exception('Unexpected exception running a KWin script')
-            return
+        #  Save the KWin script in a temporary file
+        (f, fn) = tempfile.mkstemp(prefix='autokey.kwin.script.', suffix='.js')
+        with open(fn, 'w') as script_file:
+            script_file.write(kwin_script)
 
-        #  Unload the script from KWin and erase the temporary file
-        try:
-            proc = subprocess.run(['dbus-send', '--print-reply', '--dest=org.kde.KWin', '/Scripting', 'org.kde.kwin.Scripting.unloadScript', f'string:{fn}'], capture_output=True, check=True)
-            os.unlink(fn)
-        except subprocess.CalledProcessError:
-            logger.exception('Unexpected exception running a KWin script')
-            return
+        #  Load the file into KWin
+        obj = bus.get('org.kde.KWin', '/Scripting')
+        script_id = str(obj.loadScript(fn))
 
-    def run_kwin_script(script, response_expected=False):
+        #  Run the script
+        obj = bus.get('org.kde.KWin', f'/Scripting/Script{script_id}')
+        obj.run()
+
+        #  Unload the script
+        obj = bus.get('org.kde.KWin', '/Scripting')
+        obj.unloadScript(fn)
+
+        #  Delete the temporary file
+        os.unlink(fn)
+
+    def run(self, kwin_script, listener_timeout=10, response_expected=False):
         """
-        This the entrypoint into the KWin interface.  Call this method
-        to execute a KWin script and retrieve the results, if any.
+        This is the entrypoint into KWinInterface.  This method executes
+        a KWin script and, optionally, receives the results.
 
-        :param script: The KWin script's code
+        :param script: The KWin script code
         :type script: string
-        :keyword response_expected: Flag indicating whether or not data
-        is expected to be returned.
+        :keyword response_expected: Flag indicating whether or not
+        a response is expected to be returned byt the KWIN script.
         :type response_expected: boolean
+        :keyword listener_timeout: The number of seconds to wait for
+        the KWin script to send a response. Only meaningful when
+        response_expected = True.
         """
+        bus = SessionBus()
+
+        unique_id = str(uuid.uuid4()).replace('-', '')
+
         if response_expected:
-            #  Generate a unique id for this listener (requests are issues
-            #  rapidly that we need to be able to unquely identify which
-            #  listener is waiting on a response from which script.
-            subdir = str(uuid.uuid4()).replace('-', '')
-            service_path = '/' + DBUS_SERVICE_NAME.replace('.', '/') + '/' + subdir
+            service_path = '/' + DBUS_SERVICE_NAME.replace('.','/') + '/' + unique_id
 
-            #  Append the callDBus to the end of the script.  Make sure script
-            #  has put the data it wants to send into the "result" variable.
-            script = script + f'\ncallDBus("{DBUS_SERVICE_NAME}", "{service_path}", "{DBUS_SERVICE_NAME}", "Response", result)'
+            #  Add a line to the kwin_script that contains the call that
+            #  sends the script's output back via our KWinListener DBus
+            #  service.  Note that the kwin_script must put the data
+            #  being sent into the "result" variable.
+            kwin_script = kwin_script + f'\ncallDBus("{DBUS_SERVICE_NAME}", "{service_path}", "{DBUS_SERVICE_NAME}", "Response", result)'
 
-            #  Start the thread that will wait for the listener to be
-            #  ready and then send the script to Kwin
-            t = threading.Thread(target=KWinInterface.__send_kwin_script, args=(script, DBUS_SERVICE_NAME, service_path,), kwargs={'response_expected': response_expected})
+            #  Send the script to KWin in a separate thread, so that a
+            #  KWinListener DBus service can be started at the same time,
+            #  listening for the script's reply message.
+            t = threading.Thread(target=self._run_script, args=(kwin_script,), kwargs={'response_expected': response_expected, 'listener_timeout': listener_timeout, 'unique_id': unique_id})
             t.start()
 
-            #  Start the listener
-            result = KWinListener(subdir).run()
+            #  Start the KWinListener DBus service
+            bus = SessionBus()
+            listener = KWinListener()
+            dbus_service = bus.publish(DBUS_SERVICE_NAME, (unique_id, listener))
+            GLib.timeout_add_seconds(listener_timeout, listener._timeout)
+            loop.run()
+            #  Execution pauses here, until a DBus message is recieved
+            #  or the timeout is reached.
+            dbus_service.unpublish()
 
+            #  Close the KWin script sending thread
             t.join()
-            return result
+
+            #  If the timeout expired, either the script code is broken
+            #  or the timeout value isn't long enough
+            if not listener.result:
+                logger.error(f'Timeout expired before KWin script returned a result:\nDBUus service path: {service_path}\nKWin script:\n{kwin_script}')
+            else:
+                return listener.result
+
         else:
-            #  Send the script without waiting for anything back
-            KWinInterface.__send_kwin_script(script, DBUS_SERVICE_NAME)
+            #  Run the KWin script without waiting for a response
+            self._run_script(kwin_script)
 
 class KdeMouseReadInterface():
     def __init__(self):
@@ -209,7 +186,7 @@ class KdeMouseReadInterface():
 const y = workspace.cursorPos.y;
 result = [x, y];
 result = JSON.stringify(result, null, 4);"""
-        result = KWinInterface.run_kwin_script(kwin_script, response_expected=True)
+        result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
             return result
 
@@ -230,10 +207,12 @@ result = {
     'wm_title': w.caption
 };
 result = JSON.stringify(result, null, 4);"""
-        result = KWinInterface.run_kwin_script(kwin_script, response_expected=True)
+        result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
             result = json.loads(result)
             return WindowInfo(wm_title=result['wm_title'], wm_class=result['wm_class'])
+        else:
+            return WindowInfo(wm_title='unknown', wm_class='unknown')
 
     def get_window_list(self):
         """
@@ -266,10 +245,12 @@ windows.forEach(function(w) {
     }
 });
 result = JSON.stringify(winJsonArr, null, 0);"""
-        result = KWinInterface.run_kwin_script(kwin_script, response_expected=True)
+        result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
             result = json.loads(result)
             return result
+        else:
+            return []
 
     def get_window_title(self, window=None, traverse=True) -> str:
         """
@@ -303,7 +284,7 @@ result = JSON.stringify(winJsonArr, null, 0);"""
         kwin_script="""const w = workspace.activeScreen.geometry;
 result = [w.width, w.height];
 result = JSON.stringify(result, null, 4);"""
-        result = KWinInterface.run_kwin_script(kwin_script, response_expected=True)
+        result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
            return result
 
