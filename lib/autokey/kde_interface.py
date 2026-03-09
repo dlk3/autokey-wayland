@@ -373,34 +373,62 @@ for (var i=0; i<windows.length; i++) {
         KWinInterface().run(kwin_script)
 
     def move_to_workspace(self, window_id, workspace_number):
+        """
+        kdotool set_desktop_for_window [WINDOW] NUMBER
+            Move a window to a different desktop.
+            Specify the desktop number or "current_desktop" or "all".
+        """
         raise NotImplementedError
         self._dbus_move_to_workspace(window_id, workspace_number)
 
     def switch_workspace(self, workspace_number):
+        """
+        kdotool set_desktop <number>
+            Change the current desktop to <number>.
+        """
         raise NotImplementedError
         self._dbus_switch_workspace(workspace_number)
 
     def get_properties(self, window_id):
+        """
+        KWin API read/write properties:
+        bool skipTaskbar: Indicates that the window should not be included on a taskbar.
+        bool skipPager: Indicates that the window should not be included on a Pager.
+        bool skipSwitcher: Whether the Window should be excluded from window switching effects.
+        bool keepAbove: Whether the Window is set to be kept above other windows.
+        bool keepBelow: Whether the Window is set to be kept below other windows.
+        bool shade: Whether the Window is shaded.
+        bool minimized: Whether the Window is minimized.
+        bool fullScreen: Whether this Window is fullScreen. A Window might either be fullScreen due to the _NET_WM property or through a legacy support hack. The fullScreen state can only be changed if the Window does not use the legacy hack. To be sure whether the state changed, connect to the notify signal.
+        """
         raise NotImplementedError
         return self._dbus_get_properties(window_id)
 
     def stick_window(self, window_id):
+        #  Cant find
         raise NotImplementedError
         self._dbus_stick_window(window_id)
 
     def unstick_window(self, window_id):
+        #  Cant find
         raise NotImplementedError
         self._dbus_unstick_window(window_id)
 
     def maximize_window(self, window_id, direction):
+        # KWin API function: window.setMaximize(bool vertically, bool horizontally)
         raise NotImplementedError
         self._dbus_maximize_window(window_id, direction)
 
     def unmaximize_window(self, window_id, direction):
+        # KWin API: window.setMaximize(bool vertically, bool horizontally)
         raise NotImplementedError
         self._dbus_unmaximize_window(window_id, direction)
 
     def make_fullscreen_window(self, window_id):
+        """
+        KWin API read/write properties:
+        bool fullScreen: Whether this Window is fullScreen. A Window might either be fullScreen due to the _NET_WM property or through a legacy support hack. The fullScreen state can only be changed if the Window does not use the legacy hack. To be sure whether the state changed, connect to the notify signal.
+        """
         raise NotImplementedError
         self._dbus_make_fullscreen_window(window_id)
 
@@ -409,6 +437,11 @@ for (var i=0; i<windows.length; i++) {
         self._dbus_unmake_fullscreen_window(window_id)
 
     def make_above_window(self, window_id):
+        """
+        KWin API read/write properties:
+        bool keepAbove: Whether the Window is set to be kept above other windows.
+        bool keepBelow: Whether the Window is set to be kept below other windows.
+        """
         raise NotImplementedError
         self._dbus_make_above_window(window_id)
 
