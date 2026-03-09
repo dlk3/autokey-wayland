@@ -51,20 +51,64 @@ window_list = mediator.get_window_list()
 for window in window_list:
     if 'KSudoku' in window['wm_title']:
         mediator.close_window(window['id'])
+print()
 
-print('Give focus to a window that currently does not have it')
+print('activate_window()')
 for window in window_list:
     if not window['focus'] and 'X Recording bridge' not in window['wm_title']:
-        print(f'Giving focus to {window['wm_title']}')
+        print(f'\tActivating {window['wm_title']}')
         mediator.activate_window(window['id'])
         break
+print()
 
-print('Move and resize this window, then put it back where it was')
-window_list = mediator.get_window_list()
-for window in window_list:
-    if window['focus']:
-        mediator.move_resize_window(window['id'], 100, 100, 1000, 1000)
-        time.sleep(1)
-        mediator.move_resize_window(window['id'], window['x'], window['y'], window['width'], window['height'])
-        break
+print('move_resize_window()\n')
+window = mediator.get_active_window()
+mediator.move_resize_window(window['id'], 100, 100, 1000, 1000)
+time.sleep(1)
+mediator.move_resize_window(window['id'], window['x'], window['y'], window['width'], window['height'])
+
+print('move_to_workspace() and switch_workspace()\n')
+window = mediator.get_active_window()
+mediator.move_to_workspace(window['id'], 1)
+time.sleep(1)
+mediator.switch_workspace(1)
+time.sleep(1)
+mediator.move_to_workspace(window['id'], 0)
+time.sleep(1)
+mediator.switch_workspace(0)
+time.sleep(1)
+
+print('get_properties()')
+window = mediator.get_active_window()
+print(mediator.get_properties(window['id']), '\n')
+
+print('maximize_window()/unmaximize_window()  horizontally')
+window = mediator.get_active_window()
+mediator.activate_window(window['id'])
+mediator.maximize_window(window['id'], 1)
+time.sleep(2)
+mediator.unmaximize_window(window['id'], 1)
+time.sleep(1)
+print('maximize_window()/unmaximize_window()  vertically')
+mediator.maximize_window(window['id'], 2)
+time.sleep(2)
+mediator.unmaximize_window(window['id'], 2)
+time.sleep(1)
+print('maximize_window()/unmaximize_window()  both\n')
+mediator.maximize_window(window['id'], 3)
+time.sleep(2)
+mediator.unmaximize_window(window['id'], 3)
+time.sleep(1)
+
+print('make_fullscreen_window()/unmake_fullscreen_window()\n')
+mediator.make_fullscreen_window(window['id'])
+time.sleep(2)
+mediator.unmake_fullscreen_window(window['id'])
+time.sleep(1)
+
+print('make_above_window()/unmake_above_window() (no visual effect)\n')
+mediator.make_above_window(window['id'])
+time.sleep(2)
+mediator.unmake_above_window(window['id'])
+time.sleep(1)
 

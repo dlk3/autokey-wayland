@@ -106,7 +106,7 @@ class KWinInterface():
 
         #  Run the script
         obj = bus.get('org.kde.KWin', f'/Scripting/Script{script_id}')
-        obj.run()
+        result = obj.run()
 
         #  Unload the script
         obj = bus.get('org.kde.KWin', '/Scripting')
@@ -334,38 +334,35 @@ result = JSON.stringify(result, null, 4);"""
            return result
 
     def close_window(self, window_id):
-        kwin_script = """const windows = workspace.windowList();
-for (var i=0; i<windows.length; i++) {
-    if (windows[i].internalId == '<window_id>') {
-        windows[i].closeWindow();
-        break;
-    }
-};""".replace('<window_id>', window_id)
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    w.closeWindow();
+}""".replace('<window_id>', window_id)
         KWinInterface().run(kwin_script)
 
     def activate_window(self, window_id):
-        kwin_script = """const windows = workspace.windowList();
-for (var i=0; i<windows.length; i++) {
-    if (windows[i].internalId == '<window_id>') {
-        workspace.raiseWindow(windows[i]);
-        break;
-    }
-};""".replace('<window_id>', window_id)
+        if not window_id:
+            logger.error('valid window_id not provided for activate_window()')
+            return
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    workspace.activeWindow = w;
+}""".replace('<window_id>', window_id)
         KWinInterface().run(kwin_script)
 
     def move_resize_window(self, window_id, x, y , width, height):
-        kwin_script = """const windows = workspace.windowList();
-for (var i=0; i<windows.length; i++) {
-    if (windows[i].internalId == '<window_id>') {
-        let obj = Object.assign({}, windows[i].frameGeometry);
-        obj.x = <x>;
-        obj.y = <y>;
-        obj.width = <width>;
-        obj.height = <height>;
-        windows[i].frameGeometry = obj;
-        break;
-    }
-};""".replace('<window_id>', window_id)
+        if not window_id:
+            logger.error('valid window_id not provided for move_resize_window()')
+            return
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    let obj = Object.assign({}, w.frameGeometry);
+    obj.x = <x>;
+    obj.y = <y>;
+    obj.width = <width>;
+    obj.height = <height>;
+    w.frameGeometry = obj;
+}""".replace('<window_id>', window_id)
         kwin_script = kwin_script.replace('<x>', str(x))
         kwin_script = kwin_script.replace('<y>', str(y))
         kwin_script = kwin_script.replace('<width>', str(width))
@@ -373,79 +370,131 @@ for (var i=0; i<windows.length; i++) {
         KWinInterface().run(kwin_script)
 
     def move_to_workspace(self, window_id, workspace_number):
-        """
-        kdotool set_desktop_for_window [WINDOW] NUMBER
-            Move a window to a different desktop.
-            Specify the desktop number or "current_desktop" or "all".
-        """
-        raise NotImplementedError
-        self._dbus_move_to_workspace(window_id, workspace_number)
+        if not window_id:
+            logger.error('valid window_id not provided for move_to_worspace()')
+            return
+        kwin_script = """let d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
+if (d) {
+    let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+    if (w) {
+        w.desktops = [d];
+    }
+}""".replace('<window_id>', window_id)
+        kwin_script = kwin_script.replace('<workspace_number>', str(workspace_number + 1))
+        KWinInterface().run(kwin_script)
 
     def switch_workspace(self, workspace_number):
-        """
-        kdotool set_desktop <number>
-            Change the current desktop to <number>.
-        """
-        raise NotImplementedError
-        self._dbus_switch_workspace(workspace_number)
+        kwin_script = """let d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
+if (d) {
+    workspace.currentDesktop = d;
+}""".replace('<workspace_number>', str(workspace_number + 1))
+        KWinInterface().run(kwin_script)
 
     def get_properties(self, window_id):
-        """
-        KWin API read/write properties:
-        bool skipTaskbar: Indicates that the window should not be included on a taskbar.
-        bool skipPager: Indicates that the window should not be included on a Pager.
-        bool skipSwitcher: Whether the Window should be excluded from window switching effects.
-        bool keepAbove: Whether the Window is set to be kept above other windows.
-        bool keepBelow: Whether the Window is set to be kept below other windows.
-        bool shade: Whether the Window is shaded.
-        bool minimized: Whether the Window is minimized.
-        bool fullScreen: Whether this Window is fullScreen. A Window might either be fullScreen due to the _NET_WM property or through a legacy support hack. The fullScreen state can only be changed if the Window does not use the legacy hack. To be sure whether the state changed, connect to the notify signal.
-        """
-        raise NotImplementedError
-        return self._dbus_get_properties(window_id)
+        if not window_id:
+            logger.error('valid window_id not provided for get_properties()')
+            return
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    result = JSON.stringify({
+        is_modal: w.modal,
+        is_shaded: w.shade,
+        is_skip_taskbar: w.skipTaskbar,
+        is_hidden: w.hidden,
+        is_fullscreen: w.fullscreen,
+        is_above: w.keepAbove
+    });
+} else {
+    result = '';
+}""".replace('<window_id>', window_id)
+        result = KWinInterface().run(kwin_script, response_expected=True)
+        if result:
+           return result
 
     def stick_window(self, window_id):
-        #  Cant find
-        raise NotImplementedError
-        self._dbus_stick_window(window_id)
+        logger.warning('stick_window() not implemented.  The sticky property is not exposed in the KWin script API.')
+        return
 
     def unstick_window(self, window_id):
-        #  Cant find
-        raise NotImplementedError
-        self._dbus_unstick_window(window_id)
+        logger.warning('unstick_window() not implemented:  The sticky property is not exposed in the KWin script API.')
+        return
 
     def maximize_window(self, window_id, direction):
-        # KWin API function: window.setMaximize(bool vertically, bool horizontally)
-        raise NotImplementedError
-        self._dbus_maximize_window(window_id, direction)
+        """
+        direction:
+            1 - horizontal
+            2 - vertical
+            3 - both
+        """
+        if not window_id:
+            logger.error('valid window_id not provided for maximize_window()')
+            return
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    w.setMaximize(<maximize>);
+}""".replace('<window_id>', window_id)
+        if direction == 1:
+            kwin_script = kwin_script.replace('<maximize>', 'false, true')
+        elif direction == 2:
+            kwin_script = kwin_script.replace('<maximize>', 'true, false')
+        elif direction == 3:
+            kwin_script = kwin_script.replace('<maximize>', 'true, true')
+        else:
+            logger.warning('maximize_window(direction) called with invalid value.  Must be 1 for horizontal, 2 for vertical, or 3 for both.')
+            return
+        KWinInterface().run(kwin_script)
 
     def unmaximize_window(self, window_id, direction):
-        # KWin API: window.setMaximize(bool vertically, bool horizontally)
-        raise NotImplementedError
-        self._dbus_unmaximize_window(window_id, direction)
+        """
+        The KWin API does not provide a way for us to determine current
+        state so the best we can do is unmaximize in both directions.
+        """
+        if not window_id:
+            logger.error('valid window_id not provided for unmaximize_window()')
+            return
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    w.setMaximize(false, false);
+}""".replace('<window_id>', window_id)
+        KWinInterface().run(kwin_script)
 
     def make_fullscreen_window(self, window_id):
-        """
-        KWin API read/write properties:
-        bool fullScreen: Whether this Window is fullScreen. A Window might either be fullScreen due to the _NET_WM property or through a legacy support hack. The fullScreen state can only be changed if the Window does not use the legacy hack. To be sure whether the state changed, connect to the notify signal.
-        """
-        raise NotImplementedError
-        self._dbus_make_fullscreen_window(window_id)
+        if not window_id:
+            logger.error('valid window_id not provided for make_fullscreen_window()')
+            return
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    w.fullScreen = true;
+}""".replace('<window_id>', window_id)
+        KWinInterface().run(kwin_script)
 
     def unmake_fullscreen_window(self, window_id):
-        raise NotImplementedError
-        self._dbus_unmake_fullscreen_window(window_id)
+        if not window_id:
+            logger.error('valid window_id not provided for unmake_fullscreen_window()')
+            return
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    w.fullScreen = false;
+}""".replace('<window_id>', window_id)
+        KWinInterface().run(kwin_script)
 
     def make_above_window(self, window_id):
-        """
-        KWin API read/write properties:
-        bool keepAbove: Whether the Window is set to be kept above other windows.
-        bool keepBelow: Whether the Window is set to be kept below other windows.
-        """
-        raise NotImplementedError
-        self._dbus_make_above_window(window_id)
+        if not window_id:
+            logger.error('valid window_id not provided make_above_window()')
+            return
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    w.keepAbove = true;
+}""".replace('<window_id>', window_id)
+        KWinInterface().run(kwin_script)
 
     def unmake_above_window(self, window_id):
-        raise NotImplementedError
-        self._dbus_unmake_above_window(window_id)
+        if not window_id:
+            logger.error('valid window_id not provided for unmake_above_window()')
+            return
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    w.keepAbove = false;
+}""".replace('<window_id>', window_id)
+        KWinInterface().run(kwin_script)
 
