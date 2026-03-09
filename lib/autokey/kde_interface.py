@@ -23,6 +23,7 @@ import tempfile
 import threading
 import time
 import uuid
+import re
 
 from autokey.sys_interface.abstract_interface import AbstractSysInterface, AbstractMouseInterface, AbstractWindowInterface, WindowInfo
 
@@ -293,28 +294,83 @@ result = JSON.stringify(result, null, 4);"""
     """
 
     def get_active_window(self):
-        raise NotImplementedError
-        return self._active_window()
+        """
+        Ask KWin for the details for the currently focused window
+
+        :return: A dictionary containing information a window
+        :rtype: dictionary
+        """
+        window_list = self.get_window_list()
+        for window in window_list:
+            if window['focus']:
+                return window
+        #  If none of the windows in the list have focus, return an empty object
+        logger.error(f"Unable to determine the active window. The window list: {window_list}")
+        empty_window = {
+            'wm_class': '',
+            'wm_class_instance': '',
+            'wm_title': '',
+            'workspace': None,
+            'desktop': None,
+            'pid': None,
+            'id': None,
+            'frame_type': None,
+            'window_type': None,
+            'width': None,
+            'height': None,
+            'x': None,
+            'y': None,
+            'focus': False,
+            'in_current_workspace': False
+        }
+        return empty_window
 
     def get_active_desktop_index(self):
-        raise NotImplementedError
-        return self._dbus_get_active_desktop_index()
+        kwin_script="""const d = workspace.currentDesktop;
+result = d.x11DesktopNumber - 1;
+result = JSON.stringify(result, null, 4);"""
+        result = KWinInterface().run(kwin_script, response_expected=True)
+        if result:
+           return result
 
     def close_window(self, window_id):
-        raise NotImplementedError
-        self._dbus_close_window(window_id)
+        kwin_script = """const windows = workspace.windowList();
+for (var i=0; i<windows.length; i++) {
+    if (windows[i].internalId == '<window_id>') {
+        windows[i].closeWindow();
+        break;
+    }
+};""".replace('<window_id>', window_id)
+        KWinInterface().run(kwin_script)
 
     def activate_window(self, window_id):
-        raise NotImplementedError
-        self._dbus_activate_window(window_id)
+        kwin_script = """const windows = workspace.windowList();
+for (var i=0; i<windows.length; i++) {
+    if (windows[i].internalId == '<window_id>') {
+        workspace.raiseWindow(windows[i]);
+        break;
+    }
+};""".replace('<window_id>', window_id)
+        KWinInterface().run(kwin_script)
 
     def move_resize_window(self, window_id, x, y , width, height):
-        raise NotImplementedError
-        self._dbus_move_resize_window(window_id, x, y, width, height)
-
-    def get_screensize(self):
-        raise NotImplementedError
-        return self._dbus_get_screensize()
+        kwin_script = """const windows = workspace.windowList();
+for (var i=0; i<windows.length; i++) {
+    if (windows[i].internalId == '<window_id>') {
+        let obj = Object.assign({}, windows[i].frameGeometry);
+        obj.x = <x>;
+        obj.y = <y>;
+        obj.width = <width>;
+        obj.height = <height>;
+        windows[i].frameGeometry = obj;
+        break;
+    }
+};""".replace('<window_id>', window_id)
+        kwin_script = kwin_script.replace('<x>', str(x))
+        kwin_script = kwin_script.replace('<y>', str(y))
+        kwin_script = kwin_script.replace('<width>', str(width))
+        kwin_script = kwin_script.replace('<height>', str(height))
+        KWinInterface().run(kwin_script)
 
     def move_to_workspace(self, window_id, workspace_number):
         raise NotImplementedError
@@ -360,38 +416,3 @@ result = JSON.stringify(result, null, 4);"""
         raise NotImplementedError
         self._dbus_unmake_above_window(window_id)
 
-    def _active_window(self):
-        raise NotImplementedError
-        #TODO probably can be done more efficiently with an additional dbus method in the gnome extension
-        window_list = self._dbus_window_list()
-        for window in window_list:
-            if window['focus']:
-                return window
-        # TODO seeing this a lot when I use a script to call `gnome-screenshot -a`, suspect it's just related to that focus behaves differently when that app runs?
-        logger.error(f"Unable to determine the active window. The window list: {window_list}")
-
-        # @dlk3 - This happens when any GNOME session utility is active, like gnome-screenshot, the Activites screen, or the screen lock.  None of the windows in the
-        # window_list have focus when those things do.  Need to return something, however, or get_active_window() above throws an exception that causes even more
-        # problems - any keystrokes made on the GNOME session utility sit in the queue, preventing abbreviations being recognized, until the queue gets flushed
-        # somehow.
-        #
-        # This seems to work to prevent the exceptions and the follow-on problems ...
-        # Return an empty window object (Only really need wm_class and wm_title, but hey, why not do it all)
-        empty_window = {
-            'wm_class': '',
-            'wm_class_instance': '',
-            'wm_title': '',
-            'workspace': None,
-            'desktop': None,
-            'pid': None,
-            'id': None,
-            'frame_type': None,
-            'window_type': None,
-            'width': None,
-            'height': None,
-            'x': None,
-            'y': None,
-            'focus': False,
-            'in_current_workspace': False
-        }
-        return empty_window

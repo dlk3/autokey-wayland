@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+import subprocess
+import time
+
 import sys
 sys.path.append('/home/dlk/src/autokey-wayland/lib')
 
@@ -15,20 +18,53 @@ else:
     mouse = GnomeMouseReadInterface()
     mediator = GnomeExtensionWindowInterface()
 
-result = mediator.get_window_list()
-print(f'get_window_list = {result}\n')
+result = mouse.mouse_location()
+print(f'mouse_location() = {result}\n')
+
+window_list = mediator.get_window_list()
+print(f'get_window_list() = {window_list}\n')
 
 result = mediator.get_window_info()
-print(f'get_window_info = {result}\n')
+print(f'get_window_info() = {result}\n')
 
 result = mediator.get_window_title()
-print(f'get_window_title = {result}\n')
+print(f'get_window_title() = {result}\n')
 
 result = mediator.get_window_class()
-print(f'get_window_class = {result}\n')
+print(f'get_window_class() = {result}\n')
 
 result = mediator.get_screen_size()
-print(f'get_screen_size = {result}\n')
+print(f'get_screen_size() = {result}\n')
 
-result = mouse.mouse_location()
-print(f'mouse_location = {result}\n')
+# window API functions
+
+result = mediator.get_active_window()
+print(f'get_active_window() = {result}\n')
+
+result = mediator.get_active_desktop_index()
+print(f'get_active_desktop_index() = {result}\n')
+
+print('Opening a KSuduko window, so that I can test close_window(id)')
+subprocess.run('ksudoku &', shell=True)
+time.sleep(1)
+window_list = mediator.get_window_list()
+for window in window_list:
+    if 'KSudoku' in window['wm_title']:
+        mediator.close_window(window['id'])
+
+print('Give focus to a window that currently does not have it')
+for window in window_list:
+    if not window['focus'] and 'X Recording bridge' not in window['wm_title']:
+        print(f'Giving focus to {window['wm_title']}')
+        mediator.activate_window(window['id'])
+        break
+
+print('Move and resize this window, then put it back where it was')
+window_list = mediator.get_window_list()
+for window in window_list:
+    if window['focus']:
+        mediator.move_resize_window(window['id'], 100, 100, 1000, 1000)
+        time.sleep(1)
+        mediator.move_resize_window(window['id'], window['x'], window['y'], window['width'], window['height'])
+        break
+
