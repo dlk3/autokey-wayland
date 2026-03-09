@@ -1,4 +1,4 @@
-#  Copyright (C) 2024  @sebastiansam55 on GitHub.com
+#  Copyright (C) 2024  Sam Sebastian
 #  Copyright (C) 2026  David King <dave@daveking.com>
 #
 #  This program is free software; you can redistribute it and/or
