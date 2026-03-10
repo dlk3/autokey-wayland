@@ -340,24 +340,22 @@ class Window(AbstractWindow):
         try:
             (screen_width, screen_height) = self.mediator.windowInterface.get_screen_size()
         except Exception as e:
-            logger.error ('KDE KWin never responded with the screen size.')
-        try:
-            target_window = self.__get_target_window(title, matchClass, by_hex)
-            if target_window:
-                #logger.debug(f'window API: target window details:\n{json.dumps(target_window, indent=4)}')
-                if win_width == -1:
-                    win_width = target_window['width']
-                elif not win_width:
-                    win_width = screen_width // 3
-                if win_height == -1:
-                    win_height = target_window['height']
-                elif not win_height:
-                    win_height = screen_height // 3
-                x = (screen_width - win_width) // 2
-                y = (screen_height - win_height) // 2
-                self.resize_move(title, x, y, win_width, win_height, matchClass=matchClass, by_hex=by_hex)
-        except Exception as e:
-            logger.error('window.center_window() script API unable to get a valid numeric screen resolution')
+            logger.exception('KDE KWin never responded with the screen size.')
+            return
+        target_window = self.__get_target_window(title, matchClass, by_hex)
+        if target_window:
+            #logger.debug(f'window API: target window details:\n{json.dumps(target_window, indent=4)}')
+            if win_width == -1:
+                win_width = target_window['width']
+            elif not win_width:
+                win_width = screen_width // 3
+            if win_height == -1:
+                win_height = target_window['height']
+            elif not win_height:
+                win_height = screen_height // 3
+            x = (screen_width - win_width) // 2
+            y = (screen_height - win_height) // 2
+            self.resize_move(title, x, y, win_width, win_height, matchClass=matchClass, by_hex=by_hex)
         return
 
     def get_window_list(self, filter_desktop=-1):
