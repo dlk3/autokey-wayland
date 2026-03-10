@@ -375,7 +375,10 @@ if (w) {
 
     def move_to_workspace(self, window_id, workspace_number):
         if not window_id:
-            logger.error('valid window_id not provided for move_to_worspace()')
+            logger.error('invalid window_id specified for move_to_workspace()')
+            return
+        if not workspace_number:
+            logger.error('invalid workspace_number specified for move_to_workspace()')
             return
         kwin_script = """let d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
 if (d) {
