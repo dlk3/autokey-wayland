@@ -186,10 +186,10 @@ class KdeMouseReadInterface():
         kwin_script = """const x = workspace.cursorPos.x;
 const y = workspace.cursorPos.y;
 result = [x, y];
-result = JSON.stringify(result, null, 4);"""
+result = JSON.stringify(result);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-            return result
+            return json.loads(result)
 
 class KdeWindowInterface(AbstractWindowInterface):
     def __init__(self):
@@ -207,7 +207,7 @@ result = {
     'wm_class': w.resourceName,
     'wm_title': w.caption
 };
-result = JSON.stringify(result, null, 4);"""
+result = JSON.stringify(result);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
             result = json.loads(result)
@@ -228,7 +228,7 @@ windows.forEach(function(w) {
     if ((!w.desktopWindow) && ((w.desktops).length > 0)) {
         winJsonArr.push({
             wm_class: w.resourceClass,
-            wm_class_instance: null,
+            wm_class_instance: w.resourceClass,
             wm_title: w.caption,
             workspace: w.desktops[0].x11DesktopNumber - 1,
             desktop: w.desktops[0].id,
@@ -241,11 +241,11 @@ windows.forEach(function(w) {
             x: w.x,
             y: w.y,
             focus: w.active,
-            in_current_workspace: null
+            in_current_workspace: (w.desktops.find((d) => d == workspace.currentDesktop) !== null)
         });
     }
 });
-result = JSON.stringify(winJsonArr, null, 0);"""
+result = JSON.stringify(winJsonArr);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
             result = json.loads(result)
@@ -284,10 +284,10 @@ result = JSON.stringify(winJsonArr, null, 0);"""
         """
         kwin_script="""const w = workspace.activeScreen.geometry;
 result = [w.width, w.height];
-result = JSON.stringify(result, null, 4);"""
+result = JSON.stringify(result);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-           return result
+           return json.loads(result)
 
     """
     The rest of these methods support the window API
@@ -328,10 +328,10 @@ result = JSON.stringify(result, null, 4);"""
     def get_active_desktop_index(self):
         kwin_script="""const d = workspace.currentDesktop;
 result = d.x11DesktopNumber - 1;
-result = JSON.stringify(result, null, 4);"""
+result = JSON.stringify(result);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-           return result
+           return json.loads(result)
 
     def close_window(self, window_id):
         kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
@@ -409,14 +409,14 @@ if (w) {
 }""".replace('<window_id>', window_id)
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-           return result
+           return json.loads(result)
 
     def stick_window(self, window_id):
-        logger.warning('stick_window() not implemented.  The sticky property is not exposed in the KWin script API.')
+        logger.warning('stick_window() not implemented for KDE/Wayland.  The sticky property is not exposed in the KWin script API.')
         return
 
     def unstick_window(self, window_id):
-        logger.warning('unstick_window() not implemented:  The sticky property is not exposed in the KWin script API.')
+        logger.warning('unstick_window() not implemented for KDE/Wayland:  The sticky property is not exposed in the KWin script API.')
         return
 
     def maximize_window(self, window_id, direction):
@@ -446,16 +446,32 @@ if (w) {
 
     def unmaximize_window(self, window_id, direction):
         """
-        The KWin API does not provide a way for us to determine current
-        state so the best we can do is unmaximize in both directions.
+        direction:
+            1 - horizontal
+            2 - vertical
+            3 - both
         """
         if not window_id:
             logger.error('valid window_id not provided for unmaximize_window()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        if direction not in [1,2,3]:
+            logger.warning('unmaximize_window(direction) called with invalid value.  Must be 1 for horizontal, 2 for vertical, or 3 for both.')
+            return
+        kwin_script = """const direction = <direction>;
+const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
-    w.setMaximize(false, false);
+    const s = workspace.clientArea(KWin.MaximizeArea, w);
+    vert = (w.height > s.height);
+    horiz = (w.width == s.width);
+    if (direction == 1) {
+        w.setMaximize(vert, false);
+    } else if (direction == 2){
+        w.setMaximize(false, horiz);
+    } else if (direction == 3) {
+        w.setMaximize(false, false);
+    }
 }""".replace('<window_id>', window_id)
+        kwin_script = kwin_script.replace('<direction>', str(direction))
         KWinInterface().run(kwin_script)
 
     def make_fullscreen_window(self, window_id):
