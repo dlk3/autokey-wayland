@@ -229,7 +229,7 @@ result = JSON.stringify(result);"""
         kwin_script = """const windows = workspace.windowList();
 winJsonArr = [];
 windows.forEach(function(w) {
-    if ((!w.desktopWindow) && ((w.desktops).length > 0)) {
+    if ((!w.desktopWindow) && ((w.desktops).length > 0) && (!w.caption.includes('Xwayland Video Bridge'))) {
         winJsonArr.push({
             wm_class: w.resourceClass,
             wm_class_instance: w.resourceClass,

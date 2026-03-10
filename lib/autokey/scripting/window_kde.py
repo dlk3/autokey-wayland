@@ -337,7 +337,10 @@ class Window(AbstractWindow):
         :param matchClass: if True, match on the window class instead of the title
         :param by_hex: If true, interpret the C{title} as a hexid
         """
-        (screen_width, screen_height) = self.mediator.windowInterface.get_screen_size()
+        try:
+            (screen_width, screen_height) = self.mediator.windowInterface.get_screen_size()
+        except Exception as e:
+            logger.error ('KDE KWin never responded with the screen size.')
         try:
             target_window = self.__get_target_window(title, matchClass, by_hex)
             if target_window:
