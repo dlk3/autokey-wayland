@@ -17,7 +17,7 @@
 #####################################################################
 
 """
-Desktop window management based on the AutoKey GNOME Shell extension
+Desktop window management based on KDE KWin scripts
 """
 
 import re
@@ -193,22 +193,15 @@ class Window(AbstractWindow):
         - remove
         - toggle
 
-        Properties available in all environments:
+        Properties available in KDE environment:
 
-        - sticky  ("add" or "remove" only, no "toggle")
+        - above
+        - fullscreen
         - maximized_vert
         - maximized_horz
-        - fullscreen
-        - above
-
-        These additional properties are available exclusively in the X11
-        environment, using C{wmctrl}:
-
-        - modal
         - shaded
-        - skip_taskbar
         - skip_pager
-        - hidden
+        - skip_taskbar
 
         :param title: window title to match against (as case-insensitive substring match)
         :param action: one of the actions listed above
@@ -220,16 +213,31 @@ class Window(AbstractWindow):
         if target_window:
             #logger.debug(f'window API: target window details:\n{json.dumps(target_window, indent=4)}')
             properties = self.mediator.windowInterface.get_properties(target_window['id'])
-            if prop == 'sticky':
+            if prop == 'above':
                 if action == 'toggle':
-                    logger.error('Current sticky state unknown, "toggle" action is not supported in window.set_property()')
+                    if properties['is_above']:
+                        self.mediator.windowInterface.unmake_above_window(target_window['id'])
+                    else:
+                        self.mediator.windowInterface.make_above_window(target_window['id'])
                 elif action == 'add':
-                    self.mediator.windowInterface.stick_window(target_window['id'])
+                    self.mediator.windowInterface.make_above_window(target_window['id'])
                 elif action == 'remove':
-                    self.mediator.windowInterface.unstick_window(target_window['id'])
+                    self.mediator.windowInterface.unmake_above_window(target_window['id'])
                 else:
                     logger.error(f'Unknown action "{action}" in window.set_property()')
-            if prop == 'maximized_vert':
+            elif prop == 'fullscreen':
+                if action == 'toggle':
+                    if properties['is_fullscreen']:
+                        self.mediator.windowInterface.unmake_fullscreen_window(target_window['id'])
+                    else:
+                        self.mediator.windowInterface.make_fullscreen_window(target_window['id'])
+                elif action == 'add':
+                    self.mediator.windowInterface.make_fullscreen_window(target_window['id'])
+                elif action == 'remove':
+                    self.mediator.windowInterface.unmake_fullscreen_window(target_window['id'])
+                else:
+                    logger.error(f'Unknown action "{action}" in window.set_property()')
+            elif prop == 'maximized_vert':
                 if action == 'toggle':
                     if properties['is_maximized_vert']:
                         self.mediator.windowInterface.unmaximize_window(target_window['id'], 2)
@@ -253,28 +261,31 @@ class Window(AbstractWindow):
                     self.mediator.windowInterface.unmaximize_window(target_window['id'], 1)
                 else:
                     logger.error(f'Unknown action "{action}" in window.set_property()')
-            elif prop == 'fullscreen':
+            elif prop == 'shaded':
                 if action == 'toggle':
-                    if properties['is_fullscreen']:
-                        self.mediator.windowInterface.unmake_fullscreen_window(target_window['id'])
-                    else:
-                        self.mediator.windowInterface.make_fullscreen_window(target_window['id'])
+                    self.mediator.windowInterface.set_property(target_window['id'], 'shade', not properties['is_shaded'])
                 elif action == 'add':
-                    self.mediator.windowInterface.make_fullscreen_window(target_window['id'])
+                    self.mediator.windowInterface.set_property(target_window['id'], 'shade', True)
                 elif action == 'remove':
-                    self.mediator.windowInterface.unmake_fullscreen_window(target_window['id'])
+                    self.mediator.windowInterface.set_property(target_window['id'], 'shade', False)
                 else:
                     logger.error(f'Unknown action "{action}" in window.set_property()')
-            elif prop == 'above':
+            elif prop == 'skip_pager':
                 if action == 'toggle':
-                    if properties['is_above']:
-                        self.mediator.windowInterface.unmake_above_window(target_window['id'])
-                    else:
-                        self.mediator.windowInterface.make_above_window(target_window['id'])
+                    self.mediator.windowInterface.set_property(target_window['id'], 'skipPager', not properties['is_skip_pager'])
                 elif action == 'add':
-                    self.mediator.windowInterface.make_above_window(target_window['id'])
+                    self.mediator.windowInterface.set_property(target_window['id'], 'skipPager', True)
                 elif action == 'remove':
-                    self.mediator.windowInterface.unmake_above_window(target_window['id'])
+                    self.mediator.windowInterface.set_property(target_window['id'], 'skipPager', False)
+                else:
+                    logger.error(f'Unknown action "{action}" in window.set_property()')
+            elif prop == 'skip_taskbar':
+                if action == 'toggle':
+                    self.mediator.windowInterface.set_property(target_window['id'], 'skipTaskbar', not properties['is_skip_taskbar'])
+                elif action == 'add':
+                    self.mediator.windowInterface.set_property(target_window['id'], 'skipTaskbar', True)
+                elif action == 'remove':
+                    self.mediator.windowInterface.set_property(target_window['id'], 'skipTaskbar', False)
                 else:
                     logger.error(f'Unknown action "{action}" in window.set_property()')
             else:

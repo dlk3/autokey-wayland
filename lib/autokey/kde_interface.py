@@ -128,6 +128,10 @@ class KWinInterface():
         :keyword listener_timeout: The number of seconds to wait for
         the KWin script to send a response. Only meaningful when
         response_expected = True.
+        :return: if response_expected = True, the data sent from a
+        callDBus() call in the KWin script, sent to the KWinListener
+        DBus service, will be returned.  Otherwise nothing is returned.
+        :rtype: JSON object
         """
         bus = SessionBus()
 
@@ -161,12 +165,12 @@ class KWinInterface():
             #  Close the KWin script sending thread
             t.join()
 
-            #  If the timeout expired, either the script code is broken
-            #  or the timeout value isn't long enough
             if not listener.result:
+                #  If the timeout expired, either the script code is broken
+                #  or the timeout value isn't long enough
                 logger.error(f'Timeout expired before KWin script returned a result:\nDBUus service path: {service_path}\nKWin script:\n{kwin_script}')
             else:
-                return listener.result
+                return json.loads(listener.result)
 
         else:
             #  Run the KWin script without waiting for a response
@@ -189,7 +193,7 @@ result = [x, y];
 result = JSON.stringify(result);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-            return json.loads(result)
+            return result
 
 class KdeWindowInterface(AbstractWindowInterface):
     def __init__(self):
@@ -210,7 +214,7 @@ result = {
 result = JSON.stringify(result);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-            result = json.loads(result)
+            result = result
             return WindowInfo(wm_title=result['wm_title'], wm_class=result['wm_class'])
         else:
             return WindowInfo(wm_title='unknown', wm_class='unknown')
@@ -248,7 +252,7 @@ windows.forEach(function(w) {
 result = JSON.stringify(winJsonArr);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-            result = json.loads(result)
+            result = result
             return result
         else:
             return []
@@ -287,11 +291,11 @@ result = [w.width, w.height];
 result = JSON.stringify(result);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-           return json.loads(result)
+           return result
 
-    """
-    The rest of these methods support the window API
-    """
+    ####################################################################
+    #  The following methods support the window API
+    ####################################################################
 
     def get_active_window(self):
         """
@@ -331,10 +335,10 @@ result = d.x11DesktopNumber - 1;
 result = JSON.stringify(result);"""
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-           return json.loads(result)
+           return result
 
     def close_window(self, window_id):
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     w.closeWindow();
 }""".replace('<window_id>', window_id)
@@ -344,7 +348,7 @@ if (w) {
         if not window_id:
             logger.error('valid window_id not provided for activate_window()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     workspace.activeWindow = w;
 }""".replace('<window_id>', window_id)
@@ -354,7 +358,7 @@ if (w) {
         if not window_id:
             logger.error('valid window_id not provided for move_resize_window()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     let obj = Object.assign({}, w.frameGeometry);
     obj.x = <x>;
@@ -375,7 +379,7 @@ if (w) {
             return
         kwin_script = """let d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
 if (d) {
-    let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+    const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
     if (w) {
         w.desktops = [d];
     }
@@ -391,25 +395,40 @@ if (d) {
         KWinInterface().run(kwin_script)
 
     def get_properties(self, window_id):
+        # Missing properties
+        #   skip_taskbar
+        #   skip_pager
         if not window_id:
             logger.error('valid window_id not provided for get_properties()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
+    const s = workspace.clientArea(KWin.MaximizeArea, w);
     result = JSON.stringify({
-        is_modal: w.modal,
-        is_shaded: w.shade,
-        is_skip_taskbar: w.skipTaskbar,
-        is_hidden: w.hidden,
+        is_above: w.keepAbove,
         is_fullscreen: w.fullscreen,
-        is_above: w.keepAbove
+        is_hidden: w.hidden,
+        is_maximized_vert: (w.height > s.height),
+        is_maximized_horz: (w.width == s.width),
+        is_shaded: w.shade,
+        is_skip_pager: w.skipPager,
+        is_skip_taskbar: w.skipTaskbar
     });
 } else {
     result = '';
 }""".replace('<window_id>', window_id)
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-           return json.loads(result)
+           return result
+
+    def set_properties(window_id, prop, value):
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+if (w) {
+    w.<property> = <value>;
+}""".replace('<window_id>', window_id);
+        kwin_script = kwin_script.replace('<property>', prop)
+        kwin_script = kwin_script.replace('<value>', 'true' if value else 'false')
+        KWinInterface().run(kwin_script)
 
     def stick_window(self, window_id):
         logger.warning('stick_window() not implemented for KDE/Wayland.  The sticky property is not exposed in the KWin script API.')
@@ -420,16 +439,14 @@ if (w) {
         return
 
     def maximize_window(self, window_id, direction):
-        """
-        direction:
-            1 - horizontal
-            2 - vertical
-            3 - both
-        """
+        #  direction:
+        #    1 - horizontal
+        #    2 - vertical
+        #    3 - both
         if not window_id:
             logger.error('valid window_id not provided for maximize_window()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     w.setMaximize(<maximize>);
 }""".replace('<window_id>', window_id)
@@ -445,12 +462,10 @@ if (w) {
         KWinInterface().run(kwin_script)
 
     def unmaximize_window(self, window_id, direction):
-        """
-        direction:
-            1 - horizontal
-            2 - vertical
-            3 - both
-        """
+        #  direction:
+        #    1 - horizontal
+        #    2 - vertical
+        #    3 - both
         if not window_id:
             logger.error('valid window_id not provided for unmaximize_window()')
             return
@@ -462,11 +477,11 @@ const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     const s = workspace.clientArea(KWin.MaximizeArea, w);
     vert = (w.height > s.height);
-    horiz = (w.width == s.width);
+    horz = (w.width == s.width);
     if (direction == 1) {
         w.setMaximize(vert, false);
     } else if (direction == 2){
-        w.setMaximize(false, horiz);
+        w.setMaximize(false, horz);
     } else if (direction == 3) {
         w.setMaximize(false, false);
     }
@@ -478,7 +493,7 @@ if (w) {
         if not window_id:
             logger.error('valid window_id not provided for make_fullscreen_window()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     w.fullScreen = true;
 }""".replace('<window_id>', window_id)
@@ -488,7 +503,7 @@ if (w) {
         if not window_id:
             logger.error('valid window_id not provided for unmake_fullscreen_window()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     w.fullScreen = false;
 }""".replace('<window_id>', window_id)
@@ -498,7 +513,7 @@ if (w) {
         if not window_id:
             logger.error('valid window_id not provided make_above_window()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     w.keepAbove = true;
 }""".replace('<window_id>', window_id)
@@ -508,7 +523,7 @@ if (w) {
         if not window_id:
             logger.error('valid window_id not provided for unmake_above_window()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     w.keepAbove = false;
 }""".replace('<window_id>', window_id)

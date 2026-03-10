@@ -40,9 +40,9 @@ def waylandChecks():
 
         #  Check that we're running on a supported desktop environment
         if os.environ['XDG_SESSION_DESKTOP'] == 'gnome' or 'GNOME_DESKTOP_SESSION_ID' in os.environ or os.environ['XDG_SESSION_DESKTOP'] == 'KDE':
-            logger.debug(f"waylandChecks() found AutoKey running under a supported desktop environment")
+            logger.debug(f"waylandChecks() found AutoKey running under a supported desktop environment: {os.environ['XDG_SESSION_DESKTOP']}")
         else:
-            logger.debug(f"waylandChecks() found AutoKey running under an unsupported desktop environment, displaying popup.")
+            logger.debug(f"waylandChecks() found AutoKey running under an unsupported desktop environment: {os.environ['XDG_SESSION_DESKTOP']}, displaying popup.")
             __show_unsupported_desktop_popup()
             return False
     except Exception as e:

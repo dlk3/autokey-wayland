@@ -29,6 +29,7 @@
 
 from gi.repository import GLib
 from pydbus import SessionBus
+import json
 import os
 import tempfile
 import threading
@@ -42,6 +43,10 @@ loop = GLib.MainLoop()
 
 #  The definition for a DBus service that listens for a message from a
 #  KWin script.
+#
+#  The XML in the docstring is NOT a comment, it is the introspection
+#  definition needed when pybus pusblishes the serbvice.  See
+#  https://pydbus.readthedocs.io/en/latest/legacydocs/tutorial.html#class-preparation
 class KWinListener(object):
     """
         <node>
@@ -135,6 +140,9 @@ class KWinInterface():
         :keyword listener_timeout: The number of seconds to wait for
         the KWin script to send a response. Only meaningful when
         response_expected = True.
+        :return: Data sent from a callDBus() call in KWin script sent to
+        our KWinListener DBus service.
+        :rtype: JSON object
         """
         bus = SessionBus()
 
@@ -171,9 +179,9 @@ class KWinInterface():
             #  If the timeout expired, either the script code is broken
             #  or the timeout value isn't long enough
             if not listener.result:
-                logger.error(f'Timeout expired before KWin script returned a result:\nDBUus service path: {service_path}\nKWin script:\n{kwin_script}')
+                print(f'Timeout expired before KWin script returned a result:\nDBUus service path: {service_path}\nKWin script:\n{kwin_script}')
             else:
-                return listener.result
+                return json.loads(listener.result)
 
         else:
             #  Run the KWin script without waiting for a response
@@ -188,7 +196,7 @@ class KWinInterface():
 #  listen for it.
 kwin_script="""const w = workspace.activeScreen.geometry;
 result = [w.width, w.height];
-result = JSON.stringify(result, null, 4);"""
+result = JSON.stringify(result);"""
 
 runner = KWinInterface()
 result = runner.run(kwin_script, response_expected=True)
