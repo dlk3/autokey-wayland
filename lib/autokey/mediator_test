@@ -21,11 +21,11 @@ else:
 result = mouse.mouse_location()
 print(f'mouse_location() = {result}\n')
 
-window_list = mediator.get_window_list()
-print(f'get_window_list() = {window_list}\n')
-
 result = mediator.get_window_info()
 print(f'get_window_info() = {result}\n')
+
+window_list = mediator.get_window_list()
+print(f'get_window_list() = {window_list}\n')
 
 result = mediator.get_window_title()
 print(f'get_window_title() = {result}\n')

@@ -168,8 +168,7 @@ class Window(AbstractWindow):
         target_window = self.__get_target_window(title, matchClass, by_hex)
         if target_window:
             #logger.debug(f'window API: target window details:\n{json.dumps(target_window, indent=4)}')
-            hexid = target_window['id']
-            self.mediator.windowInterface.move_to_workspace(hexid, deskNum)
+            self.mediator.windowInterface.move_to_workspace(target_window['id'], deskNum)
 
     def switch_desktop(self, deskNum):
         """

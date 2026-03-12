@@ -36,6 +36,10 @@ loop = GLib.MainLoop()
 
 #  The definition for a DBus service that listens for a message from a
 #  KWin script.
+#
+#  The XML in the docstring in this class is NOT a comment, it is the
+#  DBus introspection detail that pydbus uses when it publishes this
+#  service.
 class KWinListener(object):
     """
         <node>
@@ -106,7 +110,7 @@ class KWinInterface():
 
         #  Run the script
         obj = bus.get('org.kde.KWin', f'/Scripting/Script{script_id}')
-        result = obj.run()
+        obj.run()
 
         #  Unload the script
         obj = bus.get('org.kde.KWin', '/Scripting')
@@ -155,19 +159,41 @@ class KWinInterface():
             #  Start the KWinListener DBus service
             bus = SessionBus()
             listener = KWinListener()
-            dbus_service = bus.publish(DBUS_SERVICE_NAME, (unique_id, listener))
+
+            #  The publish() of the DBUS service can collide with an
+            #  already existing service, so we retry it more than once.
+            max_retries = 3
+            retry_ctr = 0
+            success = False
+            while retry_ctr < max_retries:
+                try:
+                    dbus_service = bus.publish(DBUS_SERVICE_NAME, (unique_id, listener))
+                    success = True
+                    break
+                except RuntimeError as e:
+                    retry_ctr = retry_ctr + 1
+                    time.sleep(0.1)
+            if not success:
+                logger.error(f'Failed to publish a KWinListener service:\n{e}')
+                return
+
+            #  Set the timeout and start the service
             GLib.timeout_add_seconds(listener_timeout, listener._timeout)
             loop.run()
+
             #  Execution pauses here, until a DBus message is recieved
             #  or the timeout is reached.
+
+            #  Remove the service
             dbus_service.unpublish()
 
             #  Close the KWin script sending thread
             t.join()
 
             if not listener.result:
-                #  If the timeout expired, either the script code is broken
-                #  or the timeout value isn't long enough
+                #  If the timeout expired, either the script code is
+                #  broken or KWin is getting bogged down and the timeout
+                #  value wasn't long enough
                 logger.error(f'Timeout expired before KWin script returned a result:\nDBUus service path: {service_path}\nKWin script:\n{kwin_script}')
             else:
                 return json.loads(listener.result)
@@ -187,13 +213,10 @@ class KdeMouseReadInterface():
         :return: [x, y]
         :rtype: list
         """
-        kwin_script = """const x = workspace.cursorPos.x;
-const y = workspace.cursorPos.y;
-result = [x, y];
-result = JSON.stringify(result);"""
+        kwin_script = 'let result = JSON.stringify(workspace.cursorPos);'
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-            return result
+            return [result['x'], result['y']]
 
 class KdeWindowInterface(AbstractWindowInterface):
     def __init__(self):
@@ -206,16 +229,10 @@ class KdeWindowInterface(AbstractWindowInterface):
         :return: (wm_title, wm_class)
         :rtype: WindowInfo
         """
-        kwin_script = """const w = workspace.activeWindow;
-result = {
-    'wm_class': w.resourceName,
-    'wm_title': w.caption
-};
-result = JSON.stringify(result);"""
+        kwin_script = 'let result = JSON.stringify(workspace.activeWindow);'
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-            result = result
-            return WindowInfo(wm_title=result['wm_title'], wm_class=result['wm_class'])
+            return WindowInfo(wm_title=result['caption'], wm_class=result['resourceName'])
         else:
             return WindowInfo(wm_title='unknown', wm_class='unknown')
 
@@ -226,36 +243,35 @@ result = JSON.stringify(result);"""
         :return: An array containing information about each window
         :rtype: list of dictionaries
         """
-        kwin_script = """const windows = workspace.windowList();
-winJsonArr = [];
-windows.forEach(function(w) {
-    if ((!w.desktopWindow) && ((w.desktops).length > 0) && (!w.caption.includes('Xwayland Video Bridge'))) {
-        winJsonArr.push({
-            wm_class: w.resourceClass,
-            wm_class_instance: w.resourceClass,
-            wm_title: w.caption,
-            workspace: w.desktops[0].x11DesktopNumber - 1,
-            desktop: w.desktops[0].id,
-            pid: w.pid,
-            id: w.internalId,
-            frame_type: null,
-            window_type: w.windowType,
-            width: w.width,
-            height: w.height,
-            x: w.x,
-            y: w.y,
-            focus: w.active,
-            in_current_workspace: (w.desktops.find((d) => d == workspace.currentDesktop) !== null)
-        });
-    }
-});
-result = JSON.stringify(winJsonArr);"""
+        kwin_script = 'let result = JSON.stringify([workspace.windowList(), workspace.currentDesktop]);'
         result = KWinInterface().run(kwin_script, response_expected=True)
+        window_list = []
         if result:
-            result = result
-            return result
-        else:
-            return []
+            for window in result[0]:
+                if not window['desktopWindow'] and len(window['desktops']) > 0 and 'Xwayland Video Bridge' not in window['caption']:
+                    in_current_workspace = False
+                    for desktop in window['desktops']:
+                        if desktop['id'] == result[1]['id']:
+                            in_current_workspace = True
+                            break
+                    window_list.append({
+                        'wm_class': window['resourceClass'],
+                        'wm_class_instance': window['resourceClass'],
+                        'wm_title': window['caption'],
+                        'workspace': window['desktops'][0]['x11DesktopNumber'] - 1,
+                        'desktop': window['desktops'][0]['id'],
+                        'pid': window['pid'],
+                        'id': window['internalId'],
+                        'frame_type': None,
+                        'window_type': window['windowType'],
+                        'width': window['width'],
+                        'height': window['height'],
+                        'x': window['x'],
+                        'y': window['y'],
+                        'focus': window['active'],
+                        'in_current_workspace': in_current_workspace
+                    })
+        return window_list
 
     def get_window_title(self, window=None, traverse=True) -> str:
         """
@@ -286,12 +302,10 @@ result = JSON.stringify(winJsonArr);"""
         :return: [width, height]
         :rtype: list
         """
-        kwin_script="""const w = workspace.activeScreen.geometry;
-result = [w.width, w.height];
-result = JSON.stringify(result);"""
+        kwin_script='let result = JSON.stringify(workspace.activeScreen.geometry);'
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-           return result
+           return [result['width'], result['height']]
 
     ####################################################################
     #  The following methods support the window API
@@ -304,35 +318,55 @@ result = JSON.stringify(result);"""
         :return: A dictionary containing information a window
         :rtype: dictionary
         """
-        window_list = self.get_window_list()
-        for window in window_list:
-            if window['focus']:
-                return window
-        #  If none of the windows in the list have focus, return an empty object
-        logger.error(f"Unable to determine the active window. The window list: {window_list}")
-        empty_window = {
-            'wm_class': '',
-            'wm_class_instance': '',
-            'wm_title': '',
-            'workspace': None,
-            'desktop': None,
-            'pid': None,
-            'id': None,
-            'frame_type': None,
-            'window_type': None,
-            'width': None,
-            'height': None,
-            'x': None,
-            'y': None,
-            'focus': False,
-            'in_current_workspace': False
-        }
-        return empty_window
+        kwin_script = 'let result = JSON.stringify([workspace.activeWindow, workspace.currentDesktop]);'
+        result = KWinInterface().run(kwin_script, response_expected=True)
+        if result:
+            window = result[0]
+            in_current_workspace = False
+            for desktop in window['desktops']:
+                if desktop['id'] == result[1]['id']:
+                    in_current_workspace = True
+                    break
+            active_window = {
+                'wm_class': window['resourceClass'],
+                'wm_class_instance': window['resourceClass'],
+                'wm_title': window['caption'],
+                'workspace': window['desktops'][0]['x11DesktopNumber'] - 1,
+                'desktop': window['desktops'][0]['id'],
+                'pid': window['pid'],
+                'id': window['internalId'],
+                'frame_type': None,
+                'window_type': window['windowType'],
+                'width': window['width'],
+                'height': window['height'],
+                'x': window['x'],
+                'y': window['y'],
+                'focus': window['active'],
+                'in_current_workspace': in_current_workspace
+            }
+        else:
+            logger.error(f"Unable to determine the active window. The window list: {window_list}")
+            active_window = {
+                'wm_class': '',
+                'wm_class_instance': '',
+                'wm_title': '',
+                'workspace': None,
+                'desktop': None,
+                'pid': None,
+                'id': None,
+                'frame_type': None,
+                'window_type': None,
+                'width': None,
+                'height': None,
+                'x': None,
+                'y': None,
+                'focus': False,
+                'in_current_workspace': False
+            }
+        return active_window
 
     def get_active_desktop_index(self):
-        kwin_script="""const d = workspace.currentDesktop;
-result = d.x11DesktopNumber - 1;
-result = JSON.stringify(result);"""
+        kwin_script = 'let result = JSON.stringify(workspace.currentDesktop.x11DesktopNumber - 1);'
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
            return result
@@ -377,8 +411,10 @@ if (w) {
         if not window_id:
             logger.error('invalid window_id specified for move_to_workspace()')
             return
-        if not workspace_number:
-            logger.error('invalid workspace_number specified for move_to_workspace()')
+        try:
+            workspace_number = int(workspace_number)
+        except:
+            logger.error(f'invalid workspace_number specified for move_to_workspace(): "{workspace_number}"')
             return
         kwin_script = """let d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
 if (d) {
@@ -391,6 +427,11 @@ if (d) {
         KWinInterface().run(kwin_script)
 
     def switch_workspace(self, workspace_number):
+        try:
+            workspace_number = int(workspace_number)
+        except:
+            logger.error(f'invalid workspace_number specified for switch_workspace(): "{workspace_number}"')
+            return
         kwin_script = """let d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
 if (d) {
     workspace.currentDesktop = d;
@@ -398,31 +439,31 @@ if (d) {
         KWinInterface().run(kwin_script)
 
     def get_properties(self, window_id):
-        # Missing properties
-        #   skip_taskbar
-        #   skip_pager
         if not window_id:
             logger.error('valid window_id not provided for get_properties()')
             return
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
-    const s = workspace.clientArea(KWin.MaximizeArea, w);
-    result = JSON.stringify({
-        is_above: w.keepAbove,
-        is_fullscreen: w.fullscreen,
-        is_hidden: w.hidden,
-        is_maximized_vert: (w.height > s.height),
-        is_maximized_horz: (w.width == s.width),
-        is_shaded: w.shade,
-        is_skip_pager: w.skipPager,
-        is_skip_taskbar: w.skipTaskbar
-    });
+    let s = workspace.clientArea(KWin.MaximizeArea, w);
+    result = JSON.stringify([w, s]);
 } else {
-    result = '';
+    result = JSON.stringify([null, null]);
 }""".replace('<window_id>', window_id)
         result = KWinInterface().run(kwin_script, response_expected=True)
         if result:
-           return result
+            (window, screen) = result
+            return {
+                'is_above': window['keepAbove'],
+                'is_fullscreen': window['fullScreen'],
+                'is_hidden': window['hidden'],
+                'is_maximized_vert': (window['height'] == screen['height']),
+                'is_maximized_horz': (window['width'] == screen['width']),
+                'is_shaded': window['shade'],
+                'is_skip_pager': window['skipPager'],
+                'is_skip_taskbar': window['skipTaskbar']
+            }
+        else:
+            return
 
     def set_properties(window_id, prop, value):
         kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
