@@ -8,10 +8,16 @@ sys.path.append('/home/dlk/src/autokey-wayland/lib')
 
 import os
 if os.environ['XDG_CURRENT_DESKTOP'] =="KDE":
-    from kde_interface import KdeWindowInterface
-    from kde_interface import KdeMouseReadInterface
-    mouse = KdeMouseReadInterface()
-    mediator = KdeWindowInterface()
+    #from kde_interface import KdeWindowInterface
+    #from kde_interface import KdeMouseReadInterface
+    #mouse = KdeMouseReadInterface()
+    #mediator = KdeWindowInterface()
+
+    from kde_interface import KWinInterface
+    mediator = KWinInterface()
+    mediator.run_preloaded_script('mouse_location')
+    mediator.shutdown()
+    exit()
 else:
     from gnome_interface import GnomeExtensionWindowInterface
     from gnome_interface import GnomeMouseReadInterface
