@@ -23,13 +23,26 @@ import tempfile
 import threading
 import glob
 import queue
+import subprocess
 
 from autokey.sys_interface.abstract_interface import AbstractSysInterface, AbstractWindowInterface, WindowInfo, queue_method
 
-#logger = __import__("autokey.logger").logger.get_logger(__name__)
-import logging
-logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logger = __import__("autokey.logger").logger.get_logger(__name__)
+#import logging
+#logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.DEBUG)
+#logger = logging.getLogger(__name__)
+
+#  Toggle extra debug log messages useful for tracing message flow
+#  through queues and caches
+VERBOSE = True
+
+#  Log KWin version when in debug mode
+try:
+    proc = subprocess.run(['kwin_wayland_wrapper', '--version'], capture_output=True, check=True)
+    kwin_version = proc.stdout.decode('utf-8').split('\n')[0].split(' ')[1]
+    logger.debug(f'KWin version = {kwin_version}')
+except subprocess.CalledProcessError as e:
+    logger.exception('KWin version check failed')
 
 #  The name of the KWinListener DBus service.
 DBUS_SERVICE_NAME='com.autokey.KWinListener'
@@ -47,15 +60,27 @@ class KWinListener(object):
                 <method name='Response'>
                     <arg type='s' name='response' direction='in'/>
                 </method>
+                <method name='Signal'>
+                    <arg type='s' name='response' direction='in'/>
+                </method>
                 <method name='Shutdown'/>
             </interface>
         </node>
     """
     def __init__(self):
         self.response_queue = queue.Queue()
+        self.signal_queue = queue.Queue()
 
     def Response(self, message):
         self.response_queue.put(message)
+        if VERBOSE:
+            logger.debug(f'KWinListener queued a Response message:\n{json.loads(message)}')
+        return True
+
+    def Signal(self, message):
+        self.signal_queue.put(message)
+        if VERBOSE:
+            logger.debug(f'KWinListener queued a Signal message:\n{json.loads(message)}')
         return True
 
     def Shutdown(self):
@@ -68,8 +93,10 @@ class KWinInterface():
     def __init__(self, timeout=1):
         self.timeout = timeout
         self.response_cache = {}
+        self.signal_scripts = {}
+        self.signal_response_cache = {}
 
-        #  Start the DBus service
+        #  Start the DBus service thread
         self.loop = GLib.MainLoop()
         self.dbus_thread = threading.Thread(target=self._dbus_service)
         self.dbus_thread.start()
@@ -79,6 +106,9 @@ class KWinInterface():
         for fn in glob.glob(fn_spec):
             os.unlink(fn)
 
+        #  Preload the KWin signal scripts
+        self._preload_signal_scripts()
+
     #  Method that runs the DBus service in a seperate thread
     def _dbus_service(self):
         self.listener = KWinListener()
@@ -86,11 +116,19 @@ class KWinInterface():
         dbus_service = bus.publish(DBUS_SERVICE_NAME, self.listener)
         self.loop.run()
 
-    #  Method to sutdown the DBus service thread and clean up temp files
+    #  Method to sutdown the DBus service thread and clean up KWin
+    #  scripts and their temp files
     def cancel(self):
         self.loop.quit()
         self.dbus_thread.join()
 
+        #  Shut down the signal scripts
+        bus = SessionBus()
+        for script_name, script_id in self.signal_scripts.items():
+            obj = bus.get('org.kde.KWin', f'/Scripting/{script_id}')
+            obj.stop()
+
+        #  Erase the temporary script files
         fn_spec = os.path.join(tempfile.gettempdir(), 'autokey.kwin.script.*.js')
         for fn in glob.glob(fn_spec):
             os.unlink(fn)
@@ -112,8 +150,68 @@ class KWinInterface():
         #  Load the script file into KWin
         return 'Script' + str(obj.loadScript(fn))
 
-    #  Method that runs a kwin_script on KWin
-    def run(self, script_name, kwin_script, response_expected=False):
+    #  Method that loads the KWin signal scripts.  Called by __init__()
+    #  above.
+    def _preload_signal_scripts(self):
+        service_path = '/' + DBUS_SERVICE_NAME.replace('.','/')
+        self.signal_scripts = {
+            'get_active_window': """function send_active_window(client) {
+    result = ['get_active_window', [client, workspace.currentDesktop]];
+    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+}
+    result = ['get_active_window', [workspace.activeWindow, workspace.currentDesktop]];
+    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+workspace.windowActivated.connect(send_active_window);""".replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path),
+
+            'get_active_desktop_index': """function send_active_window(previous_desktop) {
+    result = ['get_active_desktop_index', workspace.currentDesktop];
+    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+}
+    result = ['get_active_desktop_index', workspace.currentDesktop];
+    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+workspace.currentDesktopChanged.connect(send_active_window);""".replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path)
+        }
+        bus = SessionBus()
+        for script_name, kwin_script in self.signal_scripts.items():
+            #  Save the KWin script in a temporary file
+            (f, fn) = tempfile.mkstemp(prefix=f'autokey.kwin.script.{script_name}.js')
+            with open(fn, 'w') as script_file:
+                script_file.write(kwin_script)
+
+            #  Load the script file into KWin
+            obj = bus.get('org.kde.KWin', '/Scripting')
+            script_id = 'Script' + str(obj.loadScript(fn))
+
+            #  Save the script id for later reference
+            self.signal_scripts[script_name] = script_id
+
+            #  Start the script
+            obj = bus.get('org.kde.KWin', f'/Scripting/{script_id}')
+            obj.run()
+
+    #  Method that runs a kwin_script
+    def run(self, kwin_script, script_name=None, response_expected=False):
+        #  If this is a KWin signal script, then it should have a cached
+        #  response.  Return that.
+        if script_name in self.signal_scripts:
+            #  Process the contents of the signal queue into the signal
+            #  response cache
+            try:
+                while True:
+                    response = json.loads(self.listener.signal_queue.get(block=False))
+                    if VERBOSE:
+                        logger.debug('Caching a response from the signal_queue for ' + response[0])
+                    self.signal_response_cache[response[0]] = response[1]
+            except queue.Empty:
+                #  Once the queue has been emptied, return the cached
+                #  response.
+                if script_name in self.signal_response_cache:
+                    if VERBOSE:
+                        logger.debug(f'Returning a cached response for {script_name}')
+                    return self.signal_response_cache[script_name]
+            logger.warning(f'The {script_name} KWin script should have a cached response and it does not, AutoKey will run the KWin script.')
+
+        #  Otherwise, run the script ...
         script_id = self._load_script(kwin_script, response_expected=response_expected)
         bus = SessionBus()
         obj = bus.get('org.kde.KWin', f'/Scripting/{script_id}')
@@ -128,9 +226,9 @@ class KWinInterface():
                 #  previous response from this service from the cache
                 logger.error(f'timed out while waiting for response from {script_name}')
                 if script_name in self.response_cache:
-                    logger.debug('sending cached response')
+                    logger.error(f'Sending cached response for {script_name}')
                     return self.response_cache[script_name]
-                logger.debug('no cached response available')
+                logger.error(f'No cached response available for {script_name}')
                 return
             finally:
                 #  Delete the kwin_script from KWin
@@ -146,25 +244,9 @@ class KWinInterface():
                 logger.error(f'Unexpected response from {response[0]}, expected {script_name}')
                 return
 
-            #  Saving this code in case there are a lot of mismatches
-            #  in testing.
-            """
-            for response in self.response_list:
-                if response[0] == script_name:
-                    print('here')
-                    return response[1]
+        #  Remove the script from Kwin
+        obj.stop()
 
-            try:
-                while True:
-                    response = self.listener.response_queue.get(timeout=self.timeout)
-                    print(f'queue response = {response}')
-                    if response[0] == script_name:
-                        return response[1]
-                    else:
-                        self.response_list.append(response)
-            except queue.Empty:
-                logger.debug(f'KWinInterface timed out waiting for response from {script_name} script')
-            """
 
 class KdeWindowInterface(AbstractWindowInterface):
     def __init__(self):
@@ -182,7 +264,7 @@ class KdeWindowInterface(AbstractWindowInterface):
         :rtype: list
         """
         kwin_script = 'let result = JSON.stringify(["mouse_location", workspace.cursorPos]);'
-        result = self.kwin.run('mouse_location', kwin_script, response_expected=True)
+        result = self.kwin.run(kwin_script, script_name='mouse_location', response_expected=True)
         if result:
             return [result['x'], result['y']]
 
@@ -193,10 +275,9 @@ class KdeWindowInterface(AbstractWindowInterface):
         :return: (wm_title, wm_class)
         :rtype: WindowInfo
         """
-        kwin_script = 'let result = JSON.stringify(["get_window_info", workspace.activeWindow]);'
-        result = self.kwin.run('get_window_info', kwin_script, response_expected=True)
+        result = self.get_active_window()
         if result:
-            return WindowInfo(wm_title=result['caption'], wm_class=result['resourceName'])
+            return WindowInfo(wm_title=result['wm_title'], wm_class=result['wm_class'])
         else:
             return WindowInfo(wm_title='unknown', wm_class='unknown')
 
@@ -208,7 +289,7 @@ class KdeWindowInterface(AbstractWindowInterface):
         :rtype: list of dictionaries
         """
         kwin_script = 'let result = JSON.stringify(["get_window_list", [workspace.windowList(), workspace.currentDesktop]]);'
-        result = self.kwin.run('get_window_list', kwin_script, response_expected=True)
+        result = self.kwin.run(kwin_script, script_name='get_window_list', response_expected=True)
         window_list = []
         if result:
             for window in result[0]:
@@ -244,9 +325,9 @@ class KdeWindowInterface(AbstractWindowInterface):
         :return: window title
         :rtype: string
         """
-        result = self.get_window_info()
+        result = self.get_active_window()
         if result:
-            return result[0]
+            return result['wm_title']
 
     def get_window_class(self, window=None, traverse=True) -> str:
         """
@@ -255,9 +336,9 @@ class KdeWindowInterface(AbstractWindowInterface):
         :return: window class
         :rtype: string
         """
-        result = self.get_window_info()
+        result = self.get_active_window()
         if result:
-            return result[1]
+            return result['wm_class']
 
     def get_screen_size(self):
         """
@@ -267,7 +348,7 @@ class KdeWindowInterface(AbstractWindowInterface):
         :rtype: list
         """
         kwin_script = 'let result = JSON.stringify(["get_screen_size", workspace.activeScreen.geometry]);'
-        result = self.kwin.run('get_screen_size', kwin_script, response_expected=True)
+        result = self.kwin.run(kwin_script, script_name='get_screen_size', response_expected=True)
         if result:
            return [result['width'], result['height']]
 
@@ -282,9 +363,9 @@ class KdeWindowInterface(AbstractWindowInterface):
         :return: A dictionary containing information a window
         :rtype: dictionary
         """
-        kwin_script = 'let result = JSON.stringify([workspace.activeWindow, workspace.currentDesktop]);'
-        result = KWinInterface().run(kwin_script, response_expected=True)
-        if result:
+        kwin_script = 'let result = JSON.stringify(["get_active_window", [workspace.activeWindow, workspace.currentDesktop]]);'
+        result = self.kwin.run(kwin_script, script_name='get_active_window', response_expected=True)
+        if result and result[0]:
             window = result[0]
             in_current_workspace = False
             for desktop in window['desktops']:
@@ -309,7 +390,7 @@ class KdeWindowInterface(AbstractWindowInterface):
                 'in_current_workspace': in_current_workspace
             }
         else:
-            logger.error(f"Unable to determine the active window. The window list: {window_list}")
+            logger.error(f"Unable to determine the active window.")
             active_window = {
                 'wm_class': '',
                 'wm_class_instance': '',
@@ -330,17 +411,17 @@ class KdeWindowInterface(AbstractWindowInterface):
         return active_window
 
     def get_active_desktop_index(self):
-        kwin_script = 'let result = JSON.stringify(workspace.currentDesktop.x11DesktopNumber - 1);'
-        result = KWinInterface().run(kwin_script, response_expected=True)
+        kwin_script = 'let result = JSON.stringify(["get_active_window", workspace.currentDesktop]);'
+        result = self.kwin.run(kwin_script, script_name='get_active_desktop_index', response_expected=True)
         if result:
-           return result
+           return result['x11DesktopNumber'] - 1
 
     def close_window(self, window_id):
         kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     w.closeWindow();
 }""".replace('<window_id>', window_id)
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def activate_window(self, window_id):
         if not window_id:
@@ -350,7 +431,7 @@ if (w) {
 if (w) {
     workspace.activeWindow = w;
 }""".replace('<window_id>', window_id)
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def move_resize_window(self, window_id, x, y , width, height):
         if not window_id:
@@ -369,7 +450,7 @@ if (w) {
         kwin_script = kwin_script.replace('<y>', str(y))
         kwin_script = kwin_script.replace('<width>', str(width))
         kwin_script = kwin_script.replace('<height>', str(height))
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def move_to_workspace(self, window_id, workspace_number):
         if not window_id:
@@ -388,7 +469,7 @@ if (d) {
     }
 }""".replace('<window_id>', window_id)
         kwin_script = kwin_script.replace('<workspace_number>', str(workspace_number + 1))
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def switch_workspace(self, workspace_number):
         try:
@@ -400,7 +481,7 @@ if (d) {
 if (d) {
     workspace.currentDesktop = d;
 }""".replace('<workspace_number>', str(workspace_number + 1))
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def get_properties(self, window_id):
         if not window_id:
@@ -409,11 +490,11 @@ if (d) {
         kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
 if (w) {
     let s = workspace.clientArea(KWin.MaximizeArea, w);
-    result = JSON.stringify([w, s]);
+    result = JSON.stringify(['get_properties', [w, s]]);
 } else {
-    result = JSON.stringify([null, null]);
+    result = JSON.stringify(['get_properties', [null, null]]);
 }""".replace('<window_id>', window_id)
-        result = KWinInterface().run(kwin_script, response_expected=True)
+        result = self.kwin.run(kwin_script, script_name='get_properties', response_expected=True)
         if result:
             (window, screen) = result
             return {
@@ -436,7 +517,7 @@ if (w) {
 }""".replace('<window_id>', window_id);
         kwin_script = kwin_script.replace('<property>', prop)
         kwin_script = kwin_script.replace('<value>', 'true' if value else 'false')
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def stick_window(self, window_id):
         logger.warning('stick_window() not implemented for KDE/Wayland.  The sticky property is not exposed in the KWin script API.')
@@ -467,7 +548,7 @@ if (w) {
         else:
             logger.warning('maximize_window(direction) called with invalid value.  Must be 1 for horizontal, 2 for vertical, or 3 for both.')
             return
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def unmaximize_window(self, window_id, direction):
         #  direction:
@@ -495,7 +576,7 @@ if (w) {
     }
 }""".replace('<window_id>', window_id)
         kwin_script = kwin_script.replace('<direction>', str(direction))
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def make_fullscreen_window(self, window_id):
         if not window_id:
@@ -505,7 +586,7 @@ if (w) {
 if (w) {
     w.fullScreen = true;
 }""".replace('<window_id>', window_id)
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def unmake_fullscreen_window(self, window_id):
         if not window_id:
@@ -515,7 +596,7 @@ if (w) {
 if (w) {
     w.fullScreen = false;
 }""".replace('<window_id>', window_id)
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def make_above_window(self, window_id):
         if not window_id:
@@ -525,7 +606,7 @@ if (w) {
 if (w) {
     w.keepAbove = true;
 }""".replace('<window_id>', window_id)
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 
     def unmake_above_window(self, window_id):
         if not window_id:
@@ -535,5 +616,5 @@ if (w) {
 if (w) {
     w.keepAbove = false;
 }""".replace('<window_id>', window_id)
-        KWinInterface().run(kwin_script)
+        self.kwin.run(kwin_script)
 

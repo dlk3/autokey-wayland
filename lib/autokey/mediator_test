@@ -38,9 +38,6 @@ print(f'get_window_class() = {result}\n')
 result = mediator.get_screen_size()
 print(f'get_screen_size() = {result}\n')
 
-mediator.cancel()
-exit()
-
 # window API functions
 
 result = mediator.get_active_window()
@@ -116,4 +113,6 @@ mediator.make_above_window(window['id'])
 time.sleep(1)
 mediator.unmake_above_window(window['id'])
 time.sleep(1)
+
+mediator.cancel()
 
