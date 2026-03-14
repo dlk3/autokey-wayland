@@ -21,13 +21,15 @@ import json
 import os
 import tempfile
 import threading
-import time
-import uuid
-import re
+import glob
+import queue
 
-from autokey.sys_interface.abstract_interface import AbstractSysInterface, AbstractMouseInterface, AbstractWindowInterface, WindowInfo
+from autokey.sys_interface.abstract_interface import AbstractSysInterface, AbstractWindowInterface, WindowInfo, queue_method
 
-logger = __import__("autokey.logger").logger.get_logger(__name__)
+#logger = __import__("autokey.logger").logger.get_logger(__name__)
+import logging
+logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 #  The name of the KWinListener DBus service.
 DBUS_SERVICE_NAME='com.autokey.KWinListener'
@@ -50,120 +52,127 @@ class KWinListener(object):
         </node>
     """
     def __init__(self):
-        self.response_list = []
+        self.response_queue = queue.Queue()
 
     def Response(self, message):
-        self.response_list.append(message)
+        self.response_queue.put(message)
+        return True
 
     def Shutdown(self):
+        self.response_queue.shutdown()
         loop.quit()
+        return True
 
 class KWinInterface():
 
-    def __init__(self):
-        print('hello')
-        self.preloaded_scripts = self._preload_scripts()
+    def __init__(self, timeout=1):
+        self.timeout = timeout
+        self.response_cache = {}
+
+        #  Start the DBus service
         self.loop = GLib.MainLoop()
         self.dbus_thread = threading.Thread(target=self._dbus_service)
         self.dbus_thread.start()
 
-    def _preload_scripts(self):
-        kwin_scripts = {
-            'mouse_location': 'let result = JSON.stringify(["mouse_location", workspace.cursorPos);',
-            'get_window_info': 'let result = JSON.stringify(["get_window_info", workspace.activeWindow]);',
-            'get_window_list': 'let result = JSON.stringify([get_window_list, [workspace.windowList(), workspace.currentDesktop]]);',
-            'get_screen_size': 'let result = JSON.stringify(["get_screen_size", workspace.activeScreen.geometry]);'
-        }
-        for name, script in kwin_scripts.items():
-            service_path = '/' + DBUS_SERVICE_NAME.replace('.','/')
-            script = script + f'\ncallDBus("{DBUS_SERVICE_NAME}", "{service_path}", "{DBUS_SERVICE_NAME}", "Response", result)'
+        #  Delete any old script files from the tmp directory
+        fn_spec = os.path.join(tempfile.gettempdir(), 'autokey.kwin.script.*.js')
+        for fn in glob.glob(fn_spec):
+            os.unlink(fn)
 
-            bus = SessionBus()
-            obj = bus.get('org.kde.KWin', '/Scripting')
-
-            #  Save the KWin script in a temporary file
-            (f, fn) = tempfile.mkstemp(prefix='autokey.kwin.script.', suffix='.js')
-            with open(fn, 'w') as script_file:
-                script_file.write(script)
-
-            #  Load the file into KWin
-            kwin_scripts[name] = 'Script' + str(obj.loadScript(fn))
-            print(name, kwin_scripts[name])
-
-        print(kwin_scripts)
-        return kwin_scripts
-
+    #  Method that runs the DBus service in a seperate thread
     def _dbus_service(self):
-        listener = KWinListener()
+        self.listener = KWinListener()
         bus = SessionBus()
-        dbus_service = bus.publish(DBUS_SERVICE_NAME, listener)
+        dbus_service = bus.publish(DBUS_SERVICE_NAME, self.listener)
         self.loop.run()
 
-    def shutdown():
+    #  Method to sutdown the DBus service thread and clean up temp files
+    def cancel(self):
         self.loop.quit()
         self.dbus_thread.join()
 
-    def run_preloaded_script(self, script_name):
-        script_id = self.preloaded_scripts[script_name]
-        print('called to run ' + script_name + ' ' + script_id)
+        fn_spec = os.path.join(tempfile.gettempdir(), 'autokey.kwin.script.*.js')
+        for fn in glob.glob(fn_spec):
+            os.unlink(fn)
 
+    #  Method that loads a kwin_script into KWin.  Called by run() below.
+    def _load_script(self, kwin_script, response_expected=False):
+        if response_expected:
+            service_path = '/' + DBUS_SERVICE_NAME.replace('.','/')
+            kwin_script = kwin_script + f' callDBus("{DBUS_SERVICE_NAME}", "{service_path}", "{DBUS_SERVICE_NAME}", "Response", result);'
+
+        bus = SessionBus()
+        obj = bus.get('org.kde.KWin', '/Scripting')
+
+        #  Save the KWin script in a temporary file
+        (f, fn) = tempfile.mkstemp(prefix='autokey.kwin.script.', suffix='.js')
+        with open(fn, 'w') as script_file:
+            script_file.write(kwin_script)
+
+        #  Load the script file into KWin
+        return 'Script' + str(obj.loadScript(fn))
+
+    #  Method that runs a kwin_script on KWin
+    def run(self, script_name, kwin_script, response_expected=False):
+        script_id = self._load_script(kwin_script, response_expected=response_expected)
         bus = SessionBus()
         obj = bus.get('org.kde.KWin', f'/Scripting/{script_id}')
         obj.run()
 
-        while len(self.response_list) == 0:
-            print('loop')
-            time.sleep(0.1)
-        print(self.response_list)
-        self.shutdown()
-
-    def run(self, kwin_script, response_expected=False):
-        """
-        This is the entrypoint into KWinInterface.  This method executes
-        a KWin script and, optionally, receives the results.
-
-        :param script: The KWin script code
-        :type script: string
-        :keyword response_expected: Flag indicating whether or not
-        a response is expected to be returned byt the KWIN script.
-        :type response_expected: boolean
-        :keyword listener_timeout: The number of seconds to wait for
-        the KWin script to send a response. Only meaningful when
-        response_expected = True.
-        :return: if response_expected = True, the data sent from a
-        callDBus() call in the KWin script, sent to the KWinListener
-        DBus service, will be returned.  Otherwise nothing is returned.
-        :rtype: JSON object
-        """
         if response_expected:
-            service_path = '/' + DBUS_SERVICE_NAME.replace('.','/')
-
-            #  Add a line to the kwin_script that contains the call that
-            #  sends the script's output back via our KWinListener DBus
-            #  service.  Note that the kwin_script must put the data
-            #  being sent into the "result" variable.
-            kwin_script = kwin_script + f'\ncallDBus("{DBUS_SERVICE_NAME}", "{service_path}", "{DBUS_SERVICE_NAME}", "Response", result)'
-
-            #  Run the script
-            bus = SessionBus()
-            obj = bus.get('org.kde.KWin', f'/Scripting/Script{script_id}')
-            obj.run()
-
-            for response in listener.result:
-                #  If the timeout expired, either the script code is
-                #  broken or KWin is getting bogged down and the timeout
-                #  value wasn't long enough
-                logger.error(f'Timeout expired before KWin script returned a result:\nDBUus service path: {service_path}\nKWin script:\n{kwin_script}')
+            try:
+                #  Get the next response from the DBus service's queue
+                response = json.loads(self.listener.response_queue.get(timeout=self.timeout))
+            except queue.Empty:
+                #  There wasn't anything in the queue, return the
+                #  previous response from this service from the cache
+                logger.error(f'timed out while waiting for response from {script_name}')
+                if script_name in self.response_cache:
+                    logger.debug('sending cached response')
+                    return self.response_cache[script_name]
+                logger.debug('no cached response available')
+                return
+            finally:
+                #  Delete the kwin_script from KWin
+                obj = bus.get('org.kde.KWin', f'/Scripting/{script_id}')
+                obj.stop()
+            #  If the response matches the script that's being called,
+            #  return the reponse, otherwise log an error and return
+            #  None.
+            if response[0] == script_name:
+                self.response_cache[script_name] = response[1]
+                return response[1]
             else:
-                return json.loads(listener.result)
+                logger.error(f'Unexpected response from {response[0]}, expected {script_name}')
+                return
 
-        else:
-            #  Run the KWin script without waiting for a response
-            self._run_script(kwin_script)
+            #  Saving this code in case there are a lot of mismatches
+            #  in testing.
+            """
+            for response in self.response_list:
+                if response[0] == script_name:
+                    print('here')
+                    return response[1]
 
-class KdeMouseReadInterface():
+            try:
+                while True:
+                    response = self.listener.response_queue.get(timeout=self.timeout)
+                    print(f'queue response = {response}')
+                    if response[0] == script_name:
+                        return response[1]
+                    else:
+                        self.response_list.append(response)
+            except queue.Empty:
+                logger.debug(f'KWinInterface timed out waiting for response from {script_name} script')
+            """
+
+class KdeWindowInterface(AbstractWindowInterface):
     def __init__(self):
-        pass
+        super().__init__()
+        self.kwin = KWinInterface()
+
+    def cancel(self):
+        self.kwin.cancel()
 
     def mouse_location(self):
         """
@@ -172,14 +181,10 @@ class KdeMouseReadInterface():
         :return: [x, y]
         :rtype: list
         """
-        kwin_script = 'let result = JSON.stringify(workspace.cursorPos);'
-        result = KWinInterface().run(kwin_script, response_expected=True)
+        kwin_script = 'let result = JSON.stringify(["mouse_location", workspace.cursorPos]);'
+        result = self.kwin.run('mouse_location', kwin_script, response_expected=True)
         if result:
             return [result['x'], result['y']]
-
-class KdeWindowInterface(AbstractWindowInterface):
-    def __init__(self):
-        super().__init__()
 
     def get_window_info(self, window=None, traverse: bool=True) -> WindowInfo:
         """
@@ -188,8 +193,8 @@ class KdeWindowInterface(AbstractWindowInterface):
         :return: (wm_title, wm_class)
         :rtype: WindowInfo
         """
-        kwin_script = 'let result = JSON.stringify(workspace.activeWindow);'
-        result = KWinInterface().run(kwin_script, response_expected=True)
+        kwin_script = 'let result = JSON.stringify(["get_window_info", workspace.activeWindow]);'
+        result = self.kwin.run('get_window_info', kwin_script, response_expected=True)
         if result:
             return WindowInfo(wm_title=result['caption'], wm_class=result['resourceName'])
         else:
@@ -202,8 +207,8 @@ class KdeWindowInterface(AbstractWindowInterface):
         :return: An array containing information about each window
         :rtype: list of dictionaries
         """
-        kwin_script = 'let result = JSON.stringify([workspace.windowList(), workspace.currentDesktop]);'
-        result = KWinInterface().run(kwin_script, response_expected=True)
+        kwin_script = 'let result = JSON.stringify(["get_window_list", [workspace.windowList(), workspace.currentDesktop]]);'
+        result = self.kwin.run('get_window_list', kwin_script, response_expected=True)
         window_list = []
         if result:
             for window in result[0]:
@@ -261,8 +266,8 @@ class KdeWindowInterface(AbstractWindowInterface):
         :return: [width, height]
         :rtype: list
         """
-        kwin_script='let result = JSON.stringify(workspace.activeScreen.geometry);'
-        result = KWinInterface().run(kwin_script, response_expected=True)
+        kwin_script = 'let result = JSON.stringify(["get_screen_size", workspace.activeScreen.geometry]);'
+        result = self.kwin.run('get_screen_size', kwin_script, response_expected=True)
         if result:
            return [result['width'], result['height']]
 
