@@ -1,3 +1,9 @@
+autokey (0.97.4) noble; urgency=medium
+
+  * Added support for the KDE/Wayland environment.
+    
+ -- David King <dave@daveking.com>  Sun, 15 Mar 2026 02:54:10 -050
+
 autokey (0.97.3) noble; urgency=medium
 
   * Implemented the remainder of the window and clipboard API methods that had
@@ -62,7 +68,7 @@ autokey (0.97.1) noble; urgency=medium
   * Created spec file and build script to support building of Fedora RPMs.
   * Updated Debian build scripts.
 
- -- David King <dave@daveking.com>  Wed, 04 Feb 2026 20:49:49 -0500
+ -- David King <dave@daveking.com>  Wed, 4 Feb 2026 20:49:49 -0500
 
 autokey (0.95.10-0) bionic; urgency=medium
 

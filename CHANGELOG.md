@@ -1,5 +1,11 @@
 # Changelog
 
+## AutoKey 0.97.4
+
+### New Features
+
+  * AutoKey for Wayland now supports KDE/Wayland systems, in addition to the GNOME/Wayland and X11 systems it supported previously.
+
 ## AutoKey 0.97.3
 
 ### New Features

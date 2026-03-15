@@ -28,14 +28,14 @@ What Does Not Work Under Wayland
 Which Desktops Support Wayland
 ------------------------------
 
-Updated: February 22, 2026
+Updated: March 15, 2026
 
 +--------------+-------------------+-----------------+
 | Desktop / WM | Wayland Support   | AutoKey Support |
 +==============+===================+=================+
 | GNOME Shell  | ✔️  Default       | ✔️              |
 +--------------+-------------------+-----------------+
-| KDE Plasma   | ✔️  Stable        |                 |
+| KDE Plasma   | ✔️  Stable        | ✔️              |
 +--------------+-------------------+-----------------+
 | XFCE         | 🚧 Experimental   |                 |
 +--------------+-------------------+-----------------+

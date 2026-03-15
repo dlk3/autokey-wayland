@@ -34,10 +34,15 @@ Manipulating Desktop Windows
 The Wayland protocol does not provide an interface for manipulating windows on
 the desktop like X11 did. Those actions must now be accomplished through
 integration with the compositor components in desktop software like Gnome and
-KDE. GNOME uses the Mutter compositor.  It provides an API for GNOME Shell
+KDE. 
+
+GNOME uses the Mutter compositor.  It provides an API for GNOME Shell
 extensions that we used to re-implement the window control functions in
 AutoKey. A custom AutoKey GNOME Shell extension is now installed as part of
-AutoKey for Wayland to enable this integration.
+AutoKey for Wayland to enable this integration.  
+
+KDE uses the KWin compositor.  AutoKey generates and executes KWin scripts 
+dynamically to implement the window control functions in AutoKey.
 
 Clipboard Integration
 ---------------------

@@ -36,7 +36,7 @@ LOCK_FILE = os.path.join(RUN_DIR, "autokey.pid")
 
 APP_NAME = "autokey"
 CATALOG = ""
-VERSION = "0.97.3"
+VERSION = "0.97.4"
 HOMEPAGE = "https://github.com/dlk3/autokey-wayland"
 AUTHOR = 'Chris Dekter'
 AUTHOR_EMAIL = 'cdekter@gmail.com'

@@ -43,6 +43,7 @@ X11-specific Components
 Wayland-specific Components
 ---------------------------
 
+- ``lib/autokey/scripting/clipboard_wayland.py``
 - ``lib/autokey/uinput_interface.py``
 - ``lib/autokey/wayland_checks.py``
 
@@ -50,10 +51,11 @@ Wayland/GNOME-specific components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - ``lib/autokey/gnome_interface.py``
-- ``lib/autokey/scripting/clipboard_wayland.py``
 - ``lib/autokey/scripting/window_gnome.py``
 
 Wayland/KDE-specific components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*to be developed*
+- ``lib/autokey/kde_mouse_interface.py``
+- ``lib/autokey/kde_window_interface.py``
+- ``lib/autokey/scripting/window_kde.py``
