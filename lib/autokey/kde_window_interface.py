@@ -19,30 +19,27 @@ from gi.repository import GLib
 from pydbus import SessionBus
 import json
 import os
+import subprocess
 import tempfile
 import threading
 import glob
 import queue
-import subprocess
 
 from autokey.sys_interface.abstract_interface import AbstractSysInterface, AbstractWindowInterface, WindowInfo, queue_method
 
 logger = __import__("autokey.logger").logger.get_logger(__name__)
-#import logging
-#logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.DEBUG)
-#logger = logging.getLogger(__name__)
 
 #  Toggle extra debug log messages useful for tracing message flow
 #  through queues and caches
 VERBOSE = True
 
-#  Log KWin version when in debug mode
+#  Log KDE version when in debug mode
 try:
-    proc = subprocess.run(['kwin_wayland_wrapper', '--version'], capture_output=True, check=True)
-    kwin_version = proc.stdout.decode('utf-8').split('\n')[0].split(' ')[1]
-    logger.debug(f'KWin version = {kwin_version}')
-except subprocess.CalledProcessError as e:
-    logger.exception('KWin version check failed')
+    proc = subprocess.run(['plasmashell', '--version'], capture_output=True, check=True)
+    kde_version = proc.stdout.decode('utf-8').split(' ')[1].strip()
+    logger.debug(f'KDE Plasma version = {kde_version}')
+except subprocess.CalledProcessError:
+    logger.exception('KDE Plasma version check failed')
 
 #  The name of the KWinListener DBus service.
 DBUS_SERVICE_NAME='com.autokey.KWinListener'
@@ -84,6 +81,7 @@ class KWinListener(object):
         return True
 
     def Shutdown(self):
+        self.signal_queue.shutdown()
         self.response_queue.shutdown()
         loop.quit()
         return True
@@ -230,10 +228,6 @@ workspace.currentDesktopChanged.connect(send_active_window);""".replace('<servic
                     return self.response_cache[script_name]
                 logger.error(f'No cached response available for {script_name}')
                 return
-            finally:
-                #  Delete the kwin_script from KWin
-                obj = bus.get('org.kde.KWin', f'/Scripting/{script_id}')
-                obj.stop()
             #  If the response matches the script that's being called,
             #  return the reponse, otherwise log an error and return
             #  None.
@@ -246,7 +240,7 @@ workspace.currentDesktopChanged.connect(send_active_window);""".replace('<servic
 
         #  Remove the script from Kwin
         obj.stop()
-
+        os.unlink(fn)
 
 class KdeWindowInterface(AbstractWindowInterface):
     def __init__(self):
@@ -255,18 +249,6 @@ class KdeWindowInterface(AbstractWindowInterface):
 
     def cancel(self):
         self.kwin.cancel()
-
-    def mouse_location(self):
-        """
-        Returns the x/y coordinates of the mouse pointer
-
-        :return: [x, y]
-        :rtype: list
-        """
-        kwin_script = 'let result = JSON.stringify(["mouse_location", workspace.cursorPos]);'
-        result = self.kwin.run(kwin_script, script_name='mouse_location', response_expected=True)
-        if result:
-            return [result['x'], result['y']]
 
     def get_window_info(self, window=None, traverse: bool=True) -> WindowInfo:
         """

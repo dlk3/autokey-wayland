@@ -23,7 +23,7 @@ from autokey import common
 from autokey.configmanager.configmanager import ConfigManager
 from autokey.configmanager.configmanager_constants import INTERFACE_TYPE
 if common.DESKTOP == 'KDE':
-    from autokey.kde_interface import KdeWindowInterface
+    from autokey.kde_window_interface import KdeWindowInterface
 else:
     from autokey.gnome_interface import GnomeExtensionWindowInterface
 from autokey.sys_interface.clipboard import Clipboard
@@ -108,6 +108,12 @@ class IoMediator(threading.Thread):
 
 
     def shutdown(self):
+        #  If the windowInterface has a cancel method, call it.
+        #  KdeWindowInterface needs this to shutdown cleanly.
+        cancel_method = getattr(self.windowInterface, "cancel", None)
+        if callable(cancel_method):
+            logger.debug('windowInterface shutting down.')
+            self.windowInterface.cancel()
         logger.debug("IoMediator shutting down")
         self.interface.cancel()
         logger.debug("queue.put_nowait()")
