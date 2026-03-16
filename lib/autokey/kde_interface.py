@@ -21,6 +21,7 @@ import json
 import os
 import subprocess
 import tempfile
+import time
 import threading
 import glob
 import queue
@@ -34,7 +35,7 @@ logger = __import__("autokey.logger").logger.get_logger(__name__)
 VERBOSE = True
 
 #  The name of the KWinListener DBus service.
-DBUS_SERVICE_NAME='com.autokey.KWinListener'
+DBUS_SERVICE_NAME='org.autokey.KWinListener'
 
 #  The definition for a DBus service that listens for a message from a
 #  KWin script.
@@ -45,7 +46,7 @@ DBUS_SERVICE_NAME='com.autokey.KWinListener'
 class KWinListener(object):
     """
         <node>
-            <interface name='com.autokey.KWinListener'>
+            <interface name='org.autokey.KWinListener'>
                 <method name='Response'>
                     <arg type='s' name='response' direction='in'/>
                 </method>
@@ -146,7 +147,7 @@ class KWinInterface():
             script_file.write(kwin_script)
 
         #  Load the script file into KWin
-        return 'Script' + str(obj.loadScript(fn))
+        return 'Script' + str(obj.loadScript(self.script_fn))
 
     #  Method that loads the KWin signal scripts.  Called by __init__()
     #  above.
@@ -172,7 +173,7 @@ workspace.currentDesktopChanged.connect(send_active_window);""".replace('<servic
         bus = SessionBus()
         for script_name, kwin_script in self.signal_scripts.items():
             #  Save the KWin script in a temporary file
-            (f, fn) = tempfile.mkstemp(prefix=f'autokey.kwin.script.{script_name}.js')
+            (f, fn) = tempfile.mkstemp(prefix=f'autokey.kwin.script.{script_name}.', suffix='.js')
             with open(fn, 'w') as script_file:
                 script_file.write(kwin_script)
 
@@ -215,33 +216,41 @@ workspace.currentDesktopChanged.connect(send_active_window);""".replace('<servic
         obj = bus.get('org.kde.KWin', f'/Scripting/{script_id}')
         obj.run()
 
-        response = None
+        #  Read contents of queue, cache what we read, and return a live
+        #  result for the script that called us, or a cached result if
+        #  we timed out waiting for a reply to appear on the queue.
+        #  Timeout value is set when KWinInterface is instantiated.
+        reply = None
         if response_expected:
-            while True:
-                try:
-                    #  Get the next response from the DBus service's queue
-                    queued_response = json.loads(self.listener.response_queue.get(timeout=self.timeout))
-                except queue.Empty:
-                    #  There wasn't anything in the queue, return the
-                    #  previous response from this service from the cache
-                    logger.error(f'timed out while waiting for response from {script_name}')
+            try:
+                one_time_timeout = self.timeout
+                while True:
+                    item = json.loads(self.listener.response_queue.get(timeout=one_time_timeout))
+                    one_time_timeout = 0
+                    if VERBOSE:
+                        logger.debug('Caching a response from the response_queue for ' + item[0])
+                    #  Put a timestamp at the front of the result so we
+                    #  can tell how old it is.
+                    self.response_cache[item[0]] = [time.time(), item[1]]
+                    if item[0] == script_name:
+                        reply = item[1]
+            except queue.Empty:
+                if not reply:
+                    #  If this script is in the cache
                     if script_name in self.response_cache:
-                        logger.error(f'Sending cached response for {script_name}')
-                        response self.response_cache[script_name]
-                    logger.error(f'No cached response available for {script_name}')
-                    break
-                #  Cache the response
-                self.response_cache[script_name] = queued_response[1]
-                #  If the response matches the script that is waiting
-                #  for a response, send it back.
-                if queued_response[0] == script_name:
-                    response queued_response[1]
+                        #  and it's result isn't too old
+                        if time.time() - self.response_cache[script_name][0] < 30:
+                            if VERBOSE:
+                                logger.debug(f'Returning a cached response for {script_name}')
+                            reply = self.response_cache[script_name][1]
+            if not reply:
+                logger.warning(f'Timed out waiting for a response from the {script_name} KWin script and there is no recent cached result to reply with.  Returning "None"')
 
         #  Remove the script from Kwin
         obj.stop()
         os.unlink(self.script_fn)
 
-        return response
+        return reply
 
 class KdeMouseInterface():
     def __init__(self):

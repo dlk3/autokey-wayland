@@ -245,7 +245,10 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
             #print("Unable to create UInput device. {}".format(ex))
 
         MouseReadInterface.__init__(self)
-        logger.debug("Screen size: {}".format(self.mediator.windowInterface.get_screen_size()))
+        if common.DESKTOP == 'KDE':
+            logger.debug("Screen size: We're rnning on KDE.  The interface to the KWin script API cannot accept calls this early in the startup process.")
+        else:
+            logger.debug("Screen size: {}".format(self.mediator.windowInterface.get_screen_size()))
 
         self.inv_map = self.__reverse_mapping(e.keys)
         self.inv_autokey_map = self.__reverse_mapping(self.autokey_map)
