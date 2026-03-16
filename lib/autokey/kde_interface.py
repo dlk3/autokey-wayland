@@ -30,9 +30,8 @@ from autokey.sys_interface.abstract_interface import AbstractSysInterface, Abstr
 
 logger = __import__("autokey.logger").logger.get_logger(__name__)
 
-#  Toggle extra debug log messages useful for tracing message flow
-#  through queues and caches
-VERBOSE = True
+#  Toggle extra debug log messages useful for tracing
+VERBOSE=False
 
 #  The name of the KWinListener DBus service.
 DBUS_SERVICE_NAME='org.autokey.KWinListener'
@@ -158,16 +157,16 @@ class KWinInterface():
     result = ['get_active_window', [client, workspace.currentDesktop]];
     callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
 }
-    result = ['get_active_window', [workspace.activeWindow, workspace.currentDesktop]];
-    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+result = ['get_active_window', [workspace.activeWindow, workspace.currentDesktop]];
+callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
 workspace.windowActivated.connect(send_active_window);""".replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path),
 
             'get_active_desktop_index': """function send_active_window(previous_desktop) {
     result = ['get_active_desktop_index', workspace.currentDesktop];
     callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
 }
-    result = ['get_active_desktop_index', workspace.currentDesktop];
-    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+result = ['get_active_desktop_index', workspace.currentDesktop];
+callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
 workspace.currentDesktopChanged.connect(send_active_window);""".replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path)
         }
         bus = SessionBus()
@@ -264,7 +263,7 @@ class KdeMouseInterface():
         :rtype: list
         """
         kwin_script = 'let result = JSON.stringify(["mouse_location", workspace.cursorPos]);'
-        result = self.mediator.kwin.run(kwin_script, script_name='mouse_location', response_expected=True)
+        result = self.mediator.windowInterface.kwin.run(kwin_script, script_name='mouse_location', response_expected=True)
         if result:
             return [result['x'], result['y']]
 
@@ -317,8 +316,8 @@ class KdeWindowInterface(AbstractWindowInterface):
                         'id': window['internalId'],
                         'frame_type': None,
                         'window_type': window['windowType'],
-                        'width': window['width'],
-                        'height': window['height'],
+                        'width': int(window['width']),
+                        'height': int(window['height']),
                         'x': window['x'],
                         'y': window['y'],
                         'focus': window['active'],
@@ -390,8 +389,8 @@ class KdeWindowInterface(AbstractWindowInterface):
                 'id': window['internalId'],
                 'frame_type': None,
                 'window_type': window['windowType'],
-                'width': window['width'],
-                'height': window['height'],
+                'width': int(window['width']),
+                'height': int(window['height']),
                 'x': window['x'],
                 'y': window['y'],
                 'focus': window['active'],
