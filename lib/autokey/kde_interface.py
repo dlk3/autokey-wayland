@@ -33,14 +33,6 @@ logger = __import__("autokey.logger").logger.get_logger(__name__)
 #  through queues and caches
 VERBOSE = True
 
-#  Log KDE version when in debug mode
-try:
-    proc = subprocess.run(['plasmashell', '--version'], capture_output=True, check=True)
-    kde_version = proc.stdout.decode('utf-8').split(' ')[1].strip()
-    logger.debug(f'KDE Plasma version = {kde_version}')
-except subprocess.CalledProcessError:
-    logger.exception('KDE Plasma version check failed')
-
 #  The name of the KWinListener DBus service.
 DBUS_SERVICE_NAME='com.autokey.KWinListener'
 
@@ -93,6 +85,14 @@ class KWinInterface():
         self.response_cache = {}
         self.signal_scripts = {}
         self.signal_response_cache = {}
+
+        #  Write KDE version to debug log
+        try:
+            proc = subprocess.run(['plasmashell', '--version'], capture_output=True, check=True)
+            kde_version = proc.stdout.decode('utf-8').split(' ')[1].strip()
+            logger.debug(f'KDE Plasma version = {kde_version}')
+        except subprocess.CalledProcessError:
+            logger.exception('KDE Plasma version check failed')
 
         #  Start the DBus service thread
         self.loop = GLib.MainLoop()
@@ -229,8 +229,8 @@ workspace.currentDesktopChanged.connect(send_active_window);""".replace('<servic
                 logger.error(f'No cached response available for {script_name}')
                 return
             #  If the response matches the script that's being called,
-            #  return the reponse, otherwise log an error and return
-            #  None.
+            #  cache the response and then return it.  Otherwise log an
+            #  error and return None.
             if response[0] == script_name:
                 self.response_cache[script_name] = response[1]
                 return response[1]
@@ -241,6 +241,22 @@ workspace.currentDesktopChanged.connect(send_active_window);""".replace('<servic
         #  Remove the script from Kwin
         obj.stop()
         os.unlink(fn)
+
+class KdeMouseInterface():
+    def __init__(self):
+        super().__init__()
+
+    def mouse_location(self):
+        """
+        Returns the x/y coordinates of the mouse pointer
+
+        :return: [x, y]
+        :rtype: list
+        """
+        kwin_script = 'let result = JSON.stringify(["mouse_location", workspace.cursorPos]);'
+        result = self.mediator.kwin.run(kwin_script, script_name='mouse_location', response_expected=True)
+        if result:
+            return [result['x'], result['y']]
 
 class KdeWindowInterface(AbstractWindowInterface):
     def __init__(self):

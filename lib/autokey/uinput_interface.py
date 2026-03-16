@@ -53,7 +53,7 @@ from autokey.sys_interface.abstract_interface import AbstractSysInterface, Abstr
 import autokey.configmanager.configmanager as cm
 import autokey.configmanager.configmanager_constants as cm_constants
 if common.DESKTOP == 'KDE':
-    from autokey.kde_mouse_interface import KdeMouseInterface as MouseReadInterface
+    from autokey.kde_interface import KdeMouseInterface as MouseReadInterface
 else:
     from autokey.gnome_interface import GnomeMouseReadInterface as MouseReadInterface
 
@@ -971,12 +971,6 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
 
     def cancel(self):
-        #  If the MouseReadInterface class has a cancel method, call it.
-        #  KdeMouseInterface needs this to shutdown cleanly.
-        cancel_method = getattr(MouseReadInterface, "cancel", None)
-        if callable(cancel_method):
-            logger.debug('MouseReadInterface shutting down.')
-            MouseReadInterface.cancel(self)
         logger.debug("UInputInterface: Try to exit event thread.")
         self.queue.put_nowait((None, None))
         logger.debug("UInputInterface: Event thread exit marker enqueued.")
