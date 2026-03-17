@@ -24,6 +24,7 @@ Architecture: all
 Depends: imagemagick,
          python3-dbus,
          python3-evdev,
+         python3-pydbus,
          python3-pyinotify,
          python3-pyudev,
          python3-xlib,
