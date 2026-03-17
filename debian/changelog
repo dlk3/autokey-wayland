@@ -2,7 +2,7 @@ autokey (0.97.4) noble; urgency=medium
 
   * Added support for the KDE/Wayland environment.
     
- -- David King <dave@daveking.com>  Sun, 15 Mar 2026 02:54:10 -050
+ -- David King <dave@daveking.com>  Sun, 15 Mar 2026 02:54:10 -0500
 
 autokey (0.97.3) noble; urgency=medium
 
@@ -11,7 +11,7 @@ autokey (0.97.3) noble; urgency=medium
     a new version of the AutoKey GNOME Shell extension.
     
     
- -- David King <dave@daveking.com>  Fri, 20 Feb 2026 21:11:00 -050
+ -- David King <dave@daveking.com>  Fri, 20 Feb 2026 21:11:00 -0500
 
 autokey (0.97.2) noble; urgency=medium
 
@@ -42,7 +42,7 @@ autokey (0.97.2) noble; urgency=medium
     clipboard API which does not work on Wayland systems in backgrounded apps
     - #17, #18
 
- -- David King <dave@daveking.com>  Fri, 20 Feb 2026 21:11:00 -050
+ -- David King <dave@daveking.com>  Fri, 20 Feb 2026 21:11:00 -0500
 
 autokey (0.97.1) noble; urgency=medium
 
