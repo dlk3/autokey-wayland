@@ -2,7 +2,7 @@
 Contributing to AutoKey for Wayland
 ===================================
 
-Contributions to this project are more than welcome.  The preferred method for contributing something to the project is through `GitHub's Pull Request process`_.  It's always wise to discuss your ideas with us before putting a ton of work into something.  Open a draft PR or an Issue_, describing what you have in mind.  If we can give you any guidance we think might help, we will.
+Contributions to this project are more than welcome.  The preferred method for contributing something to the project is through `GitHub's Pull Request process`_.  Especially in current times, when we're all being inundated with AI slop, it's wise to introduce yourself and discuss your ideas with me before submitting something.  Open a draft PR or an Issue_, describing what you have in mind.  It will help things flow smoothly and, if I can give you any guidance I think might help, I will.
 
 .. _Issue: https://github.com/dlk3/autokey-wayland/issues
 .. _GitHub's Pull Request process: https://docs.github.com/en/desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request-from-github-desktop#creating-a-pull-request
@@ -56,6 +56,5 @@ Wayland/GNOME-specific components
 Wayland/KDE-specific components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- ``lib/autokey/kde_mouse_interface.py``
-- ``lib/autokey/kde_window_interface.py``
+- ``lib/autokey/kde_interface.py``
 - ``lib/autokey/scripting/window_kde.py``

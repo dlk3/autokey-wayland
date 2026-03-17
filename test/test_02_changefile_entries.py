@@ -18,7 +18,7 @@
 #  pytest test case
 
 #  Test to make sure that the various changelogs have an entry for the version
-#  about to built.
+#  about to be built.
 
 import os
 import sys
