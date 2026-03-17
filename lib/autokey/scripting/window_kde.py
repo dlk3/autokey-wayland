@@ -32,7 +32,7 @@ logger = __import__("autokey.logger").logger.get_logger(__name__)
 
 class Window(AbstractWindow):
     """
-    Window management with AutoKey GNOME Shell extension
+    Window management with AutoKey KDE KWin window interface
     """
 
     def __init__(self, mediator):
@@ -83,9 +83,6 @@ class Window(AbstractWindow):
     def activate(self, title, switchDesktop=False, matchClass=False, by_hex=False):
         """
         Activate the specified window, giving it input focus
-
-        **Note:** This method does not appear to do anything under Wayland.
-        Research suggests Wayland does not premit "stealing" of focus.
 
         Usage: C{window.activate(title, switchDesktop=False, matchClass=False)}
 
@@ -161,7 +158,7 @@ class Window(AbstractWindow):
         Usage: C{window.move_to_desktop(title, desknum, matchClass=False, by_hex=False)}
 
         :param title: window title to match against (as case-insensitive substring match)
-        :param desknum: the number of the desktop (workspace) to which to move this window
+        :param desknum: the number of the desktop (workspace) to which to move this window (note: zero based)
         :param matchClass: if C{True}, match on the window class instead of the title
         :param by_hex: If true, interpret the C{title} as a hexid
         """
@@ -363,7 +360,7 @@ class Window(AbstractWindow):
 
         Each list item consists of: C{[hexid, desktop, hostname, title]}
 
-        Where the C{hexid} is the ID used for some other functions (like L{import -window} from ImageMagick).
+        Where the C{hexid} is the window ID.
 
         C{desktop} is the number of which desktop (sometimes called workspaces) the window appears upon.
 
@@ -371,7 +368,7 @@ class Window(AbstractWindow):
 
         C{title} is the title that you would usually see in your window manager of choice.
 
-        :param filter_desktop
+        :param filter_desktop (note: zero based)
         :return: C{[[hexid1, desktop1, hostname1, title1], [hexid2,desktop2,hostname2,title2], ...etc]} Returns C{[]} if no windows are found.
         """
         output_list = []

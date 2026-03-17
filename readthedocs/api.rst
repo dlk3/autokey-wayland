@@ -21,13 +21,13 @@ the API classes documented here.
 .. _keyboard API page: keyboard.html
 
 .. toctree::
+   api/clipboard.rst
+   api/common.rst
+   api/dialog.rst
+   api/engine.rst
+   api/highlevel.rst
    api/keyboard.rst
    api/mouse.rst
    api/store.rst
-   api/dialog.rst
-   api/clipboard.rst
    api/system.rst
    api/window.rst
-   api/engine.rst
-   api/highlevel.rst
-   api/common.rst

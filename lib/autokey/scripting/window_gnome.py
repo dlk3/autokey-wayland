@@ -84,9 +84,6 @@ class Window(AbstractWindow):
         """
         Activate the specified window, giving it input focus
 
-        **Note:** This method does not appear to do anything under Wayland.
-        Research suggests Wayland does not premit "stealing" of focus.
-
         Usage: C{window.activate(title, switchDesktop=False, matchClass=False)}
 
         If switchDesktop is False (default), the window will be moved to the current desktop and activated. Otherwise, switch to the window's current desktop and activate it there.
@@ -161,7 +158,7 @@ class Window(AbstractWindow):
         Usage: C{window.move_to_desktop(title, desknum, matchClass=False, by_hex=False)}
 
         :param title: window title to match against (as case-insensitive substring match)
-        :param desknum: the number of the desktop (workspace) to which to move this window
+        :param desknum: the number of the desktop (workspace) to which to move this window (note: zero based)
         :param matchClass: if C{True}, match on the window class instead of the title
         :param by_hex: If true, interpret the C{title} as a hexid
         """
@@ -193,22 +190,13 @@ class Window(AbstractWindow):
         - remove
         - toggle
 
-        Properties available in all environments:
+        Properties available in the GNOME environment:
 
         - sticky  ("add" or "remove" only, no "toggle")
         - maximized_vert
         - maximized_horz
         - fullscreen
         - above
-
-        These additional properties are available exclusively in the X11
-        environment, using C{wmctrl}:
-
-        - modal
-        - shaded
-        - skip_taskbar
-        - skip_pager
-        - hidden
 
         :param title: window title to match against (as case-insensitive substring match)
         :param action: one of the actions listed above
@@ -360,7 +348,7 @@ class Window(AbstractWindow):
 
         C{title} is the title that you would usually see in your window manager of choice.
 
-        :param filter_desktop
+        :param filter_desktop (note: zero based)
         :return: C{[[hexid1, desktop1, hostname1, title1], [hexid2,desktop2,hostname2,title2], ...etc]} Returns C{[]} if no windows are found.
         """
         output_list = []

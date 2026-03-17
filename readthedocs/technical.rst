@@ -54,8 +54,7 @@ clipboard. Fortunately the developers of a utility called wl-clipboard_ have
 found a way around this restriction.  You can visit their site it you want the 
 details, suffice it to say that AutoKey for Wayland now uses wl-clipboard to 
 integrate with the clipboard on Wayland systems.  As a result, all of 
-the clipboard functionality we're used to works on Wayland just as it does on
-X11.
+AutoKey's clipboard functions continue to work in Wayland.
 
 .. _Wayland: https://en.wikipedia.org/wiki/Wayland_(protocol)
 .. _evdev: https://en.wikipedia.org/wiki/Evdev
