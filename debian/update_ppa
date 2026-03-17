@@ -53,6 +53,23 @@ rsync --archive --partial --progress $PPA_DIR /tmp/ppa/
 mv ${HOME}/Downloads/autokey*.deb /tmp/ppa/
 cd /tmp/ppa
 
+#  Keep, at most, $LIMIT versions of each package
+LIMIT=3
+OLD_NAME=''
+CTR=0
+for PKG in $(ls *.deb | sort -r); do
+        PKG_NAME=$(echo $PKG | cut -d_ -f1)
+        if [ "$PKG_NAME" != "$OLD_NAME" ]; then
+                CTR=1
+                OLD_NAME=$PKG_NAME
+        else
+                CTR=$(( $CTR + 1 ))
+        fi
+        if [[ $CTR > $LIMIT ]]; then
+                rm $PKG
+        fi
+done	
+
 #  Create the Packages files in the repo
 echo "Creating Packages files for PPA"
 dpkg-scanpackages --multiversion . >Packages

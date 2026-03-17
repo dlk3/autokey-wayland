@@ -92,7 +92,7 @@ if [ ! $container ]; then
 		
 	#  If this isn't a test, put the deb files into my PPA
 	if [ $TESTBUILD == false ]; then
-		update_ppa
+		./update_ppa
 	fi
 
 else
