@@ -28,6 +28,7 @@ Requires:	gnome-extensions-app
 Requires:	python3-dbus
 Requires:	python3-evdev
 Requires:	python3-pyudev
+Requires:	python3-pydbus
 Requires:	ImageMagick
 Recommends:	wmctrl
 Recommends:	xautomation
@@ -55,9 +56,13 @@ if [ "$USER" = "root" ] && [ "$(logname)" != "root" ]; then
 else
     echo "*******************************************************************************"
     echo "*  If you plan to run AutoKey on a Wayland desktop, please enter the          *"
-    echo "*  following commands to configure your userid to run AutoKey:                *"
+    echo "*  following command to configure your userid to run AutoKey:                 *"
     echo "*                                                                             *"
     echo "sudo usermod -a -G input \$(id -u -n)"
+    echo "*                                                                             *"
+    echo "   If you plan to use AutoKey on a GNOME desktop under Wayland, also enter    *"
+    echo "*  this command:                                                              *"
+    echo "*                                                                             *"
     echo "gnome-extension install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip"
     echo "*                                                                             *"
     echo "*  You will need to log off and log back on so that these changes take        *"
@@ -193,6 +198,11 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-exten
 %{_mandir}/man1/autokey-qt.1*
 
 %changelog
+* Tue Mar 17 2026 David King <dave@daveking.com> - 0.97.4-0
+- Add python3-pydbus as Required package
+- Adjust post install message to account for installations on KDE systems,
+  indicating that the gnome-extensions command is GNOME-only.
+
 * Wed Mar 4 2026 David King <dave@daveking.com> - 0.97.3-0
 - Change X11 utilities from Depends to Recommends packages so that the 
   installation does not fail if these packages are not available

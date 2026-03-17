@@ -30,9 +30,3 @@ If you don't already have AutoKey installed, do this instead:
 ```sudo dnf install autokey-gtk```
 
 Alternately, if you prefer Qt-style user interfaces, you can install the ```autokey-qt``` package instead.
-
-## The user configuration script
-
-There are two manual steps that need to be done to make AutoKey work for each user under Wayland.  I have created a script called ```autokey-user-config``` which performs these steps.  Run it under your regular userid after the dnf installation described above is complete and you have logged off and back on.  The dnf installation process above will remind you to do this same thing as well.
-
-This is a one-time only action, only required the first time you install a version of AutoKey that supports Wayland.
