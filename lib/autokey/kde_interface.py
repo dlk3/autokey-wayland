@@ -131,6 +131,8 @@ class KWinInterface():
         for fn in glob.glob(fn_spec):
             os.unlink(fn)
 
+
+            
     #  Method that loads a kwin_script into KWin.  Called by run() below.
     def _load_script(self, kwin_script, response_expected=False):
         if response_expected:
@@ -141,6 +143,7 @@ class KWinInterface():
         obj = bus.get('org.kde.KWin', '/Scripting')
 
         #  Save the KWin script in a temporary file
+        kwin_script = ' '.join([x.strip() for x in kwin_script.split('\n')])
         (f, self.script_fn) = tempfile.mkstemp(prefix='autokey.kwin.script.', suffix='.js')
         with open(self.script_fn, 'w') as script_file:
             script_file.write(kwin_script)
@@ -153,24 +156,29 @@ class KWinInterface():
     def _preload_signal_scripts(self):
         service_path = '/' + DBUS_SERVICE_NAME.replace('.','/')
         self.signal_scripts = {
-            'get_active_window': """function send_active_window(client) {
-    result = ['get_active_window', [client, workspace.currentDesktop]];
-    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
-}
-result = ['get_active_window', [workspace.activeWindow, workspace.currentDesktop]];
-callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
-workspace.windowActivated.connect(send_active_window);""".replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path),
+            'get_active_window': """
+                function send_active_window(client) {
+                    let result = ['get_active_window', [client, workspace.currentDesktop]];
+                    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+                }
+                let result = ['get_active_window', [workspace.activeWindow, workspace.currentDesktop]];
+                callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+                workspace.windowActivated.connect(send_active_window);
+            """.replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path),
 
-            'get_active_desktop_index': """function send_active_window(previous_desktop) {
-    result = ['get_active_desktop_index', workspace.currentDesktop];
-    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
-}
-result = ['get_active_desktop_index', workspace.currentDesktop];
-callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
-workspace.currentDesktopChanged.connect(send_active_window);""".replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path)
+            'get_active_desktop_index': """
+                function send_active_window(previous_desktop) {
+                    let result = ['get_active_desktop_index', workspace.currentDesktop];
+                    callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+                }
+                let result = ['get_active_desktop_index', workspace.currentDesktop];
+                callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
+                workspace.currentDesktopChanged.connect(send_active_window);
+            """.replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path)
         }
         bus = SessionBus()
         for script_name, kwin_script in self.signal_scripts.items():
+            kwin_script = ' '.join([x.strip() for x in kwin_script.split('\n')])
             #  Save the KWin script in a temporary file
             (f, fn) = tempfile.mkstemp(prefix=f'autokey.kwin.script.{script_name}.', suffix='.js')
             with open(fn, 'w') as script_file:
@@ -424,35 +432,41 @@ class KdeWindowInterface(AbstractWindowInterface):
            return result['x11DesktopNumber'] - 1
 
     def close_window(self, window_id):
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    w.closeWindow();
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                w.closeWindow();
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
     def activate_window(self, window_id):
         if not window_id:
             logger.error('valid window_id not provided for activate_window()')
             return
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    workspace.activeWindow = w;
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                workspace.activeWindow = w;
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
     def move_resize_window(self, window_id, x, y , width, height):
         if not window_id:
             logger.error('valid window_id not provided for move_resize_window()')
             return
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    let obj = Object.assign({}, w.frameGeometry);
-    obj.x = <x>;
-    obj.y = <y>;
-    obj.width = <width>;
-    obj.height = <height>;
-    w.frameGeometry = obj;
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                let obj = Object.assign({}, w.frameGeometry);
+                obj.x = <x>;
+                obj.y = <y>;
+                obj.width = <width>;
+                obj.height = <height>;
+                w.frameGeometry = obj;
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         kwin_script = kwin_script.replace('<x>', str(x))
         kwin_script = kwin_script.replace('<y>', str(y))
         kwin_script = kwin_script.replace('<width>', str(width))
@@ -468,13 +482,15 @@ if (w) {
         except:
             logger.error(f'invalid workspace_number specified for move_to_workspace(): "{workspace_number}"')
             return
-        kwin_script = """let d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
-if (d) {
-    const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-    if (w) {
-        w.desktops = [d];
-    }
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
+            if (d) {
+                const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+                if (w) {
+                    w.desktops = [d];
+                }
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         kwin_script = kwin_script.replace('<workspace_number>', str(workspace_number + 1))
         self.kwin.run(kwin_script)
 
@@ -484,23 +500,27 @@ if (d) {
         except:
             logger.error(f'invalid workspace_number specified for switch_workspace(): "{workspace_number}"')
             return
-        kwin_script = """let d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
-if (d) {
-    workspace.currentDesktop = d;
-}""".replace('<workspace_number>', str(workspace_number + 1))
+        kwin_script = """
+            const d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
+            if (d) {
+                workspace.currentDesktop = d;
+            }"""
+        kwin_script = kwin_script.replace('<workspace_number>', str(workspace_number + 1))
         self.kwin.run(kwin_script)
 
     def get_properties(self, window_id):
         if not window_id:
             logger.error('valid window_id not provided for get_properties()')
             return
-        kwin_script = """let w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    let s = workspace.clientArea(KWin.MaximizeArea, w);
-    result = JSON.stringify(['get_properties', [w, s]]);
-} else {
-    result = JSON.stringify(['get_properties', [null, null]]);
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                const s = workspace.clientArea(KWin.MaximizeArea, w);
+                let result = JSON.stringify(['get_properties', [w, s]]);
+            } else {
+                let result = JSON.stringify(['get_properties', [null, null]]);
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         result = self.kwin.run(kwin_script, script_name='get_properties', response_expected=True)
         if result:
             (window, screen) = result
@@ -518,10 +538,12 @@ if (w) {
             return
 
     def set_properties(window_id, prop, value):
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    w.<property> = <value>;
-}""".replace('<window_id>', window_id);
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                w.<property> = <value>;
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id);
         kwin_script = kwin_script.replace('<property>', prop)
         kwin_script = kwin_script.replace('<value>', 'true' if value else 'false')
         self.kwin.run(kwin_script)
@@ -542,10 +564,12 @@ if (w) {
         if not window_id:
             logger.error('valid window_id not provided for maximize_window()')
             return
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    w.setMaximize(<maximize>);
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                w.setMaximize(<maximize>);
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         if direction == 1:
             kwin_script = kwin_script.replace('<maximize>', 'false, true')
         elif direction == 2:
@@ -568,20 +592,22 @@ if (w) {
         if direction not in [1,2,3]:
             logger.warning('unmaximize_window(direction) called with invalid value.  Must be 1 for horizontal, 2 for vertical, or 3 for both.')
             return
-        kwin_script = """const direction = <direction>;
-const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    const s = workspace.clientArea(KWin.MaximizeArea, w);
-    vert = (w.height > s.height);
-    horz = (w.width == s.width);
-    if (direction == 1) {
-        w.setMaximize(vert, false);
-    } else if (direction == 2){
-        w.setMaximize(false, horz);
-    } else if (direction == 3) {
-        w.setMaximize(false, false);
-    }
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const direction = <direction>;
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                const s = workspace.clientArea(KWin.MaximizeArea, w);
+                vert = (w.height > s.height);
+                horz = (w.width == s.width);
+                if (direction == 1) {
+                    w.setMaximize(vert, false);
+                } else if (direction == 2){
+                    w.setMaximize(false, horz);
+                } else if (direction == 3) {
+                    w.setMaximize(false, false);
+                }
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         kwin_script = kwin_script.replace('<direction>', str(direction))
         self.kwin.run(kwin_script)
 
@@ -589,39 +615,47 @@ if (w) {
         if not window_id:
             logger.error('valid window_id not provided for make_fullscreen_window()')
             return
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    w.fullScreen = true;
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                w.fullScreen = true;
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
     def unmake_fullscreen_window(self, window_id):
         if not window_id:
             logger.error('valid window_id not provided for unmake_fullscreen_window()')
             return
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    w.fullScreen = false;
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                w.fullScreen = false;
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
     def make_above_window(self, window_id):
         if not window_id:
             logger.error('valid window_id not provided make_above_window()')
             return
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    w.keepAbove = true;
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                w.keepAbove = true;
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
     def unmake_above_window(self, window_id):
         if not window_id:
             logger.error('valid window_id not provided for unmake_above_window()')
             return
-        kwin_script = """const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
-if (w) {
-    w.keepAbove = false;
-}""".replace('<window_id>', window_id)
+        kwin_script = """
+            const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
+            if (w) {
+                w.keepAbove = false;
+            }"""
+        kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
