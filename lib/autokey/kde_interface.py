@@ -143,7 +143,7 @@ class KWinInterface():
         obj = bus.get('org.kde.KWin', '/Scripting')
 
         #  Save the KWin script in a temporary file
-        kwin_script = ' '.join([x.strip() for x in kwin_script.split('\n')])
+        kwin_script = ' '.join([x.strip() for x in kwin_script.split('\n')]).strip()
         (f, self.script_fn) = tempfile.mkstemp(prefix='autokey.kwin.script.', suffix='.js')
         with open(self.script_fn, 'w') as script_file:
             script_file.write(kwin_script)
@@ -178,7 +178,7 @@ class KWinInterface():
         }
         bus = SessionBus()
         for script_name, kwin_script in self.signal_scripts.items():
-            kwin_script = ' '.join([x.strip() for x in kwin_script.split('\n')])
+            kwin_script = ' '.join([x.strip() for x in kwin_script.split('\n')]).strip()
             #  Save the KWin script in a temporary file
             (f, fn) = tempfile.mkstemp(prefix=f'autokey.kwin.script.{script_name}.', suffix='.js')
             with open(fn, 'w') as script_file:
