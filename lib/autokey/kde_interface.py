@@ -448,7 +448,8 @@ class KdeWindowInterface(AbstractWindowInterface):
             const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
             if (w) {
                 w.closeWindow();
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
@@ -460,7 +461,8 @@ class KdeWindowInterface(AbstractWindowInterface):
             const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
             if (w) {
                 workspace.activeWindow = w;
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
@@ -477,7 +479,8 @@ class KdeWindowInterface(AbstractWindowInterface):
                 obj.width = <width>;
                 obj.height = <height>;
                 w.frameGeometry = obj;
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         kwin_script = kwin_script.replace('<x>', str(x))
         kwin_script = kwin_script.replace('<y>', str(y))
@@ -501,7 +504,8 @@ class KdeWindowInterface(AbstractWindowInterface):
                 if (w) {
                     w.desktops = [d];
                 }
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         kwin_script = kwin_script.replace('<workspace_number>', str(workspace_number + 1))
         self.kwin.run(kwin_script)
@@ -516,7 +520,8 @@ class KdeWindowInterface(AbstractWindowInterface):
             const d = workspace.desktops.find((d) => d.x11DesktopNumber == <workspace_number>);
             if (d) {
                 workspace.currentDesktop = d;
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<workspace_number>', str(workspace_number + 1))
         self.kwin.run(kwin_script)
 
@@ -531,7 +536,8 @@ class KdeWindowInterface(AbstractWindowInterface):
                 let result = JSON.stringify(['get_properties', [w, s]]);
             } else {
                 let result = JSON.stringify(['get_properties', [null, null]]);
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         result = self.kwin.run(kwin_script, script_name='get_properties', response_expected=True)
         if result:
@@ -554,7 +560,8 @@ class KdeWindowInterface(AbstractWindowInterface):
             const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
             if (w) {
                 w.<property> = <value>;
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id);
         kwin_script = kwin_script.replace('<property>', prop)
         kwin_script = kwin_script.replace('<value>', 'true' if value else 'false')
@@ -580,7 +587,8 @@ class KdeWindowInterface(AbstractWindowInterface):
             const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
             if (w) {
                 w.setMaximize(<maximize>);
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         if direction == 1:
             kwin_script = kwin_script.replace('<maximize>', 'false, true')
@@ -618,7 +626,8 @@ class KdeWindowInterface(AbstractWindowInterface):
                 } else if (direction == 3) {
                     w.setMaximize(false, false);
                 }
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         kwin_script = kwin_script.replace('<direction>', str(direction))
         self.kwin.run(kwin_script)
@@ -631,7 +640,8 @@ class KdeWindowInterface(AbstractWindowInterface):
             const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
             if (w) {
                 w.fullScreen = true;
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
@@ -643,7 +653,8 @@ class KdeWindowInterface(AbstractWindowInterface):
             const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
             if (w) {
                 w.fullScreen = false;
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
@@ -655,7 +666,8 @@ class KdeWindowInterface(AbstractWindowInterface):
             const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
             if (w) {
                 w.keepAbove = true;
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
@@ -667,7 +679,8 @@ class KdeWindowInterface(AbstractWindowInterface):
             const w = workspace.windowList().find((w) => w.internalId == '<window_id>');
             if (w) {
                 w.keepAbove = false;
-            }"""
+            }
+        """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
 
