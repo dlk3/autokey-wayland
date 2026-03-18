@@ -130,8 +130,6 @@ class KWinInterface():
         fn_spec = os.path.join(tempfile.gettempdir(), 'autokey.kwin.script.*.js')
         for fn in glob.glob(fn_spec):
             os.unlink(fn)
-
-
             
     #  Method that loads a kwin_script into KWin.  Called by run() below.
     def _load_script(self, kwin_script, response_expected=False):
@@ -167,13 +165,13 @@ class KWinInterface():
             """.replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path),
 
             'get_active_desktop_index': """
-                function send_active_window(previous_desktop) {
+                function send_active_desktop(previous_desktop) {
                     let result = ['get_active_desktop_index', workspace.currentDesktop];
                     callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
                 }
                 let result = ['get_active_desktop_index', workspace.currentDesktop];
                 callDBus("<service_name>", "<service_path>", "<service_name>", "Signal", JSON.stringify(result));
-                workspace.currentDesktopChanged.connect(send_active_window);
+                workspace.currentDesktopChanged.connect(send_active_desktop);
             """.replace('<service_name>', DBUS_SERVICE_NAME).replace('<service_path>', service_path)
         }
         bus = SessionBus()
@@ -260,6 +258,11 @@ class KWinInterface():
         return reply
 
 class KdeMouseInterface():
+    """
+    All of the other mouse API functions can be done via UInput.  Finding the 
+    mouse pointer location has to be done via KWin so this class is defined here
+    and called out of the uinput_interface module.
+    """
     def __init__(self):
         super().__init__()
 
@@ -276,11 +279,20 @@ class KdeMouseInterface():
             return [result['x'], result['y']]
 
 class KdeWindowInterface(AbstractWindowInterface):
+    """
+    This class provides all of the window management methods used by the rest of 
+    AutoKey.  This includes the underlying methods for the window API defined in
+    scripting/window_kde.py.
+    """
     def __init__(self):
         super().__init__()
         self.kwin = KWinInterface()
 
     def cancel(self):
+        """
+        Called during the AutoKey shutdown process to clean up the threads, DBus
+        service, and temporary script files created by the KWin interface.
+        """
         self.kwin.cancel()
 
     def get_window_info(self, window=None, traverse: bool=True) -> WindowInfo:
