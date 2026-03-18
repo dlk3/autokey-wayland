@@ -137,9 +137,6 @@ class KWinInterface():
             service_path = '/' + DBUS_SERVICE_NAME.replace('.','/')
             kwin_script = kwin_script + f' callDBus("{DBUS_SERVICE_NAME}", "{service_path}", "{DBUS_SERVICE_NAME}", "Response", result);'
 
-        bus = SessionBus()
-        obj = bus.get('org.kde.KWin', '/Scripting')
-
         #  Save the KWin script in a temporary file
         kwin_script = ' '.join([x.strip() for x in kwin_script.split('\n')]).strip()
         (f, self.script_fn) = tempfile.mkstemp(prefix='autokey.kwin.script.', suffix='.js')
@@ -147,6 +144,8 @@ class KWinInterface():
             script_file.write(kwin_script)
 
         #  Load the script file into KWin
+        bus = SessionBus()
+        obj = bus.get('org.kde.KWin', '/Scripting')
         return 'Script' + str(obj.loadScript(self.script_fn))
 
     #  Method that loads the KWin signal scripts.  Called by __init__()
