@@ -40,7 +40,7 @@ from autokey.model.phrase import SendMode
 from autokey.model.key import Key
 
 import evdev
-from evdev import ecodes as e
+from evdev import ecodes
 
 from autokey.autokey_app import AutokeyApplication
 
@@ -70,49 +70,59 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
     inv_map = {}
     char_map = {
-        "/":"KEY_SLASH", "'":"KEY_APOSTROPHE", ",":"KEY_COMMA", ".":"KEY_DOT", ";":"KEY_SEMICOLON",
-        "[":"KEY_LEFTBRACE", "]":"KEY_RIGHTBRACE", "\\":"KEY_BACKSLASH", "=":"KEY_EQUAL", "-":"KEY_MINUS", "`": "KEY_GRAVE",
+        "/":"KEY_SLASH", "'":"KEY_APOSTROPHE", ",":"KEY_COMMA", ".":"KEY_DOT",
+        ";":"KEY_SEMICOLON", "[":"KEY_LEFTBRACE", "]":"KEY_RIGHTBRACE",
+        "\\":"KEY_BACKSLASH", "=":"KEY_EQUAL", "-":"KEY_MINUS", "`": "KEY_GRAVE",
         " ":"KEY_SPACE", "\t": "KEY_TAB","\n": "KEY_ENTER"
     }
+
     #define as the left versions
     shift_key = 42
     ctrl_key = 29
     alt_key = 56
     meta_key = 125
+
     #TODO other modifiers
     #altgr_key
+
     #TODO should this be raw scan code or evdev equivalent? evdev makes more sense to me here
     #string.printable;
     #0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\x0b\x0c
-    #
+
     shifted_chars = {
-        "!":"KEY_1", "@":"KEY_2", "#":"KEY_3", "$":"KEY_4", "%":"KEY_5", "^":"KEY_6", "&": "KEY_7", "*": "KEY_8", "(":"KEY_9", ")":"KEY_0",
-        "\"":"KEY_APOSTROPHE", ">": "KEY_DOT", "<": "KEY_COMMA", ":":"KEY_SEMICOLON", "{": "KEY_LEFTBRACE", "}": "KEY_RIGHTBRACE",
-        "?": "KEY_SLASH", "+": "KEY_EQUAL", "_":"KEY_MINUS", "~":"KEY_GRAVE", "|":"KEY_BACKSLASH"
+        "!":"KEY_1", "@":"KEY_2", "#":"KEY_3", "$":"KEY_4", "%":"KEY_5",
+        "^":"KEY_6", "&": "KEY_7", "*": "KEY_8", "(":"KEY_9", ")":"KEY_0",
+        "\"":"KEY_APOSTROPHE", ">": "KEY_DOT", "<": "KEY_COMMA",
+        ":":"KEY_SEMICOLON", "{": "KEY_LEFTBRACE", "}": "KEY_RIGHTBRACE",
+        "?": "KEY_SLASH", "+": "KEY_EQUAL", "_":"KEY_MINUS", "~":"KEY_GRAVE",
+        "|":"KEY_BACKSLASH"
     }
 
     """
     str(AutoKey): str(evdev KEY_XXXX)
     """
     autokey_map = {
-        "<left>": "KEY_LEFT", "<right>": "KEY_RIGHT", "<up>": "KEY_UP", "<down>": "KEY_DOWN",
-        "<home>": "KEY_HOME", "<end>": "KEY_END", "<page_up>": "KEY_PAGEUP", "<page_down>": "KEY_PAGEDOWN",
+        "<left>": "KEY_LEFT", "<right>": "KEY_RIGHT", "<up>": "KEY_UP",
+        "<down>": "KEY_DOWN", "<home>": "KEY_HOME", "<end>": "KEY_END",
+        "<page_up>": "KEY_PAGEUP", "<page_down>": "KEY_PAGEDOWN",
 
         # universal modifiers
-        "<shift>": "KEY_LEFTSHIFT", "<ctrl>": "KEY_LEFTCTRL", "<alt>": "KEY_LEFTALT",
-        "<meta>": "KEY_LEFTMETA", "<hyper>": "KEY_LEFTMETA", "<super>": "KEY_LEFTMETA",
+        "<shift>": "KEY_LEFTSHIFT", "<ctrl>": "KEY_LEFTCTRL",
+        "<alt>": "KEY_LEFTALT", "<meta>": "KEY_LEFTMETA",
+        "<hyper>": "KEY_LEFTMETA", "<super>": "KEY_LEFTMETA",
 
         # left modifiers
-        "<left_shift>": "KEY_LEFTSHIFT", "<left_ctrl>": "KEY_LEFTCTRL", "<left_alt>": "KEY_LEFTALT", "<left_meta>": "KEY_LEFTMETA", "<left_hyper>": "KEY_LEFTMETA",
+        "<left_shift>": "KEY_LEFTSHIFT", "<left_ctrl>": "KEY_LEFTCTRL",
+        "<left_alt>": "KEY_LEFTALT", "<left_meta>": "KEY_LEFTMETA",
+        "<left_hyper>": "KEY_LEFTMETA",
 
         # right modifiers
-        "<right_shift>": "KEY_RIGHTSHIFT", "<right_ctrl>": "KEY_RIGHTCTRL", "<right_alt>": "KEY_RIGHTALT", "<right_meta>": "KEY_RIGHTMETA", "<right_hyper>": "KEY_RIGHTMETA",
+        "<right_shift>": "KEY_RIGHTSHIFT", "<right_ctrl>": "KEY_RIGHTCTRL",
+        "<right_alt>": "KEY_RIGHTALT", "<right_meta>": "KEY_RIGHTMETA",
+        "<right_hyper>": "KEY_RIGHTMETA",
 
-        "<backspace>": "KEY_BACKSPACE",
-
-
-        "<enter>": "KEY_ENTER", "\n": "KEY_ENTER",
-        "<tab>": "KEY_TAB", "\t": "KEY_TAB",
+        "<backspace>": "KEY_BACKSPACE", "<enter>": "KEY_ENTER",
+        "\n": "KEY_ENTER", "<tab>": "KEY_TAB", "\t": "KEY_TAB",
         "<escape>": "KEY_ESCAPE"
     }
 
@@ -122,71 +132,44 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
     inv_autokey_map = {}
 
     uinput_modifiers_to_ak_map = {
-
-        "KEY_LEFTSHIFT" : Key.LEFTSHIFT,
-        "KEY_RIGHTSHIFT" : Key.RIGHTSHIFT,
-
-        "KEY_LEFTCTRL": Key.LEFTCONTROL,
-        "KEY_RIGHTCTRL": Key.RIGHTCONTROL,
-
-        "KEY_LEFTALT": Key.LEFTALT,
-        "KEY_RIGHTALT": Key.RIGHTALT,
-
-        "KEY_LEFTMETA": Key.LEFTMETA,
-        "KEY_RIGHTMETA": Key.RIGHTMETA,
-
+        "KEY_LEFTSHIFT" : Key.LEFTSHIFT, "KEY_RIGHTSHIFT" : Key.RIGHTSHIFT,
+        "KEY_LEFTCTRL": Key.LEFTCONTROL, "KEY_RIGHTCTRL": Key.RIGHTCONTROL,
+        "KEY_LEFTALT": Key.LEFTALT, "KEY_RIGHTALT": Key.RIGHTALT,
+        "KEY_LEFTMETA": Key.LEFTMETA, "KEY_RIGHTMETA": Key.RIGHTMETA,
     }
 
     uinput_keys_to_ak_map = {
-        "KEY_LEFT": Key.LEFT,
-        "KEY_RIGHT": Key.RIGHT,
-        "KEY_UP": Key.UP,
+        "KEY_LEFT": Key.LEFT, "KEY_RIGHT": Key.RIGHT, "KEY_UP": Key.UP,
         "KEY_DOWN": Key.DOWN,
 
-        "KEY_HOME": Key.HOME,
-        "KEY_END": Key.END,
-        "KEY_PAGEUP": Key.PAGE_UP,
+        "KEY_HOME": Key.HOME, "KEY_END": Key.END, "KEY_PAGEUP": Key.PAGE_UP,
         "KEY_PAGEDOWN": Key.PAGE_DOWN,
 
-        "KEY_BACKSPACE": Key.BACKSPACE,
+        "KEY_BACKSPACE": Key.BACKSPACE, "KEY_ENTER": Key.ENTER,
+        "KEY_TAB": Key.TAB, "KEY_ESC": Key.ESCAPE,
 
-        "KEY_ENTER": Key.ENTER,
-        "KEY_TAB": Key.TAB,
-
-        "KEY_ESC": Key.ESCAPE,
-
-        "KEY_F1": Key.F1,
-        "KEY_F2": Key.F2,
-        "KEY_F3": Key.F3,
-        "KEY_F4": Key.F4,
-        "KEY_F5": Key.F5,
-        "KEY_F6": Key.F6,
-        "KEY_F7": Key.F7,
-        "KEY_F8": Key.F8,
-        "KEY_F9": Key.F9,
-        "KEY_F10": Key.F10,
-        "KEY_F11": Key.F11,
+        "KEY_F1": Key.F1, "KEY_F2": Key.F2, "KEY_F3": Key.F3, "KEY_F4": Key.F4,
+        "KEY_F5": Key.F5, "KEY_F6": Key.F6, "KEY_F7": Key.F7, "KEY_F8": Key.F8,
+        "KEY_F9": Key.F9, "KEY_F10": Key.F10, "KEY_F11": Key.F11,
         "KEY_F12": Key.F12,
-
     }
-
 
     translation_map = {
         "slash": "/", "apostrophe": "'", "comma": ",", "dot": ".", "semicolon": ";",
-        "space": " ", "tab": "\t", "enter": "\n",
-        "backslash": "\\", "equal": "=", "minus": "-", "grave": "`",
+        "space": " ", "tab": "\t", "enter": "\n", "backslash": "\\",
+        "equal": "=", "minus": "-", "grave": "`",
     }
 
     #TODO complete this
     btn_map = {
-        Button.LEFT: [e.BTN_LEFT, 0x90001],
-        Button.RIGHT: [e.BTN_RIGHT, 0x90002],
-        Button.MIDDLE: [e.BTN_MIDDLE, 0x90003],
-        #4: [e.BTN_SIDE, 0x90004],
-        #5: [e.BTN_EXTRA, 0x90005],
+        Button.LEFT: [ecodes.BTN_LEFT, 0x90001],
+        Button.RIGHT: [ecodes.BTN_RIGHT, 0x90002],
+        Button.MIDDLE: [ecodes.BTN_MIDDLE, 0x90003],
+        #4: [ecodes.BTN_SIDE, 0x90004],
+        #5: [ecodes.BTN_EXTRA, 0x90005],
         #6: [],
         #7: [],
-        #8: [e.BTN_BACK, ]
+        #8: [ecodes.BTN_BACK, ]
 
     }
     inv_btn_map = {
@@ -250,8 +233,12 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         else:
             logger.debug("Screen size: {}".format(self.mediator.windowInterface.get_screen_size()))
 
-        self.inv_map = self.__reverse_mapping(e.keys)
+        self.inv_map = self.__reverse_mapping(ecodes.keys)
         self.inv_autokey_map = self.__reverse_mapping(self.autokey_map)
+
+        #  @dlk3 - Remap character <-> keyboard codes when using non-US keyboard
+        self.char_map, self.shifted_chars, self.inv_map = self.__remap_keyboard(self.char_map, self.shifted_chars, self.inv_map)
+
         logger.debug("Inverted Map:", self.inv_map)
 
         # Event listener
@@ -412,12 +399,12 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         keycode = self.btn_map[button][0]
         scancode = self.btn_map[button][1]
 
-        self.ui.write(e.EV_MSC, e.MSC_SCAN, scancode)
-        self.ui.write(e.EV_KEY, keycode, 1)
+        self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, scancode)
+        self.ui.write(ecodes.EV_KEY, keycode, 1)
         self.syn_raw()
 
-        self.ui.write(e.EV_MSC, e.MSC_SCAN, scancode)
-        self.ui.write(e.EV_KEY, keycode, 0)
+        self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, scancode)
+        self.ui.write(ecodes.EV_KEY, keycode, 0)
         self.syn_raw()
 
     @queue_method(queue)
@@ -427,8 +414,8 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         keycode = self.btn_map[button][0]
         scancode = self.btn_map[button][1]
 
-        self.ui.write(e.EV_MSC, e.MSC_SCAN, scancode)
-        self.ui.write(e.EV_KEY, keycode, 1)
+        self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, scancode)
+        self.ui.write(ecodes.EV_KEY, keycode, 1)
         self.syn_raw()
 
     @queue_method(queue)
@@ -438,8 +425,8 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         keycode = self.btn_map[button][0]
         scancode = self.btn_map[button][1]
 
-        self.ui.write(e.EV_MSC, e.MSC_SCAN, scancode)
-        self.ui.write(e.EV_KEY, keycode, 0)
+        self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, scancode)
+        self.ui.write(ecodes.EV_KEY, keycode, 0)
         self.syn_raw()
 
     # implemented in MouseReadInterface
@@ -460,15 +447,15 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
     @queue_method(queue)
     def scroll_down(self, number):
         for i in range(number):
-            self.ui.write(e.EV_REL, e.REL_WHEEL, -1)
-            self.ui.write(e.EV_REL, e.REL_WHEEL_HI_RES, -120)
+            self.ui.write(ecodes.EV_REL, ecodes.REL_WHEEL, -1)
+            self.ui.write(ecodes.EV_REL, ecodes.REL_WHEEL_HI_RES, -120)
             self.syn_raw()
 
     @queue_method(queue)
     def scroll_up(self, number):
         for i in range(number):
-            self.ui.write(e.EV_REL, e.REL_WHEEL, 1)
-            self.ui.write(e.EV_REL, e.REL_WHEEL_HI_RES, 120)
+            self.ui.write(ecodes.EV_REL, ecodes.REL_WHEEL, 1)
+            self.ui.write(ecodes.EV_REL, ecodes.REL_WHEEL_HI_RES, 120)
             self.syn_raw()
 
     @queue_method(queue)
@@ -506,8 +493,8 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
             #x move
             # REL_X - X axis, positive is right, negative is left.
-            if current_x < xCoord: self.ui.write(e.EV_REL, e.REL_X, xstep)
-            elif current_x > xCoord: self.ui.write(e.EV_REL, e.REL_X, -xstep)
+            if current_x < xCoord: self.ui.write(ecodes.EV_REL, ecodes.REL_X, xstep)
+            elif current_x > xCoord: self.ui.write(ecodes.EV_REL, ecodes.REL_X, -xstep)
 
             #ystep logic
             if ystep==200 and (current_y <= yCoord+range1 and current_y >= yCoord-range1):
@@ -519,8 +506,8 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
             #y move
             # REL_Y - Y axis, positive is down, negative is up.
-            if current_y < yCoord: self.ui.write(e.EV_REL, e.REL_Y, ystep)
-            elif current_y > yCoord: self.ui.write(e.EV_REL, e.REL_Y, -ystep)
+            if current_y < yCoord: self.ui.write(ecodes.EV_REL, ecodes.REL_Y, ystep)
+            elif current_y > yCoord: self.ui.write(ecodes.EV_REL, ecodes.REL_Y, -ystep)
 
             self.syn_raw()
             current_x, current_y = self.mouse_location()
@@ -544,14 +531,14 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
         logger.debug("Clearing keys: {}".format(self.held_keys))
         for key in self.held_keys:
-            self.ui.write(e.EV_KEY, key, 0)
+            self.ui.write(ecodes.EV_KEY, key, 0)
 
     @queue_method(queue)
     def reapply_keys(self):
         #self.held_keys = self.keyboard.active_keys()
         logger.debug("Reapply held keys: {}".format(self.held_keys))
         for key in self.held_keys:
-            self.ui.write(e.EV_KEY, key, 1)
+            self.ui.write(ecodes.EV_KEY, key, 1)
 
     @queue_method(queue)
     def send_string(self, string):
@@ -593,28 +580,28 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         # print(f"Writing {key}")
         evdev_keycode, shifted_ = self.translate_to_evdev(key)
         #print(key, evdev_keycode, shifted_)
-        evdev_key = e.keys[evdev_keycode]
+        evdev_key = ecodes.keys[evdev_keycode]
         if shifted_:
             shifted=True
 
         #print(f"Keycode: {evdev_keycode}, Key: {evdev_key}", shifted_, shifted)
         logger.debug("Sending key: {}, Shifted: {}, Untranslated: {}".format(evdev_key, shifted_, key))
         if shifted:
-            self.ui.write(e.EV_MSC, e.MSC_SCAN, self.shift_key)
-            self.ui.write(e.EV_KEY, self.shift_key, 1)
+            self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.shift_key)
+            self.ui.write(ecodes.EV_KEY, self.shift_key, 1)
             self.syn_raw()
 
-        self.ui.write(e.EV_MSC, e.MSC_SCAN, self.inv_map[evdev_key])
-        self.ui.write(e.EV_KEY, self.inv_map[evdev_key], 1)
+        self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.inv_map[evdev_key])
+        self.ui.write(ecodes.EV_KEY, self.inv_map[evdev_key], 1)
         if syn : self.syn_raw()
 
-        self.ui.write(e.EV_MSC, e.MSC_SCAN, self.inv_map[evdev_key])
-        self.ui.write(e.EV_KEY, self.inv_map[evdev_key], 0)
+        self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.inv_map[evdev_key])
+        self.ui.write(ecodes.EV_KEY, self.inv_map[evdev_key], 0)
         if syn : self.syn_raw()
 
         if shifted:
-            self.ui.write(e.EV_MSC, e.MSC_SCAN, self.shift_key)
-            self.ui.write(e.EV_KEY, self.shift_key, 0)
+            self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.shift_key)
+            self.ui.write(ecodes.EV_KEY, self.shift_key, 0)
             self.syn_raw()
 
     def get_delay(self):
@@ -623,11 +610,11 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
     @queue_method(queue)
     def syn(self):
-        self.ui.write(e.EV_SYN, 0, 0)
+        self.ui.write(ecodes.EV_SYN, 0, 0)
         time.sleep(self.get_delay()) #important to sleep here, otherwise the modifiers can be lost
 
     def syn_raw(self):
-        self.ui.write(e.EV_SYN, 0, 0)
+        self.ui.write(ecodes.EV_SYN, 0, 0)
         time.sleep(self.get_delay()) #important to sleep here, otherwise the modifiers can be lost
 
     @queue_method(queue)
@@ -641,36 +628,35 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
     def __release_key(self, key, syn=False):
         evdev_keycode, shifted_ = self.translate_to_evdev(key)
         #print(key, evdev_keycode, shifted_)
-        evdev_key = e.keys[evdev_keycode]
+        evdev_key = ecodes.keys[evdev_keycode]
         if shifted_:
             shifted=True
 
-        self.ui.write(e.EV_MSC, e.MSC_SCAN, self.inv_map[evdev_key])
-        self.ui.write(e.EV_KEY, self.inv_map[evdev_key], 0)
+        self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.inv_map[evdev_key])
+        self.ui.write(ecodes.EV_KEY, self.inv_map[evdev_key], 0)
         if syn: self.syn_raw()
 
     def  __press_key(self, key, syn=False):
         evdev_keycode, shifted_ = self.translate_to_evdev(key)
         #print(key, evdev_keycode, shifted_)
-        evdev_key = e.keys[evdev_keycode]
+        evdev_key = ecodes.keys[evdev_keycode]
         if shifted_:
             shifted=True
-        self.ui.write(e.EV_MSC, e.MSC_SCAN, self.inv_map[evdev_key])
-        self.ui.write(e.EV_KEY, self.inv_map[evdev_key], 1)
+        self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.inv_map[evdev_key])
+        self.ui.write(ecodes.EV_KEY, self.inv_map[evdev_key], 1)
         if syn: self.syn_raw()
-
 
     # def wait_for_keypress(self, timeout=None):
     #     raise NotImplementedError
-
 
     # def wait_for_keyevent(self, timeout=None):
     #     raise NotImplementedError
 
     def __initMappings(self):
         """
-        Grabs hotkeys. Under X11 this means blocking the hotkeys from sending to individual applications.
-        Not sure if this can be accomplished via uinput/wayland?
+        Grabs hotkeys. Under X11 this means blocking the hotkeys from sending to
+        individual applications.  Not sure if this can be accomplished via
+        uinput/wayland?
 
         @dlk3 - It needs to be done and I added code to suppress hotkeys being
         sent though to apps at the end of the __flush_events() method below.
@@ -883,7 +869,6 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         """
         pass
 
-
     def __eventLoop(self):
         while True:
             method, args = self.queue.get()
@@ -899,22 +884,17 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
             self.queue.task_done()
 
-
     def grab_hotkey(self, item):
         pass
 
-
     def ungrab_hotkey(self, item):
         pass
-
 
     @queue_method(queue)
     def grab_keyboard(self, ):
         #TODO: something weird is happening with grab/ungrab
         #self.keyboard.grab()
-
         self.sending = True
-
         pass
 
     @queue_method(queue)
@@ -935,43 +915,40 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         """
         modifiers are expected to be autokey style
         """
-        from evdev import ecodes as e # not sure why this is needed here? Decorator maybe doing something weird?
+        # from evdev import ecodes # not sure why this is needed here? Decorator maybe doing something weird?
         logger.debug(f"Send modified key: {key}, Modifiers: {modifiers}")
         evdev_keycode, shifted = self.translate_to_evdev(key)
-        evdev_key = e.keys[evdev_keycode]
-
+        evdev_key = ecodes.keys[evdev_keycode]
 
         try:
             # down mods
             for mod in modifiers:
                 #convert to KEY_ modifier
                 evdev_mod_key = self.autokey_map[mod]
-                self.ui.write(e.EV_MSC, e.MSC_SCAN, self.inv_map[evdev_mod_key])
-                self.ui.write(e.EV_KEY, self.inv_map[evdev_mod_key], 1)
+                self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.inv_map[evdev_mod_key])
+                self.ui.write(ecodes.EV_KEY, self.inv_map[evdev_mod_key], 1)
                 self.syn_raw()
             # send key up
-            self.ui.write(e.EV_MSC, e.MSC_SCAN, self.inv_map[evdev_key])
-            self.ui.write(e.EV_KEY, self.inv_map[evdev_key], 1)
+            self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.inv_map[evdev_key])
+            self.ui.write(ecodes.EV_KEY, self.inv_map[evdev_key], 1)
             self.syn_raw()
 
             # send key down
-            self.ui.write(e.EV_MSC, e.MSC_SCAN, self.inv_map[evdev_key])
-            self.ui.write(e.EV_KEY, self.inv_map[evdev_key], 0)
+            self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.inv_map[evdev_key])
+            self.ui.write(ecodes.EV_KEY, self.inv_map[evdev_key], 0)
             self.syn_raw()
-
 
             # up mods
             for mod in modifiers:
                 #convert to KEY_ modifier
                 evdev_mod_key = self.autokey_map[mod]
-                self.ui.write(e.EV_MSC, e.MSC_SCAN, self.inv_map[evdev_mod_key])
-                self.ui.write(e.EV_KEY, self.inv_map[evdev_mod_key], 0)
+                self.ui.write(ecodes.EV_MSC, ecodes.MSC_SCAN, self.inv_map[evdev_mod_key])
+                self.ui.write(ecodes.EV_KEY, self.inv_map[evdev_mod_key], 0)
                 self.syn_raw()
 
             pass
         except Exception as e:
             logger.warning("Error sending modified key %r %r: %s", modifiers, key, str(e))
-
 
     def cancel(self):
         logger.debug("UInputInterface: Try to exit event thread.")
@@ -987,7 +964,6 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         self.eventThread.join()
 
         self.join()
-
 
     def fake_keydown(self, key):
         """
@@ -1032,7 +1008,6 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                     device.close()
 
         return return_device
-
 
     def translate_to_evdev(self, key):
         """
@@ -1090,7 +1065,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         #if not shifted and not num_lock and not altGrid:
         #TODO handle special keys like backslash etc.
         code, shifted_ = self.translate_to_evdev(keyCode[0])
-        evdev_name = e.keys[code]
+        evdev_name = ecodes.keys[code]
         # for mouse buttons this returns a list like ['BTN_LEFT', 'BTN_MOUSE']
         if type(evdev_name) is list:
             evdev_name = evdev_name[0]
@@ -1111,4 +1086,109 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
             return character.lower()
         #return self.translate_to_evdev(keyCode[0])
 
-        #return e.keys[self.translate_to_evdev(keyCode)[0]]
+        #return ecodes.keys[self.translate_to_evdev(keyCode)[0]]
+
+    def __remap_keyboard(self, char_map, shifted_chars, inv_map):
+        """
+        python-evdev uses the "us" keymap exclusively, see
+        https://github.com/gvalkov/python-evdev/issues/180
+
+        This method modifies the dictionaries, defined at the top of this
+        module, that AutoKey uses to map key names to key codes for non-US
+        keyboards.
+
+        TODO: Keymap detection probably needs to be improved to check GNOME and
+        KDE for their keymap settings.  https://github.com/madhead/shyriiwook
+        shows a way forward for GNOME.  KDE supposedly has config files that
+        contain this info.
+        """
+        KEYMAP_FILES_DIR='/usr/lib/kbd/keymaps/xkb/'
+
+        #  Convert keymap's +U+0000 and U+0000 unicode strings into characters
+        def _h2c(code):
+            if code.startswith('+U+') or code.startswith('U+'):
+                return chr(int(code.lstrip('+U').lstrip('U+'), 16))
+            else:
+                return code
+
+        #  Determine the keymap in use
+        keymap = 'us'
+        try:
+            #  Get the default keymap setting from the system locale settings
+            with open('/etc/vconsole.conf', 'r') as vconsole_file:
+                for line in vconsole_file:
+                    key, value = line.strip().split('=')
+                    if key.strip() == 'KEYMAP':
+                        keymap = value.strip('" ')
+        except FileNotFoundError:
+            if logger.level == logging.DEBUG:
+                logger.exception('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
+            else:
+                logger.warning('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
+            return ecodes, char_map, shifted_chars
+        logger.info(f'System keymap: {keymap}')
+
+        #  pythen-evdev uses the "us" keyboard by default, so the rest of this
+        #  is only necessary when non-us keyboards are in use.
+        if keymap != 'us':
+            #  Column numbers for keymap tables.  See "man keymaps" for more.
+            UNSHIFTED = 0
+            SHIFTED = 1
+
+            #  Build a character to key name map for the evdev event codes as
+            #  they are initially defined in evdev's default "us" keyboard map,
+            #  e.g., char2name['a'] = 'KEY_A'
+            char2name = {}
+            excluded_crtr = ('VoidSymbol', '<')
+            try:
+                fn = KEYMAP_FILES_DIR + 'us.map.gz'
+                with gzip.open(fn, 'r') as keymap_file:
+                    for line in keymap_file:
+                        line = line.decode('utf-8')
+                        if line.startswith('keycode'):
+                            keycode = line.split('=')[0].split(' ')[1].strip()
+                            columns = line.split('=')[1].strip().split(' ')
+                            if int(keycode) in ecodes.KEY:
+                                name = ecodes.KEY[int(keycode)]
+                                crtr = _h2c(columns[UNSHIFTED])
+                                if crtr not in excluded_crtr:
+                                    char2name[crtr] = name
+            except FileNotFoundError:
+                logger.warning(f'Unable to find keymap file: {fn}.  Defaulting to "us" keyboard.')
+                return char_map, shifted_chars, inv_map
+
+            #  Read the keyboard map info from the corresponding keymap file and
+            #  populate AutoKey's shifted_chars, char_map, and inv_map
+            #  dictionaries.
+            char_map = {"\t": "KEY_TAB","\n": "KEY_ENTER"}
+            shifted_chars = {}
+            try:
+                fn = f'{KEYMAP_FILES_DIR}{keymap}.map.gz'
+                with gzip.open(fn, 'r') as keymap_file:
+                    for line in keymap_file:
+                        line = line.decode('utf-8')
+                        if line.startswith('keycode'):
+                            keycode = line.split('=')[0].split(' ')[1].strip()
+                            columns = line.split('=')[1].strip().split(' ')
+                            crtr = _h2c(columns[UNSHIFTED])
+                            shifted_crtr = _h2c(columns[SHIFTED])
+                            #  shifted_char contains all of the keys for which
+                            #  the shifted state is not simply the uppercased
+                            #  version of the unshifted key.
+                            if len(shifted_crtr) == 1 and crtr.upper() != shifted_crtr and crtr not in excluded_crtr:
+                                shifted_chars[shifted_crtr] = char2name[crtr]
+                            #  char_map contains all the unshifted characters
+                            #  whose key names are not simply
+                            #  "KEY_" + crtr.upper()
+                            if len(crtr) == 1 and f'KEY_{crtr.upper()}' not in ecodes.ecodes and crtr not in excluded_crtr:
+                                char_map[crtr] = char2name[crtr]
+                            #  inv_map contains the key name to keycode mapping
+                            #  for the default us keymap.  Modify it for this
+                            #  keymap.
+                            if crtr in char2name:
+                                inv_map[char2name[crtr]] = int(keycode)
+            except FileNotFoundError:
+                logger.warning(f'Unable to find keymap file: {fn}.  Defaulting to "us" keyboard.')
+                return char_map, shifted_chars, inv_map
+
+        return char_map, shifted_chars, inv_map
