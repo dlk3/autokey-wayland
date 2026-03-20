@@ -33,7 +33,7 @@ import select
 import random
 import re
 import pathlib
-import subprocess
+import gzip
 
 from autokey.model.button import Button
 from autokey.model.phrase import SendMode
@@ -1112,10 +1112,10 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         if common.DESKTOP == 'KDE':
             try:
                 #  Get the default keymap setting from the KDE config file
-                with open(os.path.join(common.XDG_CONFIG_HOME, '/.config/kxkbrc'), 'r') as kde_config_file:
+                with open(os.path.expanduser('~/.config/kxkbrc'), 'r') as kde_config_file:
                     found = True
                     for line in kde_config_file:
-                        line = line.strip().split('=')
+                        line = line.strip()
                         if line.startswith('LayoutList'):
                             #  Get the first entry in the list and make that
                             #  the beginning of the keymap name
@@ -1139,6 +1139,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
             #  /etc/vconsole.conf file for the system locale settings
             try:
                 with open('/etc/vconsole.conf', 'r') as vconsole_file:
+                    found = True
                     for line in vconsole_file:
                         line = line.strip().split('=')
                         if len(line) == 2:
@@ -1146,10 +1147,9 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                                 keymap = line[1].strip('" ')
             except FileNotFoundError:
                 if logger.level == 0:
-                    logger.exception('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
-                else:
-                    logger.warning('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
-                return ecodes, char_map, shifted_chars
+                    logger.exception('unable to locate /etc/vconsole.conf.  Defaulting to "us" keyboard.')
+        if not found:
+            logger.warning('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
         logger.info(f'System keymap: {keymap}')
 
         #  pythen-evdev uses the "us" keyboard by default, so the rest of this
