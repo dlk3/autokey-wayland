@@ -1094,13 +1094,8 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         https://github.com/gvalkov/python-evdev/issues/180
 
         This method modifies the dictionaries, defined at the top of this
-        module, that AutoKey uses to map key names to key codes for non-US
+        module, that AutoKey uses to map key names to key codes, for non-US
         keyboards.
-
-        TODO: Keymap detection probably needs to be improved to check GNOME and
-        KDE for their keymap settings.  https://github.com/madhead/shyriiwook
-        shows a way forward for GNOME.  KDE supposedly has config files that
-        contain this info.
         """
         KEYMAP_FILES_DIR='/usr/lib/kbd/keymaps/xkb/'
 
@@ -1113,20 +1108,49 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
         #  Determine the keymap in use
         keymap = 'us'
-        try:
-            #  Get the default keymap setting from the system locale settings
-            with open('/etc/vconsole.conf', 'r') as vconsole_file:
-                for line in vconsole_file:
-                    key, value = line.strip().split('=')
-                    if key.strip() == 'KEYMAP':
-                        keymap = value.strip('" ')
-        except FileNotFoundError:
-            if logger.level == logging.DEBUG:
-                logger.exception('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
-            else:
-                logger.warning('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
-            return ecodes, char_map, shifted_chars
-        logger.info(f'System keymap: {keymap}')
+        found = False
+        if common.DESKTOP == 'KDE':
+            try:
+                #  Get the default keymap setting from the KDE config file
+                with open(os.path.join(common.XDG_CONFIG_HOME, '/.config/kxkbrc'), 'r') as kde_config_file:
+                    found = True
+                    for line in kde_config_file:
+                        line = line.strip().split('=')
+                        if line.startswith('LayoutList'):
+                            #  Get the first entry in the list and make that
+                            #  the beginning of the keymap name
+                            matches = re.findall(r'LayoutList=([^,]*)', line)
+                            if len(matches) > 0:
+                                keymap = matches[0]
+                        elif line.startswith('VariantList'):
+                            #  Get the first entry in the list and append that
+                            #  to the keymap name
+                            matches = re.findall(r'VariantList=([^,]*)', line)
+                            if len(matches) > 0:
+                                keymap = keymap + '-' + matches[0]
+            except FileNotFoundError:
+                if logger.level == logging.DEBUG:
+                    logger.exception(f'Unable to locate keyboard configuration file.')
+        #elif common.DESKTOP == 'GNOME':
+            # TODO: Check GNOME configuration.  See
+            # https://github.com/madhead/shyriiwook
+        elif not found:
+            #  If a keymap setting has not yet been found, check in the
+            #  /etc/vconsole.conf file for the system locale settings
+            try:
+                with open('/etc/vconsole.conf', 'r') as vconsole_file:
+                    for line in vconsole_file:
+                        line = line.strip().split('=')
+                        if len(line) == 2:
+                            if line[0].strip() == 'KEYMAP':
+                                keymap = line[1].strip('" ')
+            except FileNotFoundError:
+                if logger.level == logging.DEBUG:
+                    logger.exception('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
+                else:
+                    logger.warning('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
+                return ecodes, char_map, shifted_chars
+            logger.info(f'System keymap: {keymap}')
 
         #  pythen-evdev uses the "us" keyboard by default, so the rest of this
         #  is only necessary when non-us keyboards are in use.
