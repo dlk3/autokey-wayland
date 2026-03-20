@@ -1129,7 +1129,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                             if len(matches) > 0:
                                 keymap = keymap + '-' + matches[0]
             except FileNotFoundError:
-                if logger.level == logging.DEBUG:
+                if logger.level == 0:
                     logger.exception(f'Unable to locate keyboard configuration file.')
         #elif common.DESKTOP == 'GNOME':
             # TODO: Check GNOME configuration.  See
@@ -1145,12 +1145,12 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                             if line[0].strip() == 'KEYMAP':
                                 keymap = line[1].strip('" ')
             except FileNotFoundError:
-                if logger.level == logging.DEBUG:
+                if logger.level == 0:
                     logger.exception('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
                 else:
                     logger.warning('Unable to determine which keyboard is in use.  Defaulting to "us" keyboard.')
                 return ecodes, char_map, shifted_chars
-            logger.info(f'System keymap: {keymap}')
+        logger.info(f'System keymap: {keymap}')
 
         #  pythen-evdev uses the "us" keyboard by default, so the rest of this
         #  is only necessary when non-us keyboards are in use.
