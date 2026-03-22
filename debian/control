@@ -22,6 +22,7 @@ Homepage: https://github.com/dlk3/autokey-wayland
 Package: autokey-common
 Architecture: all
 Depends: imagemagick,
+         console-data,
          python3-dbus,
          python3-evdev,
          python3-pydbus,
@@ -34,7 +35,7 @@ Depends: imagemagick,
          ${python3:Depends}
 Recommends: wl-clipboard
 Description: desktop automation utility - common data
- AutoKey is a desktop automation utility for Linux, Wayland, and X11. It allows 
+ AutoKey is a desktop automation utility for Linux, Wayland, and X11. It allows
  the automation of virtually any task by responding to typed abbreviations and
  hotkeys. It offers a full-featured GUI that makes it highly accessible for
  novices, as well as a scripting interface offering the full flexibility and

@@ -1258,4 +1258,6 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                 logger.warning(f'Unable to find keymap file: {fn}.  Defaulting to "us" keyboard.')
                 return char_map, shifted_chars, inv_map
 
+            # TODO: Delete the temporary files
+
         return char_map, shifted_chars, inv_map

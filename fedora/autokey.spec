@@ -1,18 +1,18 @@
 %{?python_enable_dependency_generator}
-Name:		autokey
-Version:	0.97.4
-Release:	0%{?dist}
-Summary:	Desktop automation utility
+Name:       autokey
+Version:    0.97.4
+Release:    0%{?dist}
+Summary:    Desktop automation utility
 
 
-License:	GPLv3
-URL:		https://github.com/dlk3/autokey-wayland
-Source0:	https://github.com/dlk3/autokey-wayland/archive/v%{version}.tar.gz
-Source1:	10-autokey.rules
-Source2:	autokey-gnome-extension@autokey.shell-extension.zip
+License:    GPLv3
+URL:        https://github.com/dlk3/autokey-wayland
+Source0:    https://github.com/dlk3/autokey-wayland/archive/v%{version}.tar.gz
+Source1:    10-autokey.rules
+Source2:    autokey-gnome-extension@autokey.shell-extension.zip
 
-BuildArch:	noarch
-BuildRequires:	python3-devel,python3-xlib,python3-inotify,python3-dbus,python3-qt5-devel,python3-pip,python3-setuptools
+BuildArch:  noarch
+BuildRequires:  python3-devel,python3-xlib,python3-inotify,python3-dbus,python3-qt5-devel,python3-pip,python3-setuptools
 
 
 %description
@@ -23,17 +23,18 @@ accessible for novices, as well as a scripting interface offering
 the full flexibility and power of the Python language.
 
 %package common
-Summary:	Desktop automation utility - common data
-Requires:	gnome-extensions-app
-Requires:	python3-dbus
-Requires:	python3-evdev
-Requires:	python3-pyudev
-Requires:	python3-pydbus
-Requires:	ImageMagick
-Recommends:	wmctrl
-Recommends:	xautomation
-Recommends:	wl-clipboard
-Provides:	autokey = %{version}-%{release}
+Summary:    Desktop automation utility - common data
+Requires:   gnome-extensions-app
+Requires:   kbd-misc
+Requires:   python3-dbus
+Requires:   python3-evdev
+Requires:   python3-pyudev
+Requires:   python3-pydbus
+Requires:   ImageMagick
+Recommends: wmctrl
+Recommends: xautomation
+Recommends: wl-clipboard
+Provides:   autokey = %{version}-%{release}
 %description common
 This package contains the common data shared between the various front ends.
 
@@ -95,13 +96,13 @@ esac
 exit 0
 
 %package gtk
-Summary:	AutoKey GTK+ front end
-Requires:	gtksourceview3
-Requires:	libappindicator-gtk3
-Requires:	python3-gobject
-Requires:	autokey-common = %{version}-%{release}
-Provides:	autokey = %{version}-%{release}
-Requires:	zenity
+Summary:    AutoKey GTK+ front end
+Requires:   gtksourceview3
+Requires:   libappindicator-gtk3
+Requires:   python3-gobject
+Requires:   autokey-common = %{version}-%{release}
+Provides:   autokey = %{version}-%{release}
+Requires:   zenity
 %description gtk
 This package contains the GTK+ front end for autokey
 
@@ -120,11 +121,11 @@ esac
 exit 0
 
 %package qt
-Summary:	AutoKey QT front end
-Requires:	python3-qscintilla-qt5
-Requires:	python3-qt5
-Requires:	autokey-common = %{version}-%{release}
-Provides:	autokey = %{version}-%{release}
+Summary:    AutoKey QT front end
+Requires:   python3-qscintilla-qt5
+Requires:   python3-qt5
+Requires:   autokey-common = %{version}-%{release}
+Provides:   autokey = %{version}-%{release}
 %description qt
 This package contains the QT front end for autokey
 
@@ -204,7 +205,7 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-exten
   indicating that the gnome-extensions command is GNOME-only.
 
 * Wed Mar 4 2026 David King <dave@daveking.com> - 0.97.3-0
-- Change X11 utilities from Depends to Recommends packages so that the 
+- Change X11 utilities from Depends to Recommends packages so that the
   installation does not fail if these packages are not available
 - Add wl-clipboard as Reccomends package for Wayland environments
 
