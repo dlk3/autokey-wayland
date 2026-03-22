@@ -1175,7 +1175,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
             if distro in ['ubuntu', 'debian']:
                 #  We have to compile our own keymap files
-                KEYMAP_FILES_DIR = os.path.join(tempfile.gettempdir(), 'autokey_keymaps')
+                KEYMAP_FILES_DIR = tempfile.mkdtemp(prefix='autokey_keymaps_')
                 km = keymap.split('-')
                 layout = km[0]
                 variant = ''
@@ -1188,10 +1188,10 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                     #  Compile the keymap file for the keymap we are using
                     fn = os.path.join(KEYMAP_FILES_DIR, f'{keymap}.map.gz')
                     proc = subprocess.run(f'/usr/bin/ckbcomp -rules base {layout} {variant} | /usr/bin/gzip >{fn}', shell=True, cwd='/usr/share/X11/xkb', capture_output=True, check=True)
-                except subroutine.CalledProcessError:
-                    logger.exception('Failed to compile keymap.  Default "US" keymap will be used.')
+                except subprocess.CalledProcessError as ex:
+                    logger.exception(f'Failed to compile keymap.  Default "US" keymap will be used.  output={ex.ounpun} stderr={ex.stderr}')
                     return char_map, shifted_chars, inv_map
-            elif distro = '':
+            elif distro == '':
                 logger.warning('Unable to determine which Linux distribution this is.  Therefore unable to determine where the keyboard layout files are located.  Will use default "us" keympad layout.')
                 return char_map, shifted_chars, inv_map
 
