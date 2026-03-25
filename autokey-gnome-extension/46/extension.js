@@ -17,8 +17,8 @@
 
 /* exported init */
 
-
 import Gio from 'gi://Gio';
+import * as Keyboard from 'resource:///org/gnome/shell/ui/status/keyboard.js';
 
 const MR_DBUS_IFACE = `
 <node>
@@ -126,6 +126,9 @@ const MR_DBUS_IFACE = `
             <arg type="i" direction="out" name="width" />
             <arg type="i" direction="out" name="height" />
       </method>
+      <method name="GetKeymap">
+            <arg type="s" direction="out" name="keymap" />
+      </method>
       <method name="CheckVersion">
             <arg type="s" direction="out" name="version" />
       </method>
@@ -149,18 +152,18 @@ export default class Extension {
     _get_window_by_wid(winid) {
         return global.get_window_actors().find(w => w.meta_window.get_id() == winid);
     }
-    
+
     _get_workspace_by_wks(wksid) {
-		let mgr = global.workspace_manager;
-		if (mgr) {
+        let mgr = global.workspace_manager;
+        if (mgr) {
             return mgr.get_workspace_by_index(wksid);
         }
         return;
     }
 
     GetActiveWorkspaceIndex() {
-		let workspaceManager = global.workspace_manager;
-		if (workspaceManager) {
+        let workspaceManager = global.workspace_manager;
+        if (workspaceManager) {
             return workspaceManager.get_active_workspace_index()
         }
         return;
@@ -232,21 +235,21 @@ export default class Extension {
         }
     }
 
-	Properties(winid) {
-		/*  Can't find a function that works to change modal or shaded.  */
-		/*  There are functions that change shaded but no way to get current state.  */
-		/*  Window properties are not writeable.  */
+    Properties(winid) {
+        /*  Can't find a function that works to change modal or shaded.  */
+        /*  There are functions that change shaded but no way to get current state.  */
+        /*  Window properties are not writeable.  */
         let w = this._get_window_by_wid(winid);
         if (w) {
             return JSON.stringify({
-		        is_modal: (w.meta_window['window-type'] == 4),
+                is_modal: (w.meta_window['window-type'] == 4),
                 /*  is_sticky - not available  */
                 is_maximized_vert: w.meta_window['maximized-vertically'],
-                is_maximized_horz: w.meta_window['maximized-horizontally'], 
+                is_maximized_horz: w.meta_window['maximized-horizontally'],
                 /*  is_shaded - not available  */
                 is_skip_taskbar: w.meta_window['skip_taskbar'],
-				is_hidden: w.meta_window.is_hidden(),
-				is_fullscreen: w.meta_window['fullscreen'],
+                is_hidden: w.meta_window.is_hidden(),
+                is_fullscreen: w.meta_window['fullscreen'],
                 is_above: w.meta_window['above']
             });
         } else {
@@ -254,15 +257,15 @@ export default class Extension {
         }
     }
 
-	Stick(winid) {
+    Stick(winid) {
         let w = this._get_window_by_wid(winid);
         if (w)
             w.meta_window.stick();
         else
             throw new Error('Not found');
     }
-    
-	UnStick(winid) {
+
+    UnStick(winid) {
         let w = this._get_window_by_wid(winid);
         if (w)
             w.meta_window.unstick();
@@ -270,19 +273,19 @@ export default class Extension {
             throw new Error('Not found');
     }
 
-	Maximize(winid, directions) {
-		/*  Directions:
-		 *  1 - horizontal
-		 *  2 - vertical
-		 *  3 - both
-		 */
+    Maximize(winid, directions) {
+        /*  Directions:
+         *  1 - horizontal
+         *  2 - vertical
+         *  3 - both
+         */
         let w = this._get_window_by_wid(winid);
         if (w)
             w.meta_window.maximize(directions);
         else
             throw new Error('Not found');
     }
-    
+
     UnMaximize(winid, directions) {
         let w = this._get_window_by_wid(winid);
         if (w)
@@ -292,23 +295,23 @@ export default class Extension {
     }
 
     /*  Doesn't work  */
-	Shade(winid) {       
+    Shade(winid) {
         let w = this._get_window_by_wid(winid);
         if (w)
             w.meta_window.shade(global.get_current_time());
         else
             throw new Error('Not found');
     }
-    
+
     /*  Doesn't work  */
-	UnShade(winid) {      
+    UnShade(winid) {
         let w = this._get_window_by_wid(winid);
         if (w)
             w.meta_window.unshade(global.get_current_time());
         else
             throw new Error('Not found');
     }
-	
+
     MakeFullscreen(winid, fullscreen) {
         let w = this._get_window_by_wid(winid);
         if (w)
@@ -415,7 +418,7 @@ export default class Extension {
             throw new Error('Not found');
     }
 
-	/*  Doesn't work in Wayland, use Raise instead */
+    /*  Doesn't work in Wayland, use Raise instead */
     Activate(winid) {
         let win = this._get_window_by_wid(winid).meta_window;
         if (win)
@@ -424,7 +427,7 @@ export default class Extension {
             throw new Error('Not found');
     }
 
-	/*  Doesn't work in Wayland, use Raise instead */
+    /*  Doesn't work in Wayland, use Raise instead */
     Focus(winid) {
         let win = this._get_window_by_wid(winid).meta_window;
         if (win)
@@ -459,8 +462,12 @@ export default class Extension {
         return [global.screen_width, global.screen_height];
     }
 
+    GetKeymap() {
+        return Keyboard.getInputSourceManager().currentSource.id;
+    }
+
     CheckVersion() {
-        return '0.2';
+        return '0.3';
     }
 }
 

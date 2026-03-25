@@ -114,7 +114,7 @@ class KWinInterface():
         dbus_service = bus.publish(DBUS_SERVICE_NAME, self.listener)
         self.loop.run()
 
-    #  Method to sutdown the DBus service thread and clean up KWin
+    #  Method to shutdown the DBus service thread and clean up KWin
     #  scripts and their temp files
     def cancel(self):
         self.loop.quit()
@@ -130,7 +130,7 @@ class KWinInterface():
         fn_spec = os.path.join(tempfile.gettempdir(), 'autokey.kwin.script.*.js')
         for fn in glob.glob(fn_spec):
             os.unlink(fn)
-            
+
     #  Method that loads a kwin_script into KWin.  Called by run() below.
     def _load_script(self, kwin_script, response_expected=False):
         if response_expected:
@@ -258,7 +258,7 @@ class KWinInterface():
 
 class KdeMouseInterface():
     """
-    All of the other mouse API functions can be done via UInput.  Finding the 
+    All of the other mouse API functions can be done via UInput.  Finding the
     mouse pointer location has to be done via KWin so this class is defined here
     and called out of the uinput_interface module.
     """
@@ -279,7 +279,7 @@ class KdeMouseInterface():
 
 class KdeWindowInterface(AbstractWindowInterface):
     """
-    This class provides all of the window management methods used by the rest of 
+    This class provides all of the window management methods used by the rest of
     AutoKey.  This includes the underlying methods for the window API defined in
     scripting/window_kde.py.
     """

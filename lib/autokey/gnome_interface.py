@@ -33,7 +33,7 @@ class DBusInterface:
 
         version = self.dbus_interface.CheckVersion()
         logger.debug("AutoKey Gnome Extension version: %s" % version)
-        if version == "0.2":
+        if version == "0.3":
             pass
         else:
             raise Exception("Incompatible version of AutoKey Gnome Extension")
@@ -75,20 +75,20 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
         Returns the window class of the currently focused window.
         """
         return self._active_window()['wm_class']
-        
-    
+
+
     def get_window_title(self, window=None, traverse=True) -> str:
         """
         Returns the active window title
         """
         return self._active_window()['wm_title']
-    
+
     def close_window(self, window_id):
         self._dbus_close_window(window_id)
 
     def activate_window(self, window_id):
         self._dbus_activate_window(window_id)
-        
+
     def move_resize_window(self, window_id, x, y , width, height):
         self._dbus_move_resize_window(window_id, x, y, width, height)
 
@@ -97,34 +97,34 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
 
     def move_to_workspace(self, window_id, workspace_number):
         self._dbus_move_to_workspace(window_id, workspace_number)
-    
+
     def switch_workspace(self, workspace_number):
         self._dbus_switch_workspace(workspace_number)
-        
+
     def get_properties(self, window_id):
         return self._dbus_get_properties(window_id)
-        
+
     def stick_window(self, window_id):
         self._dbus_stick_window(window_id)
-        
+
     def unstick_window(self, window_id):
         self._dbus_unstick_window(window_id)
-        
+
     def maximize_window(self, window_id, direction):
         self._dbus_maximize_window(window_id, direction)
-        
+
     def unmaximize_window(self, window_id, direction):
         self._dbus_unmaximize_window(window_id, direction)
-        
+
     def make_fullscreen_window(self, window_id):
         self._dbus_make_fullscreen_window(window_id)
-        
+
     def unmake_fullscreen_window(self, window_id):
         self._dbus_unmake_fullscreen_window(window_id)
-        
+
     def make_above_window(self, window_id):
         self._dbus_make_above_window(window_id)
-        
+
     def unmake_above_window(self, window_id):
         self._dbus_unmake_above_window(window_id)
 
@@ -136,40 +136,40 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
                 return window
         # TODO seeing this a lot when I use a script to call `gnome-screenshot -a`, suspect it's just related to that focus behaves differently when that app runs?
         logger.error(f"Unable to determine the active window. The window list: {window_list}")
-        
-        # @dlk3 - This happens when any GNOME session utility is active, like gnome-screenshot, the Activites screen, or the screen lock.  None of the windows in the 
-        # window_list have focus when those things do.  Need to return something, however, or get_active_window() above throws an exception that causes even more 
-        # problems - any keystrokes made on the GNOME session utility sit in the queue, preventing abbreviations being recognized, until the queue gets flushed 
+
+        # @dlk3 - This happens when any GNOME session utility is active, like gnome-screenshot, the Activites screen, or the screen lock.  None of the windows in the
+        # window_list have focus when those things do.  Need to return something, however, or get_active_window() above throws an exception that causes even more
+        # problems - any keystrokes made on the GNOME session utility sit in the queue, preventing abbreviations being recognized, until the queue gets flushed
         # somehow.
         #
         # This seems to work to prevent the exceptions and the follow-on problems ...
         # Return an empty window object (Only really need wm_class and wm_title, but hey, why not do it all)
         empty_window = {
-            'wm_class': '', 
-            'wm_class_instance': '', 
-            'wm_title': '', 
-            'workspace': None, 
-            'desktop': None, 
-            'pid': None, 
-            'id': None, 
-            'frame_type': None, 
-            'window_type': None, 
-            'width': None, 
-            'height': None, 
-            'x': None, 
-            'y': None, 
-            'focus': False, 
+            'wm_class': '',
+            'wm_class_instance': '',
+            'wm_title': '',
+            'workspace': None,
+            'desktop': None,
+            'pid': None,
+            'id': None,
+            'frame_type': None,
+            'window_type': None,
+            'width': None,
+            'height': None,
+            'x': None,
+            'y': None,
+            'focus': False,
             'in_current_workspace': False
         }
         return empty_window
-    
+
     def _dbus_get_active_desktop_index(self):
         try:
             return self.dbus_interface.GetActiveWorkspaceIndex()
         except dbus.exceptions.DBusException as e:
             self.__init__() #reconnect to dbus
             return self.dbus_interface.GetActiveWorkspaceIndex()
-                
+
     def _dbus_window_list(self):
         #TODO consider how/if error handling can be implemented
         try:
@@ -177,7 +177,7 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
         except dbus.exceptions.DBusException as e:
             self.__init__() #reconnect to dbus
             return json.loads(self.dbus_interface.List())
-            
+
     def _dbus_close_window(self, window_id):
         #TODO consider how/if error handling can be implemented
         try:
@@ -189,7 +189,7 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
     def _dbus_activate_window(self, window_id):
         try:
             self.dbus_interface.Raise(window_id)
-        except dbus.exceptions.DBusException as e:  
+        except dbus.exceptions.DBusException as e:
             self.__init__()
             self.dbus_interface.Raise(window_id)
 
@@ -248,49 +248,49 @@ class GnomeExtensionWindowInterface(DBusInterface, AbstractWindowInterface):
         except dbus.exceptions.DBusException as e:
             self.__init__()
             self.dbus_interface.Stick(window_id)
-    
+
     def _dbus_unstick_window(self, window_id):
         try:
             self.dbus_interface.UnStick(window_id)
         except dbus.exceptions.DBusException as e:
             self.__init__()
             self.dbus_interface.UnStick(window_id)
-        
+
     def _dbus_maximize_window(self, window_id, direction):
         try:
             self.dbus_interface.Maximize(window_id, direction)
         except dbus.exceptions.DBusException as e:
             self.__init__()
             self.dbus_interface.Maximize(window_id, direction)
-        
+
     def _dbus_unmaximize_window(self, window_id, direction):
         try:
             self.dbus_interface.UnMaximize(window_id, direction)
         except dbus.exceptions.DBusException as e:
             self.__init__()
             self.dbus_interface.UnMaximize(window_id, direction)
-        
+
     def _dbus_make_fullscreen_window(self, window_id):
         try:
             self.dbus_interface.MakeFullscreen(window_id)
         except dbus.exceptions.DBusException as e:
             self.__init__()
             self.dbus_interface.MakeFullscreen(window_id)
-        
+
     def _dbus_unmake_fullscreen_window(self, window_id):
         try:
             self.dbus_interface.UnMakeFullscreen(window_id)
         except dbus.exceptions.DBusException as e:
             self.__init__()
             self.dbus_interface.UnMakeFullscreen(window_id)
-        
+
     def _dbus_make_above_window(self, window_id):
         try:
             self.dbus_interface.MakeAbove(window_id)
         except dbus.exceptions.DBusException as e:
             self.__init__()
-            self.dbus_interface.MakeAbove(window_id)  
-                 
+            self.dbus_interface.MakeAbove(window_id)
+
     def _dbus_unmake_above_window(self, window_id):
         try:
             self.dbus_interface.UnMakeAbove(window_id)

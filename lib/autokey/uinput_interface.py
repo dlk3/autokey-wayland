@@ -34,14 +34,15 @@ import random
 import re
 import pathlib
 import gzip
+import shutil
 import subprocess
 import tempfile
+from pydbus import SessionBus
 
 from autokey.model.button import Button
 from autokey.model.phrase import SendMode
 from autokey.model.key import Key
 
-import evdev
 from evdev import ecodes
 
 from autokey.autokey_app import AutokeyApplication
@@ -59,7 +60,7 @@ if common.DESKTOP == 'KDE':
 else:
     from autokey.gnome_interface import GnomeMouseReadInterface as MouseReadInterface
 
-#TODO when exiting the thread waits for one more signal and that signal repeats  for a bit during exit
+#TODO when exiting the thread waits for one more signal and that signal repeats for a bit during exit
 #  @dlk3 I put a timeout on the select in __flush_events() so that it would not
 #  block forever waiting for a keypress after a self.ui device has been closed.
 #  This matches how things are done in the equivalent function in the X11
@@ -235,11 +236,12 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         else:
             logger.debug("Screen size: {}".format(self.mediator.windowInterface.get_screen_size()))
 
+        #  @dlk3 - Remap evdev.ecodes' character <-> keyboard codes when using a
+        #  non-US keyboard
+        self.char_map, self.shifted_chars = self.__remap_keyboard(self.char_map, self.shifted_chars)
+
         self.inv_map = self.__reverse_mapping(ecodes.keys)
         self.inv_autokey_map = self.__reverse_mapping(self.autokey_map)
-
-        #  @dlk3 - Remap character <-> keyboard codes when using non-US keyboard
-        self.char_map, self.shifted_chars, self.inv_map = self.__remap_keyboard(self.char_map, self.shifted_chars, self.inv_map)
 
         logger.debug(f'Inverted Map: {self.inv_map}')
 
@@ -1090,14 +1092,18 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
         #return ecodes.keys[self.translate_to_evdev(keyCode)[0]]
 
-    def __remap_keyboard(self, char_map, shifted_chars, inv_map):
+    # @dlk3
+    def __remap_keyboard(self, char_map, shifted_chars):
         """
         python-evdev uses the "us" keymap exclusively, see
         https://github.com/gvalkov/python-evdev/issues/180
 
-        This method modifies the dictionaries, defined at the top of this
-        module, that AutoKey uses to map key names to key codes, for non-US
-        keyboards.
+        This method is an attempt to support non-us keyboards by modifying
+        the dictionaries, defined at the top of this module, that AutoKey uses
+        to map key names to key codes.  It also modifies the evdev.ecodes.keys
+        and evdev.ecodes.ecodes dictionaries in the same manner.  I don't expect
+        this to be a comprehensive solution but it could work for some
+        languages.
         """
 
         #  Convert keymap's +U+0000 and U+0000 unicode strings into characters
@@ -1128,12 +1134,17 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                             matches = re.findall(r'VariantList=([^,]*)', line)
                             if len(matches) > 0:
                                 keymap = keymap + '-' + matches[0]
+                logger.debug(f'KDE reports keymap as: {keymap}')
             except FileNotFoundError:
                 if logger.level == 0:
                     logger.exception(f'Unable to locate KDE keyboard configuration file, {kde_config_file}.')
-        #elif keymap == 'us' and common.DESKTOP == 'GNOME':
-            # TODO: Check GNOME configuration.  See
-            # https://github.com/madhead/shyriiwook
+        elif keymap == 'us' and common.DESKTOP == 'GNOME':
+            #  Get keymap name from a function in the AutoKey Gnome Shell
+            #  Extension
+            bus = SessionBus()
+            obj = bus.get('org.gnome.Shell', 'Extensions/AutoKey')
+            keymap = obj.GetKeymap()
+            logger.debug(f'GNOME reports keymap as: {keymap}')
         elif keymap == 'us':
             #  If a non-us keymap setting has not yet been found, check in the
             #  /etc/vconsole.conf file for the system locale settings
@@ -1158,6 +1169,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         if keymap != 'us':
             #  Where the keymap files are depends on the distro we're running
             KEYMAP_FILES_DIR='/usr/lib/kbd/keymaps/xkb/'   # Fedora
+            cleanup_keymap_dir = False
 
             distro = ''
             try:
@@ -1171,7 +1183,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                             distro = line[1]
             except FileNotFoundError:
                 logger.warning(f'Unable to find /etc/os-release file to determine which distro is in use here.  Defaulting to "us" keyboard.')
-                return char_map, shifted_chars, inv_map
+                return char_map, shifted_chars
 
             if distro in ['ubuntu', 'debian']:
                 #  We have to compile our own keymap files
@@ -1190,10 +1202,11 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                     proc = subprocess.run(f'/usr/bin/ckbcomp -rules base {layout} {variant} | /usr/bin/gzip >{fn}', shell=True, cwd='/usr/share/X11/xkb', capture_output=True, check=True)
                 except subprocess.CalledProcessError as ex:
                     logger.exception(f'Failed to compile keymap.  Default "US" keymap will be used.  output={ex.ounpun} stderr={ex.stderr}')
-                    return char_map, shifted_chars, inv_map
+                    return char_map, shifted_chars
+                cleanup_keymap_dir = True
             elif distro == '':
                 logger.warning('Unable to determine which Linux distribution this is.  Therefore unable to determine where the keyboard layout files are located.  Will use default "us" keympad layout.')
-                return char_map, shifted_chars, inv_map
+                return char_map, shifted_chars
 
             fn = os.path.join(KEYMAP_FILES_DIR, f'{keymap}.map.gz')
             logger.debug(f'keymap = {keymap}, distro = {distro}, keymap file = {fn}')
@@ -1222,11 +1235,12 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                                     char2name[crtr] = name
             except FileNotFoundError:
                 logger.warning(f'Unable to find keymap file: {fn}.  Defaulting to "us" keyboard.')
-                return char_map, shifted_chars, inv_map
+                return char_map, shifted_chars
 
             #  Read the keyboard map info from the corresponding keymap file and
-            #  populate AutoKey's shifted_chars, char_map, and inv_map
-            #  dictionaries.
+            #  populate AutoKey's shifted_chars and char_map.  Also modify
+            #  evdev's ecodes.ecodes and ecodes.keys dictionaries to match this
+            #  keyboard.
             char_map = {"\t": "KEY_TAB","\n": "KEY_ENTER"}
             shifted_chars = {}
             try:
@@ -1249,15 +1263,20 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                             #  "KEY_" + crtr.upper()
                             if len(crtr) == 1 and f'KEY_{crtr.upper()}' not in ecodes.ecodes and crtr not in excluded_crtr:
                                 char_map[crtr] = char2name[crtr]
-                            #  inv_map contains the key name to keycode mapping
-                            #  for the default us keymap.  Modify it for this
-                            #  keymap.
+                            #  Modify evdev's dictionaries to match this keymap:
+                            #  ecodes.keys[scancode] = 'KEY_name'
+                            #  ecodes.ecodes['KEY_name'] = scancode
                             if crtr in char2name:
-                                inv_map[char2name[crtr]] = int(keycode)
+                                if char2name[crtr] in ecodes.ecodes:
+                                    ecodes.ecodes[char2name[crtr]] = int(keycode)
+                                if int(keycode) in keys:
+                                    ecodes.keys[int(keycode)] = char2name[crtr]
             except FileNotFoundError:
                 logger.warning(f'Unable to find keymap file: {fn}.  Defaulting to "us" keyboard.')
-                return char_map, shifted_chars, inv_map
+                return char_map, shifted_chars
 
-            # TODO: Delete the temporary files
+            # Delete the temporary directory and its files
+            if cleanup_keymap_dir:
+                shutil.rmtree(KEYMAP_FILES_DIR)
 
-        return char_map, shifted_chars, inv_map
+        return char_map, shifted_chars
