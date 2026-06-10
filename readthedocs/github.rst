@@ -3,9 +3,7 @@ Manually Installing AutoKey for Wayland from GitHub
 
 It is possible to install the AutoKey for Wayland code locally and run that code in a Python virtual environment. This is useful if you are a developer who wants to work with the code, or if you're on a system for which there is no installation package available.
 
-Some attempts to install AutoKey for Wayland using this procedure have revealed that software dependencies across different Linux distributions vary to the extent that they can break the procedure. If this happens to you, open an issue here, and I'll try to help you troubleshoot the problem. On the system where this happened to me, I was still able to successfully install AutoKey using the installation packages.
-
-If you already have a "production" instance of AutoKey installed on your system using a distribution package, you do not need to remove it. The instance you are about to install manually will not interfere with your "production" installation, as long as you don't try to run them both at the same time. To be safe, you should back up the contents of your current AutoKey configuration directory before you start. A command like this would do the trick::
+If you already have a "production" instance of AutoKey installed on your system using a distribution package, you do not need to remove it. The instance you are about to install manually will not interfere with your "production" installation, as long as you don't try to run them both at the same time. To be safe, you should back up the contents of your current AutoKey configuration directory before you start. A command like this would do the trick:
 
     cp -r ~/.config/autokey ~/.config/autokey-backup
 
@@ -117,10 +115,15 @@ Using a virtual environment is highly recommended as doing so ensures that the m
 6) Run AutoKey from the virtual environment
 -------------------------------------------
 
-::
+On a GNOME desktop:
 
     cd ~/src/autokey-wayland/lib
     python3 -m autokey.gtkui -v
+
+On a KDE desktop:
+
+    cd ~/src/autokey-wayland/lib
+    python3 -m autokey.qtui -v
 
 7) Exiting the virtual environment when you are finished with AutoKey
 ---------------------------------------------------------------------
@@ -138,7 +141,10 @@ Run AutoKey with these commands::
 
     source ~/src/autokey-wayland/.venv/bin/activate
     cd ~/src/autokey-wayland/lib
+    #  For GNOME environments
     python3 -m autokey.gtkui -v
+    #  For KDE environments
+    python3 -m autokey.qtui -v
     deactivate
 
 You could put these commands into a startup script if you wanted to. Here's mine::
@@ -153,7 +159,10 @@ You could put these commands into a startup script if you wanted to. Here's mine
 
     source ~/src/autokey-wayland/.venv/bin/activate
     cd ~/src/autokey-wayland/lib
+    #  For GNOME environments
     python -m autokey.gtkui $@
+    #  For KDE environments
+    #python -m autokey.qtui $@
     deactivate
 
 Cleaning up after ourselves
