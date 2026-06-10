@@ -5,8 +5,8 @@ AutoKey is a keyboard automation utility for the Linux desktop.  It can be used
 to automate repetitive keyboard and mouse tasks.  When hotkeys are pressed or 
 short abbreviations are typed, AutoKey assists the user by performing 
 predefined actions with the keyboard or mouse.  When more complex action 
-sequences are required, a Python script can be executed from a hotkey or 
-abbreviation to perform a series of actions.
+sequences are required, a script can be executed from a hotkey or 
+abbreviation to perform a series of keyboard or mouse actions.
 
 A version of AutoKey_ that runs on X11_ has been available as a supported 
 package for most Linux distributions for a number of years.  The goal of the 
@@ -26,17 +26,18 @@ AutoKey, X11 and Wayland
 ------------------------
 
 Wayland_ is a new desktop protocol that has been slowly replacing X11_ in many 
-distributions.  It offers additional security in desktop environments by 
-severely restricting the degree to which applications can interact with desktop 
-windows that are not their own.  This new level of security has required a 
-number of changes to adapt to the new environment.  Also, there are a few 
-functions that AutoKey can no longer perform in the Wayland environment.   See 
-the `What Works & What Does Not`_ section for more specific details on the 
-differences in capability across the two environments.
+distributions.  It is designed to offer additional security in desktop 
+environments by restricting the degree to which applications can interact with 
+desktop windows that are not their own.  This new level of security has affected
+the manner in which AutoKey's functions are implemented.  The most frequently
+used AutoKey functions have been re-implemented to run under Wayland, but there 
+are a few functions that have proven to be impossible to implement under Wayland.
+See the `What Works & What Does Not`_ section for more specific details on the 
+differences in AutoKey capabilities in the X11 and Wayland environments.
 
 AutoKey uses completely different techniques under Wayland to communicate with 
 the keyboard/mouse, the clipboard, and the desktop.  This is largely 
-transparent to the general AutoKey user, but power users may encounter some of 
+transparent to the regular AutoKey user, but power users may encounter some of 
 these differences.  See the `Technical Details`_ page for a brief discussion of 
 these changes.
 
