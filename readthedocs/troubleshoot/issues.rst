@@ -16,7 +16,7 @@ log in the issue report. To generate a debug log:
 - Copy and paste the debugging messages from the terminal into a file, 
 - If the actions you performed involved typing any personally identifiable 
   information, or any passwords, edit the file to remove this information. In 
-  debug mode, AutoKey logs every keystoke you make, 
+  debug mode, AutoKey logs every keystroke you make, 
 - Drag and drop the file into the problem report.
 
 You might be interested to know that the ``~/.local/share/autokey/autokey.log`` 
