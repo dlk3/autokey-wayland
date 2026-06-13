@@ -67,7 +67,7 @@ from .shared import get_ui
 def set_linkbutton(button, path, filename_only=False):
     label = button.get_child()
     label.set_sensitive(True)
-    
+
     if path.startswith(cm_constants.CONFIG_DEFAULT_FOLDER):
         text = path.replace(cm_constants.CONFIG_DEFAULT_FOLDER, _("(Default folder)"))
     else:
@@ -535,7 +535,7 @@ class ScriptPage:
     def validate(self):
         errors = []
 
-        # Check script code        
+        # Check script code
         text = self.buffer.get_text(self.buffer.get_start_iter(), self.buffer.get_end_iter(), False)
         if dialogs.EMPTY_FIELD_REGEX.match(text):
             errors.append(_("The script code can't be empty"))
@@ -850,7 +850,7 @@ class ConfigWindow:
         menu = self.app.service.phraseRunner.macroManager.get_menu(self.on_insert_macro)
         self.uiManager.get_widget("/MenuBar/Edit/insert-macro").set_submenu(menu)
 
-        # Toolbar 'create' button 
+        # Toolbar 'create' button
         create = Gtk.MenuToolButton.new_from_stock(Gtk.STOCK_NEW)
         create.show()
         create.set_is_important(True)
@@ -943,7 +943,7 @@ class ConfigWindow:
             canPlay = isinstance(items[0], autokey.model.script.Script) and len(items) == 1
             enableAny = True
             hasError = self.app.service.scriptRunner.error_records
-                
+
             for item in items:
                 if isinstance(item, autokey.model.folder.Folder):
                     canCopy = False
@@ -1576,6 +1576,7 @@ class ConfigWindow:
         column1.add_attribute(textRenderer, "text", 1)
         column1.set_expand(True)
         column1.set_min_width(150)
+        column1.set_resizable(True)
         column1.set_sort_column_id(1)
         self.treeView.append_column(column1)
 
@@ -1586,6 +1587,7 @@ class ConfigWindow:
         column2.add_attribute(textRenderer, "text", 2)
         column2.set_expand(False)
         column2.set_min_width(50)
+        column2.set_resizable(True)
         self.treeView.append_column(column2)
 
         column3 = Gtk.TreeViewColumn(_("Hotkey"))
@@ -1595,6 +1597,7 @@ class ConfigWindow:
         column3.add_attribute(textRenderer, "text", 3)
         column3.set_expand(False)
         column3.set_min_width(100)
+        column3.set_resizable(True)
         self.treeView.append_column(column3)
 
         path = Gtk.TreePath()
