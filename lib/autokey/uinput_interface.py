@@ -214,6 +214,13 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         self.capabilities = None
         time.sleep(1)
 
+        #  Lists of keys and buttons used to recognize keyboards and mice in
+        #  __is_keyboard_by_capabilities and __is_mouse_by_capabilties
+        self.__keys_set = set(map(lambda a: 'KEY_' + a, [chr(i) for i in range(ord('A'), ord('Z') + 1)]))
+        self.__common_keys_set = set(['KEY_ENTER', 'KEY_BACKSPACE', 'KEY_SPACE'])
+        self.__mouse_button_set = set(['BTN_LEFT', 'BTN_RIGHT', 'BTN_MIDDLE'])
+        self.__mouse_pointer_set = set(['REL_X', 'REL_Y'])
+
         # Event loop
         self.eventThread = threading.Thread(target=self.__eventLoop)
 
@@ -225,19 +232,17 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         # @dlk3 - support multiple keyboards/mice
         self.grab_multiple_devices()
         logger.debug("The following devices are available on this system:\n\t{}".format('\n\t'.join([ dev.name for dev in self.get_devices() ])))
-        logger.debug("I grabbed these devices from that list: \n\t{}".format('\n\t'.join([ dev.name for dev in self.keyboards + self.mice ])))
+        logger.debug("AutoKey is monitoring these devices from that list: \n\t{}".format('\n\t'.join([ dev.name for dev in self.keyboards + self.mice ])))
         self.__watch_for_new_devices()
 
         try:
-            # mouse = "/dev/input/event12"
-            # keyboard = "/dev/input/event4"
             # creating a uinput device with the combined capabilities of the user's mouse and keyboard
             # this will undoubtedly cause issues if user attempts to send signals not supported by their devices
             self.ui = evdev.UInput.from_device(*self.device_paths, name="autokey mouse and keyboard")
             self.capabilities = self.ui.capabilities(verbose=True)
-            logger.debug("UInput device capabilities: {}".format(self.capabilities))
-            logger.info("Supports ABS Movement: {}".format(self.supports_abs()))
-            logger.info("Supports REL Movement: {}".format(self.supports_rel()))
+            #logger.debug("UInput device capabilities: {}".format(self.capabilities))
+            #logger.info("Supports ABS Movement: {}".format(self.supports_abs()))
+            #logger.info("Supports REL Movement: {}".format(self.supports_rel()))
         except Exception as ex:
             logger.error("Unable to create UInput device. {}".format(ex))
             logger.error("Check out how to resolve this issue here: https://github.com/philipl/evdevremapkeys/issues/24")
@@ -269,10 +274,10 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         #  Handler runs in its own thread when it's invoked by monitor
         def event_handler(action, device):
             if action == 'bind':
-                logger.info("UDEV reports that a new device was added to the system, checking to see if it is a keyboard or mouse that I should grab.")
+                logger.info("UDEV reports that a new device was added to the system, checking to see if it is a keyboard or mouse that I should monitor.")
                 self.grab_multiple_devices()
                 self.ui = evdev.UInput.from_device(*self.device_paths, name="autokey mouse and keyboard")
-                logger.debug("Devices that I've grabbed: \"{}\"".format('\", \"'.join([ dev.name for dev in self.keyboards + self.mice ])))
+                logger.debug("Devices that AutoKey is monitoring: \"{}\"".format('\", \"'.join([ dev.name for dev in self.keyboards + self.mice ])))
 
         monitor = pyudev.Monitor.from_netlink(pyudev.Context())
 
@@ -282,6 +287,26 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
 
         self.udev_observer = pyudev.MonitorObserver(monitor, event_handler)
         self.udev_observer.start()
+
+    #  Recognize keyboards and mice based on their uinput capabilities
+    #  (Concept from @onchito-walks in autokey/autokey PR 1134)
+    def __is_keyboard_by_capabilities(self, dev):
+        if dev.capabilities and not dev.capabilities(verbose=True).get(('EV_KEY', 1)) == None:
+            capability_set = set(map(lambda k: k[0], dev.capabilities(verbose=True).get(('EV_KEY', 1))))
+            if len(self.__keys_set.intersection(capability_set)) >= 5 or (len(self.__keys_set.intersection(capability_set)) >= 3 and len(self.__common_keys_set.intersection(capability_set)) >= 1):
+                #logger.debug(self.__keys_set.intersection(capability_set))
+                #logger.debug(self.__common_keys_set.intersection(capability_set))
+                return True
+        return False
+    def __is_mouse_by_capabilities(self, dev):
+        if dev.capabilities and not dev.capabilities(verbose=True).get(('EV_KEY', 1)) == None and not dev.capabilities(verbose=True).get(('EV_REL', 2)) == None:
+            capability_set = set(map(lambda k: k[0], dev.capabilities(verbose=True).get(('EV_KEY', 1))))
+            pointer_set = set(map(lambda p: p[0], dev.capabilities(verbose=True).get(('EV_REL', 2))))
+            if len(self.__mouse_button_set.intersection(capability_set)) >= 2 and len(self.__mouse_pointer_set.intersection(pointer_set)) >= 1:
+                #logger.debug(self.__mouse_button_set.intersection(capability_set))
+                #logger.debug(self.__mouse_pointer_set.intersection(pointer_set))
+                return True
+        return False
 
     #  @dlk3 - support multiple keyboards/mice
     def __grab_keyboard(self, devices, device):
@@ -293,7 +318,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
             self.device_paths.append(keyboard.path)
             #logger.debug("Keyboard: {}, Path: {}".format(keyboard.name, keyboard.path))
         except Exception as error:
-            logger.error(f"Could not grab keyboard device \"{dev.name}\" from list of devices found on system: {error}")
+            logger.error(f"Unable to recognize a keyboard device \"{dev.name}\" in the list of devices found on system: {error}")
 
     def __grab_mouse(self, devices, device):
         try:
@@ -303,7 +328,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
             self.device_paths.append(mouse.path)
             #logger.debug("Mouse: {}, Path: {}".format(mouse.name, mouse.path))
         except Exception as error:
-            logger.error(f"Could not grab mouse device  \"{dev.name}\" from list of devices found on system: {error}")
+            logger.error(f"Unable to recognize a mouse device  \"{dev.name}\" in list of devices found on system: {error}")
 
     def grab_multiple_devices(self):
         ### UINPUT Listener one for keyboard and eventually one for mouse
@@ -322,27 +347,38 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                 #logger.debug('This device has already been grabbed')
                 continue
 
+            #logger.debug(f'{dev.name} = {dev.capabilities(verbose=True)}')
             if re.search("keyboard", dev.name, re.IGNORECASE):
+                logger.debug(f'Keyboard recognized based on its name: {dev.name}')
                 self.__grab_keyboard(devices, dev)
             elif re.search("mouse", dev.name, re.IGNORECASE):
+                logger.debug(f'Mouse recognized based on its name: {dev.name}')
                 self.__grab_mouse(devices, dev)
+            elif self.__is_mouse_by_capabilities(dev):
+                logger.debug(f'Mouse recognized based on capabilities: {dev.name}')
+                self.__grab_mouse(devices, dev)
+            elif self.__is_keyboard_by_capabilities(dev):
+                logger.debug(f'Keyboard recognized based on capabilities: {dev.name}')
+                self.__grab_keyboard(devices, dev)
             elif dev.name in cm.ConfigManager.SETTINGS[cm_constants.KEYBOARD]:
+                logger.debug(f'Keyboard recognized because it is specified in the AutoKey configuration: {dev.name}')
                 self.__grab_keyboard(devices, dev)
             elif dev.name in cm.ConfigManager.SETTINGS[cm_constants.MOUSE]:
+                logger.debug(f'Mouse recognized because it is specified in the AutoKey configuration: {dev.name}')
                 self.__grab_mouse(devices, dev)
             elif dev.name in common.WAYLAND_KEYBOARD_DEVICE_LIST:
                 self.__grab_keyboard(devices, dev)
             elif dev.name in common.WAYLAND_MOUSE_DEVICE_LIST:
                 self.__grab_mouse(devices, dev)
 
-        dev_list = "\n(I could not get the list of devices.  Please press \"Esc\", log off and back on, and try running AutoKey again."
+        dev_list = "\n(AutoKey could not get the list of devices.  Please press \"Esc\", log off and back on, and try running AutoKey again."
         if len(self.keyboards) == 0:
-            logger.error(f"Unable to find a keyboard to connect to")
+            logger.error(f"Unable to find a keyboard to monitor")
             dev_list = ''
             if len(devices) > 0:
                 for dev in devices:
                     dev_list = dev_list + '\n' + dev.name
-            self.app.show_error_dialog_with_link(f"Unable to connect a keyboard device", f"I am unable to recognize your keyboard device.  Please update the \"keyboard\" and \"mouse\" lists in the AutoKey configuration file {cm_constants.CONFIG_FILE} with the name(s) of your keyboard and mouse device(s) from this list:\n{dev_list}\n\nClick the \"Open\" button below to edit the configuration file now or simply press \"Esc\" to close this message.", link_data=cm_constants.CONFIG_FILE)
+            self.app.show_error_dialog_with_link(f"Unable to connect a keyboard device", f"AutoKey is unable to recognize your keyboard device.  Please update the \"keyboard\" and \"mouse\" lists in the AutoKey configuration file {cm_constants.CONFIG_FILE} with the name(s) of your keyboard and mouse device(s) from this list:\n{dev_list}\n\nClick the \"Open\" button below to edit the configuration file now or simply press \"Esc\" to close this message.", link_data=cm_constants.CONFIG_FILE)
             exit(1)
         if len(self.mice) == 0:
             logger.error(f"Unable to find a mouse to connect to")
@@ -350,7 +386,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
             if len(devices) > 0:
                 for dev in devices:
                     dev_list = dev_list + '\n' + dev.name
-            self.app.show_error_dialog_with_link(f"Unable to connect a mouse device", f"I am unable to recognize your mouse device.  Please update the \"keyboard\" and \"mouse\" lists in the AutoKey configuration file {cm_constants.CONFIG_FILE} with the name(s) of your keyboard and mouse device(s) from this list:\n{dev_list}\n\nClick the \"Open\" button below to edit the configuration file now or simply press \"Esc\" to close this message.", link_data=cm_constants.CONFIG_FILE)
+            self.app.show_error_dialog_with_link(f"Unable to connect a mouse device", f"AutoKey is unable to recognize your mouse device.  Please update the \"keyboard\" and \"mouse\" lists in the AutoKey configuration file {cm_constants.CONFIG_FILE} with the name(s) of your keyboard and mouse device(s) from this list:\n{dev_list}\n\nClick the \"Open\" button below to edit the configuration file now or simply press \"Esc\" to close this message.", link_data=cm_constants.CONFIG_FILE)
             exit(1)
 
         self.devices = self.keyboards + self.mice

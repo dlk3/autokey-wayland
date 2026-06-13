@@ -1,7 +1,7 @@
 AutoKey tells me it can't find my keyboard/mouse
 ================================================
 
-AutoKey on Wayland tries to connect to all of the keyboards and mice attached to the system.  However, it only recognizes devices that have the word "keyboard" or "mouse" in their names, so it may not have recognized your device(s).  You will get a pop-up error message from AutoKey if it can't recognize at least one keyboard and one mouse:
+AutoKey on Wayland tries to connect to all of the keyboards and mice attached to the system.  If it cannot recognize at least one keyboard and mouse it will display a pop-up error message.
 
 .. image:: keyboardalert.jpg
 
