@@ -43,6 +43,9 @@ from autokey.qtui.dbus_service import AppService
 from autokey.logger import get_logger
 import autokey.UI_common_functions as UI_common
 
+import autokey.configmanager.configmanager as cm
+import autokey.configmanager.configmanager_constants as cm_constants
+
 logger = get_logger(__name__)
 del get_logger
 
@@ -74,6 +77,7 @@ class Application(AutokeyUIInterface, QApplication, AutokeyApplication, metaclas
 
     def initialise(self):
         self.setWindowIcon(QIcon.fromTheme(common.ICON_FILE, qtui_common.load_icon(qtui_common.AutoKeyIcon.AUTOKEY)))
+        self.setQuitOnLastWindowClosed(False)
         self.handler = CallbackEventHandler()
         self.notifier = Notifier(self)
         self.configWindow = ConfigWindow(self)
@@ -140,6 +144,15 @@ class Application(AutokeyUIInterface, QApplication, AutokeyApplication, metaclas
         Show the configuration window, or deiconify (un-minimise) it if it's already open.
         """
         logger.info("Displaying configuration window")
+        if not self.configWindow.isVisible():
+            geometry = cm.ConfigManager.SETTINGS.get(cm_constants.WINDOW_GEOMETRY)
+            if geometry:
+                from PyQt5.QtCore import QByteArray
+                self.configWindow.restoreGeometry(QByteArray.fromBase64(geometry.encode("ascii")))
+            else:
+                size = cm.ConfigManager.SETTINGS[cm_constants.WINDOW_DEFAULT_SIZE]
+                self.configWindow.resize(size[0], size[1])
+            self.configWindow.central_widget.set_splitter(self.configWindow.size())
         self.configWindow.show()
         self.configWindow.showNormal()
         self.configWindow.activateWindow()
