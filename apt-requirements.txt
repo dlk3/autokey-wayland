@@ -20,6 +20,6 @@ pyqt5-dev-tools
 wmctrl
 x11-xserver-utils
 zenity
-graphicsmagick-imagemagick-compat
+graphicsmagick
 xautomation
 wl-clipboard
