@@ -1,6 +1,6 @@
 %{?python_enable_dependency_generator}
 Name:		autokey
-Version:	0.97.4
+Version:	0.97.5
 Release:	0%{?dist}
 Summary:	Desktop automation utility
 
@@ -123,6 +123,7 @@ exit 0
 Summary:	AutoKey QT front end
 Requires:	python3-qscintilla-qt5
 Requires:	python3-qt5
+Requires:       python3-QtPy
 Requires:	autokey-common = %{version}-%{release}
 Provides:	autokey = %{version}-%{release}
 %description qt
@@ -198,6 +199,9 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-exten
 %{_mandir}/man1/autokey-qt.1*
 
 %changelog
+* Wed Jun 17 2026 David King <dave@daveking.com> - 0.97.5-0
+- Add python3-qtpy as Required package for autokey-qt
+
 * Tue Mar 17 2026 David King <dave@daveking.com> - 0.97.4-0
 - Add python3-pydbus as Required package
 - Adjust post install message to account for installations on KDE systems,

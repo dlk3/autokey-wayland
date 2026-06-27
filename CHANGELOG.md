@@ -1,5 +1,44 @@
 # Changelog
 
+## AutoKey 0.97.5
+
+### New Features
+
+  * Keyboard and mouse recognition during AutoKey startup has been improved.
+    Users should not need to manually configure keyboards and mice, although the
+    capability to do so remains.  (Ported
+    [PR 1134](https://github.com/autokey/autokey/pull/1094) by @onchito-walks 
+    from the AutoKey/AutoKey repository.)
+
+  * Users of the AutoKey user interface can click the column headers on
+    the main menu to sort the tree view according to the values contained in
+    each column.  (Ported [PR 1094](https://github.com/autokey/autokey/pull/1094)
+    by @mapsedge from the AutoKey/Autokey repository.)
+
+  * The script editing window in the Qt/KDE AutoKey user interface will change
+    themes to improve visibility when the system is using the "dark" theme.
+    (Ported [PR 1094](https://github.com/autokey/autokey/pull/1094) by @mapsedge
+    from the AutoKey/Autokey repository.)
+
+  * Users of the AutoKey user interface can change the width of the columns on
+    the main menu.  (Implemented a suggestion by @ineuw in [Discussion
+    1158](https://github.com/autokey/autokey/pull/1158) in the AutoKey/AutoKey
+    repository.)
+
+### Bug Fixes
+
+  * [#38](https://github.com/dlk3/autokey-wayland/issues/38) - the window.activate
+    script API method did not work for some users
+
+### Other Changes
+
+  * The Qt/KDE AutoKey user interface code was updated to provide compatibility with
+    PyQt5 and PyQt6 via the use of qtpy.  (Ported
+    [PR 1104](https://github.com/autokey/autokey/pull/1104) by @bgermann from the
+    AutoKey/AutoKey repository.)
+ 
+  * A number of code cleanup and documentation changes have been made.
+
 ## AutoKey 0.97.4
 
 ### New Features
@@ -10,11 +49,11 @@
 
 ### New Features
 
-  * I have created a new [documentation website](https://autokey-wayland.readthedocs.io/) 
+  * I have created a new [documentation website](https://autokey-wayland.readthedocs.io/)
     for AutoKey on ReadtheDocs.  This is intended to be the only source of information
     concerning AutoKey for Wayland.  If you have suggestions for improvement, please
-    let me know by opening a documentation 
-    [issue](https://github.com/dlk3/autokey-wayland/issues). 
+    let me know by opening a documentation
+    [issue](https://github.com/dlk3/autokey-wayland/issues).
 
 ### Bug Fixes
 
@@ -34,17 +73,17 @@
 
   * Added a "delay" option for the keyboard.send_keys() API method that makes
     AutoKey type more slowly.  For the moment, this only works on Wayland.
-    It will be ignored when running on an X11 system.  I hope to change that 
-    soon.  
+    It will be ignored when running on an X11 system.  I hope to change that
+    soon.
 
     Usage:
 
-    ```keyboard.send_keys('type this string', delay=50)``` 
+    ```keyboard.send_keys('type this string', delay=50)```
 
-    The ```delay=50``` will cause there to be a 50 microsecond delay between 
-    each character in the string as AutoKey types it out.  I have found this 
-    useful when sending Unicode characters using the keyboard, when typing too 
-    quickly can overwhelm the system, resulting in garbled output: 
+    The ```delay=50``` will cause there to be a 50 microsecond delay between
+    each character in the string as AutoKey types it out.  I have found this
+    useful when sending Unicode characters using the keyboard, when typing too
+    quickly can overwhelm the system, resulting in garbled output:
 
     ```keyboard.send_keys('<ctrl>+<shift>+u1f44c ', delay=50)```
 
@@ -54,30 +93,30 @@
   * Handle non-fatal exception seen during first-time use on Debian 13.3 test
     system - #16
   * Change the sample phrases and scripts so that they do not rely on the
-    clipboard API which does not work on Wayland systems in backgrounded apps 
+    clipboard API which does not work on Wayland systems in backgrounded apps
     - #17, #18
-  
+
  -- David King <dave@daveking.com>  Fri, 20 Feb 2026 21:11:00 -050
 
 ## AutoKey 0.97.1
 
-This project was forked from the "develop" branch of the "official" 
+This project was forked from the "develop" branch of the "official"
 [autokey/autokey](https://github.com/autokey/autokey) project on GitHub.
 
 ### New Features
-  
-  * AutoKey now supports Gnome/Wayland desktop environments in addition to 
+
+  * AutoKey now supports Gnome/Wayland desktop environments in addition to
     X11 environments.
   * Corrected minor bugs in AutoKey's Wayland integration code.
-  * Enhanced error messages in the Wayland integration to make them easier to 
+  * Enhanced error messages in the Wayland integration to make them easier to
     understand.
-  * Added support for more than one keyboard and mouse at a time when 
+  * Added support for more than one keyboard and mouse at a time when
     running in a Wayland environment.
   * Added support for the hot-plugging of USB or Bluetooth keyboards and mice.
 
 ### Packaging
 
-  * Migrated the autokey-gnome-extension project code into this project, as 
+  * Migrated the autokey-gnome-extension project code into this project, as
     opposed to maintaining it in a separate project.
   * Created spec file and build script to support building of Fedora RPMs.
   * Modified the Debian and Fedora packages to include scriptlets that will

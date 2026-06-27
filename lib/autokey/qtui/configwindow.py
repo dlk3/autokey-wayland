@@ -20,7 +20,6 @@ from qtpy.QtCore import Signal as pyqtSignal, QTimer
 from qtpy.QtGui import QIcon, QKeySequence, QCloseEvent
 from qtpy.QtWidgets import QApplication, QAction, QMenu
 
-
 import autokey.common
 import autokey.model.folder
 import autokey.model.phrase
@@ -35,7 +34,6 @@ from . import dialogs
 logger = __import__("autokey.logger").logger.get_logger(__name__)
 PROBLEM_MSG_PRIMARY = "Some problems were found"
 PROBLEM_MSG_SECONDARY = "%1\n\nYour changes have not been saved."
-
 
 class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwindow")):
 
@@ -58,6 +56,8 @@ class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwin
         self._set_platform_specific_keyboard_shortcuts()
         self.central_widget.init(app)
         self.central_widget.populate_tree(self.app.configManager)
+        header = self.central_widget.treeWidget.header()
+        header.setSectionResizeMode(x, header.Interactive) for x in range(self.central_widget.treeWidget.columnCount())
 
     def _create_action_create(self) -> QAction:
         """
@@ -200,10 +200,10 @@ class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwin
 
     def config_modified(self):
         pass
-        
+
     def is_dirty(self):
         return self.central_widget.dirty
-        
+
     def update_actions(self, items, changed):
         if len(items) > 0:
             can_create = isinstance(items[0], autokey.model.folder.Folder) and len(items) == 1
@@ -212,12 +212,12 @@ class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwin
                 if isinstance(item, autokey.model.folder.Folder):
                     can_copy = False
                     break
-            
+
             self.action_new_top_folder.setEnabled(True)
             self.action_new_sub_folder.setEnabled(can_create)
             self.action_new_phrase.setEnabled(can_create)
             self.action_new_script.setEnabled(can_create)
-            
+
             self.action_copy_item.setEnabled(can_copy)
             self.action_clone_item.setEnabled(can_copy)
             self.action_paste_item.setEnabled(can_create and len(self.central_widget.cutCopiedItems) > 0)
@@ -229,10 +229,10 @@ class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwin
                 self.action_save.setEnabled(False)
                 self.action_undo.setEnabled(False)
                 self.action_redo.setEnabled(False)
-        
+
     def set_undo_available(self, state):
         self.action_undo.setEnabled(state)
-        
+
     def set_redo_available(self, state):
         self.action_redo.setEnabled(state)
 
@@ -240,14 +240,14 @@ class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwin
         logger.debug("Saving completed. persist_global: {}".format(persist_global))
         self.action_save.setEnabled(False)
         self.app.config_altered(persist_global)
-        
+
     def cancel_record(self):
         if self.action_record_script.isChecked():
             self.action_record_script.setChecked(False)
             self.central_widget.recorder.stop()
-        
+
     # ---- Signal handlers ----
-    
+
     def queryClose(self):
         cm.ConfigManager.SETTINGS[cm_constants.HPANE_POSITION] = self.central_widget.splitter.sizes()[0] + 4
         cm.ConfigManager.SETTINGS[cm_constants.COLUMN_WIDTHS] = [
@@ -255,37 +255,37 @@ class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwin
         ]
         cm.ConfigManager.SETTINGS[cm_constants.WINDOW_GEOMETRY] = self.saveGeometry().toBase64().data().decode("ascii")
         self.central_widget.save_expanded_state()
-        
+
         if self.is_dirty():
             if self.central_widget.promptToSave():
                 return False
 
         self.hide()
         return True
-    
+
     # File Menu
 
     def on_close(self):
         self.cancel_record()
         self.queryClose()
-        
+
     def on_quit(self):
         if self.queryClose():
             self.app.shutdown()
-            
+
     # Edit Menu
-    
+
     def on_insert_macro(self, macro):
         token = macro.get_token()
         self.central_widget.phrasePage.insert_token(token)
-            
+
     def on_record(self):
         if self.action_record_script.isChecked():
             dlg = dialogs.RecordDialog(self, self._do_record)
             dlg.show()
         else:
             self.central_widget.recorder.stop()
-            
+
     def _do_record(self, ok: bool, record_keyboard: bool, record_mouse: bool, delay: float):
         if ok:
             self.central_widget.recorder.set_record_keyboard(record_keyboard)
@@ -304,7 +304,7 @@ class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwin
         )
 
     # Settings Menu
-            
+
     def on_advanced_settings(self):
         s = SettingsDialog(self)
         s.show()

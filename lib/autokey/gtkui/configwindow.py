@@ -1588,6 +1588,7 @@ class ConfigWindow:
         column2.set_expand(False)
         column2.set_min_width(50)
         column2.set_resizable(True)
+        column2.set_sort_column_id(2)
         self.treeView.append_column(column2)
 
         column3 = Gtk.TreeViewColumn(_("Hotkey"))
@@ -1598,6 +1599,7 @@ class ConfigWindow:
         column3.set_expand(False)
         column3.set_min_width(100)
         column3.set_resizable(True)
+        column3.set_sort_column_id(3)
         self.treeView.append_column(column3)
 
         path = Gtk.TreePath()
