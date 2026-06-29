@@ -66,7 +66,8 @@ class Application(AutokeyApplication, AutokeyUIInterface):
         Gdk.threads_init()
         args = autokey.argument_parser.parse_args()
         super().__init__(args, UI=self)
-        logger.info("Initialising GTK application")
+        logger.info(f"Initialising GTK application using GTK {Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}")
+
         try:
             self.initialise()
         except Exception as e:
@@ -90,7 +91,7 @@ class Application(AutokeyApplication, AutokeyUIInterface):
         self.notifier.rebuild_menu()
 
     def path_created_or_modified(self, path):
-	#  @dlk3  Fix for issue #16.  Wrap this call to 
+    #  @dlk3  Fix for issue #16.  Wrap this call to
         #  catch an exception, log and otherwise ignore it
         try:
             UI_common.path_created_or_modified(self.configManager, self.configWindow, path)
@@ -187,7 +188,7 @@ class Application(AutokeyApplication, AutokeyUIInterface):
             defaults to Gtk.MessageType.ERROR
         """
         # TODO does this cause issues with other places the error dialog is shown?
-        # without this threads_enter/threads_leave it  would fail to show dialog/create 
+        # without this threads_enter/threads_leave it  would fail to show dialog/create
         # app indicator when error is thrown from uinput interfaced
         Gdk.threads_enter()
         logger.debug("Displaying "+dialog_type.value_name+" Dialog")
@@ -207,7 +208,7 @@ class Application(AutokeyApplication, AutokeyUIInterface):
         # label.set_tooltip_text("Click to open file")
         # label.set_cursor(Gdk.Cursor.new(Gdk.CursorType.HAND1))
         # label.connect("activate-link", open_file_link, link_data)
-        
+
         dialog = Gtk.MessageDialog(type=dialog_type, buttons=Gtk.ButtonsType.NONE, message_format=message)
         if details is not None:
             dialog.format_secondary_text(details)

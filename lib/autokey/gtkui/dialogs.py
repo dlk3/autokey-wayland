@@ -227,6 +227,10 @@ class AbbrSettingsDialog(DialogBase):
 
         DialogBase.__init__(self)
 
+        # Disable OK button until at least one abbreviation has been added.
+        self.okButton = builder.get_object('okButton')
+        self.okButton.set_sensitive(False)
+
         # set up list view
         store = Gtk.ListStore(str)
         self.abbrList.set_model(store)
@@ -288,6 +292,8 @@ class AbbrSettingsDialog(DialogBase):
         self.ignoreCaseCheckbox.set_active(item.ignoreCase)
         self.triggerInsideCheckbox.set_active(item.triggerInside)
         self.immediateCheckbox.set_active(item.immediate)
+        # Disable OK button until at least one abbreviation has been added.
+        self._update_ok_button()
 
     def save(self, item):
         item.modes.append(TriggerMode.ABBREVIATION)
@@ -367,12 +373,23 @@ class AbbrSettingsDialog(DialogBase):
     def reset_focus(self):
         self.addButton.grab_focus()
 
+    # Disable OK button until at least one abbreviation has been added.
+    def _update_ok_button(self):
+        """Enable the OK button when the model has at least one abbreviation."""
+        model = self.abbrList.get_model()
+        if len(model) > 0 and model[0][0] is not None:
+            self.okButton.set_sensitive(True)
+        else:
+            self.okButton.set_sensitive(False)
+
     # Signal handlers
 
     def on_cell_editing_cancelled(self, renderer, data=None):
         model, curIter = self.abbrList.get_selection().get_selected()
         oldText = model.get_value(curIter, 0) or ""
         self.on_cell_modified(renderer, None, oldText)
+        # Disable OK button until at least one abbreviation has been added.
+        self._update_ok_button()
 
     def on_cell_modified(self, renderer, path, newText, data=None):
         model, curIter = self.abbrList.get_selection().get_selected()
@@ -381,12 +398,16 @@ class AbbrSettingsDialog(DialogBase):
             self.on_removeButton_clicked(renderer)
         else:
             model.set(curIter, 0, newText)
+        # Disable OK button until at least one abbreviation has been added.
+        self._update_ok_button()
 
     def on_addButton_clicked(self, widget, data=None):
         model = self.abbrList.get_model()
         newIter = model.append()
         self.abbrList.set_cursor(model.get_path(newIter), self.abbrList.get_column(0), True)
         self.removeButton.set_sensitive(True)
+        # Disable OK button until at least one abbreviation has been added.
+        self._update_ok_button()
 
     def on_removeButton_clicked(self, widget, data=None):
         model, curIter = self.abbrList.get_selection().get_selected()
@@ -395,6 +416,8 @@ class AbbrSettingsDialog(DialogBase):
             self.removeButton.set_sensitive(False)
         else:
             self.abbrList.get_selection().select_iter(model.get_iter_first())
+        # Disable OK button until at least one abbreviation has been added.
+        self._update_ok_button()
 
     def on_abbrList_cursorchanged(self, widget, data=None):
         pass

@@ -18,7 +18,7 @@
   * The script editing window in the Qt/KDE AutoKey user interface will change
     themes to improve visibility when the system is using the "dark" theme.
     (Ported [PR 1094](https://github.com/autokey/autokey/pull/1094) by @mapsedge
-    from the AutoKey/Autokey repository.)
+    from the AutoKey/AutoKey repository.)
 
   * Users of the AutoKey user interface can change the width of the columns on
     the main menu.  (Implemented a suggestion by @ineuw in [Discussion
@@ -29,6 +29,9 @@
 
   * [#38](https://github.com/dlk3/autokey-wayland/issues/38) - the window.activate
     script API method did not work for some users
+
+  * [AutoKey/AutoKey #667](https://github.com/autokey/autokey/issues/667) - "Setting
+    an abbreviation still requires pressing Enter"
 
 ### Other Changes
 
