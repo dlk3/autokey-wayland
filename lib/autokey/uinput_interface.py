@@ -293,7 +293,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
             self.device_paths.append(keyboard.path)
             #logger.debug("Keyboard: {}, Path: {}".format(keyboard.name, keyboard.path))
         except Exception as error:
-            logger.error(f"Could not grab keyboard device \"{dev.name}\" from list of devices found on system: {error}")
+            logger.error(f"Could not grab keyboard device \"{device.name}\" from list of devices found on system: {error}")
 
     def __grab_mouse(self, devices, device):
         try:
@@ -303,7 +303,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
             self.device_paths.append(mouse.path)
             #logger.debug("Mouse: {}, Path: {}".format(mouse.name, mouse.path))
         except Exception as error:
-            logger.error(f"Could not grab mouse device  \"{dev.name}\" from list of devices found on system: {error}")
+            logger.error(f"Could not grab mouse device  \"{device.name}\" from list of devices found on system: {error}")
 
     def grab_multiple_devices(self):
         ### UINPUT Listener one for keyboard and eventually one for mouse
