@@ -54,7 +54,7 @@ def get_notifier(app):
     return IndicatorNotifier(app)
 
 class IndicatorNotifier:
-    
+
     def __init__(self, autokeyApp):
         Notify.init("AutoKey")
         # Used to rate-limit error notifications to 1 per second. Without this, two notifications per second cause the
@@ -70,48 +70,48 @@ class IndicatorNotifier:
             "AutoKey",
             cm.ConfigManager.SETTINGS[cm_constants.NOTIFICATION_ICON],
             AppIndicator.IndicatorCategory.APPLICATION_STATUS)
-                                                
+
         self.indicator.set_attention_icon(common.ICON_FILE_NOTIFICATION_ERROR)
-        self.update_visible_status()           
+        self.update_visible_status()
         self.rebuild_menu()
-        
+
     def update_visible_status(self):
         if cm.ConfigManager.SETTINGS[cm_constants.SHOW_TRAY_ICON]:
             self.indicator.set_status(AppIndicator.IndicatorStatus.ACTIVE)
         else:
-            self.indicator.set_status(AppIndicator.IndicatorStatus.PASSIVE)   
-            
-    def hide_icon(self):     
+            self.indicator.set_status(AppIndicator.IndicatorStatus.PASSIVE)
+
+    def hide_icon(self):
         self.indicator.set_status(AppIndicator.IndicatorStatus.PASSIVE)
-        
+
     def set_icon(self,name):
         self.indicator.set_icon(name)
 
     def rebuild_menu(self):
         # Main Menu items
         self.errorItem = Gtk.MenuItem(label=_("View script error"))
-        
+
         enableMenuItem = Gtk.CheckMenuItem(label=_("Enable Expansions"))
         enableMenuItem.set_active(self.app.service.is_running())
         enableMenuItem.set_sensitive(not self.app.serviceDisabled)
-        
+
         configureMenuItem = Gtk.ImageMenuItem(label=_("Show Main Window"))
         configureMenuItem.set_image(Gtk.Image.new_from_stock(Gtk.STOCK_PREFERENCES, Gtk.IconSize.MENU))
-        
-        
-        
+
+
+
         removeMenuItem = Gtk.ImageMenuItem(label=_("Remove icon"))
         removeMenuItem.set_image(Gtk.Image.new_from_stock(Gtk.STOCK_CLOSE, Gtk.IconSize.MENU))
-        
+
         quitMenuItem = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_QUIT, None)
-                
+
         # Menu signals
         enableMenuItem.connect("toggled", self.on_enable_toggled)
         configureMenuItem.connect("activate", self.on_show_configure)
         removeMenuItem.connect("activate", self.on_remove_icon)
         quitMenuItem.connect("activate", self.on_destroy_and_exit)
         self.errorItem.connect("activate", self.on_show_error)
-        
+
         # Get phrase folders to add to main menu
         folders = []
         items = []
@@ -119,11 +119,11 @@ class IndicatorNotifier:
         for folder in self.configManager.allFolders:
             if folder.show_in_tray_menu:
                 folders.append(folder)
-        
+
         for item in self.configManager.allItems:
             if item.show_in_tray_menu:
                 items.append(item)
-                    
+
         # Construct main menu
         self.menu = popupmenu.PopupMenu(self.app.service, folders, items, False)
         if len(items) > 0:
@@ -136,7 +136,7 @@ class IndicatorNotifier:
         self.menu.show_all()
         self.errorItem.hide()
         self.indicator.set_menu(self.menu)
-        
+
     def notify_error(self, message):
         now = datetime.datetime.now()
         if self.last_notification_timestamp + datetime.timedelta(seconds=1) < now:
@@ -144,17 +144,17 @@ class IndicatorNotifier:
             self.last_notification_timestamp = now
         self.errorItem.show()
         self.indicator.set_status(AppIndicator.IndicatorStatus.ATTENTION)
-        
+
     def show_notify(self, message, iconName):
         Gdk.threads_enter()
         n = Notify.Notification.new("AutoKey", message, iconName)
         n.set_urgency(Notify.Urgency.LOW)
         n.show()
         Gdk.threads_leave()
-        
+
     def update_tool_tip(self):
         pass
-        
+
     def on_show_error(self, widget, data=None):
         # Work around the current GUI design: the UI is destroyed when the main window is closed.
         # This causes the show_script_error method below to fail because self.app.configWindow.ui doesn’t exist
@@ -164,20 +164,20 @@ class IndicatorNotifier:
             self.app.show_script_error(None)
         self.errorItem.hide()
         self.update_visible_status()
-            
+
     def on_enable_toggled(self, widget, data=None):
         if widget.get_active():
             self.app.unpause_service()
         else:
             self.app.pause_service()
-            
+
     def on_show_configure(self, widget, data=None):
         self.app.show_configure()
 
     def on_remove_icon(self, widget, data=None):
         self.indicator.set_status(AppIndicator.IndicatorStatus.PASSIVE)
         cm.ConfigManager.SETTINGS[cm_constants.SHOW_TRAY_ICON] = False
-                
+
     def on_destroy_and_exit(self, widget, data=None):
         self.app.shutdown()
 
@@ -185,31 +185,31 @@ class IndicatorNotifier:
 class UnityLauncher(IndicatorNotifier):
 
     SHOW_ITEM_STRING = _("Add to quicklist/notification menu")
-    
+
     #def __init__(self, autokeyApp):
     #    IndicatorNotifier.__init__(self, autokeyApp)
-        
+
     def __getQuickItem(self, label):
         from gi.repository import Dbusmenu
         item = Dbusmenu.Menuitem.new()
         item.property_set(Dbusmenu.MENUITEM_PROP_LABEL, label)
         item.property_set_bool(Dbusmenu.MENUITEM_PROP_VISIBLE, True)
         return item
-        
+
     def rebuild_menu(self):
         IndicatorNotifier.rebuild_menu(self)
-        print(threading.currentThread().name)
-        
+        #print(threading.currentThread().name)
+
         #try:
         from gi.repository import Unity, Dbusmenu
         HAVE_UNITY = True
-        print("have unity")
+        #print("have unity")
         #except ImportError:
         #    return
 
-        print("rebuild unity menu")
-        self.launcher = Unity.LauncherEntry.get_for_desktop_id ("autokey-gtk.desktop")   
-    
+        #print("rebuild unity menu")
+        self.launcher = Unity.LauncherEntry.get_for_desktop_id ("autokey-gtk.desktop")
+
         # Main Menu items
         enableMenuItem = self.__getQuickItem(_("Enable Expansions"))
         enableMenuItem.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_CHECK)
@@ -218,15 +218,15 @@ class UnityLauncher(IndicatorNotifier):
         #else:
         #    enableMenuItem.property_set_int(Dbusmenu.MENUITEM_PROP_TOGGLE_STATE, Dbusmenu.MENUITEM_TOGGLE_STATE_UNCHECKED)
         enableMenuItem.property_set_int(Dbusmenu.MENUITEM_PROP_TOGGLE_STATE, int(self.app.service.is_running()))
-        
+
         enableMenuItem.property_set_bool(Dbusmenu.MENUITEM_PROP_ENABLED, not self.app.serviceDisabled)
-        
+
         configureMenuItem = self.__getQuickItem(_("Show Main Window"))
-        
+
         # Menu signals
         enableMenuItem.connect("item-activated", self.on_ql_enable_toggled, None)
         configureMenuItem.connect("item-activated", self.on_show_configure, None)
-        
+
         # Get phrase folders to add to main menu
 #        folders = []
 #        items = []
@@ -234,26 +234,26 @@ class UnityLauncher(IndicatorNotifier):
 #        for folder in self.configManager.allFolders:
 #            if folder.show_in_tray_menu:
 #                folders.append(folder)
-#        
+#
 #        for item in self.configManager.allItems:
 #            if item.show_in_tray_menu:
 #                items.append(item)
-                    
+
         # Construct main menu
         quicklist = Dbusmenu.Menuitem.new()
         #if len(items) > 0:
         #    self.menu.append(Gtk.SeparatorMenuItem())
         quicklist.child_append(enableMenuItem)
         quicklist.child_append(configureMenuItem)
-        self.launcher.set_property ("quicklist", quicklist)        
-        
+        self.launcher.set_property ("quicklist", quicklist)
+
     def on_ql_enable_toggled(self, menuitem, data=None):
         from gi.repository import Dbusmenu
         if menuitem.property_get_int(Dbusmenu.Menuitem.MENUITEM_PROP_TOGGLE_STATE) == Dbusmenu.Menuitem.MENUITEM_TOGGLE_STATE_CHECKED:
             self.app.unpause_service()
         else:
             self.app.pause_service()
-            
+
 
 
 

@@ -7,7 +7,7 @@
   * Keyboard and mouse recognition during AutoKey startup has been improved.
     Users should not need to manually configure keyboards and mice, although the
     capability to do so remains.  (Ported
-    [PR 1134](https://github.com/autokey/autokey/pull/1094) by @onchito-walks 
+    [PR 1134](https://github.com/autokey/autokey/pull/1094) by @onchito-walks
     from the AutoKey/AutoKey repository.)
 
   * Users of the AutoKey user interface can click the column headers on
@@ -27,47 +27,58 @@
 
 ### Bug Fixes
 
-  * [#38](https://github.com/dlk3/autokey-wayland/issues/38) - the window.activate
-    script API method did not work for some users
+  * [#38](https://github.com/dlk3/autokey-wayland/issues/38) - the
+    window.activate script API method did not work for some users
 
-  * [AutoKey/AutoKey #667](https://github.com/autokey/autokey/issues/667) - "Setting
-    an abbreviation still requires pressing Enter"
+  * [AutoKey/AutoKey #667](https://github.com/autokey/autokey/issues/667) -
+    "Setting an abbreviation still requires pressing Enter"
+
+  * [#40](https://github.com/dlk3/autokey-wayland/pull/40) - "Fix misnamed
+    variables"
+
+  * [AutoKey/AutoKey PR 1168](https://github.com/autokey/autokey/pull/1168) -
+    "remove leftover debug print() calls in UnityLauncher.rebuild_menu"
 
 ### Other Changes
 
-  * The Qt/KDE AutoKey user interface code was updated to provide compatibility with
-    PyQt5 and PyQt6 via the use of qtpy.  (Ported
-    [PR 1104](https://github.com/autokey/autokey/pull/1104) by @bgermann from the
-    AutoKey/AutoKey repository.)
- 
+  * The Qt/KDE AutoKey user interface code was updated to provide compatibility
+    with PyQt5 and PyQt6 via the use of qtpy.  (Ported
+    [PR 1104](https://github.com/autokey/autokey/pull/1104) by @bgermann from
+    the AutoKey/AutoKey repository.)
+
   * A number of code cleanup and documentation changes have been made.
 
 ## AutoKey 0.97.4
 
 ### New Features
 
-  * AutoKey for Wayland now supports KDE/Wayland systems, in addition to the GNOME/Wayland and X11 systems it supported previously.
+  * AutoKey for Wayland now supports KDE/Wayland systems, in addition to the
+    GNOME/Wayland and X11 systems it supported previously.
 
 ## AutoKey 0.97.3
 
 ### New Features
 
-  * I have created a new [documentation website](https://autokey-wayland.readthedocs.io/)
-    for AutoKey on ReadtheDocs.  This is intended to be the only source of information
-    concerning AutoKey for Wayland.  If you have suggestions for improvement, please
-    let me know by opening a documentation
+  * I have created a new [documentation
+    website](https://autokey-wayland.readthedocs.io/) for AutoKey on
+    ReadtheDocs.  This is intended to be the only source of information
+    concerning AutoKey for Wayland.  If you have suggestions for improvement,
+    please let me know by opening a documentation
     [issue](https://github.com/dlk3/autokey-wayland/issues).
 
 ### Bug Fixes
 
-  * All of the [window API methods](https://autokey-wayland.readthedocs.io/en/latest/api/windowgnome.html)
-    have now been implemented using a new version of the AutoKey GNOME Shell extension.  They
-    should all work in the same manner as users are familiar with from previous releases of
-    AutoKey.
+  * All of the [window API
+    methods](https://autokey-wayland.readthedocs.io/en/latest/api/windowgnome.html)
+    have now been implemented using a new version of the AutoKey GNOME Shell
+    extension.  They should all work in the same manner as users are familiar
+    with from previous releases of AutoKey.
 
-  * All of the [clipboard API methods](https://autokey-wayland.readthedocs.io/en/latest/api/gtkclipboard.html)
-    have now been implemented using the [wl-clipboard](https://github.com/bugaevc/wl-clipboard)
-    utility.  They should all work in the same manner as users are familiar with from previous
+  * All of the [clipboard API
+    methods](https://autokey-wayland.readthedocs.io/en/latest/api/gtkclipboard.html)
+    have now been implemented using the
+    [wl-clipboard](https://github.com/bugaevc/wl-clipboard) utility.  They
+    should all work in the same manner as users are familiar with from previous
     releases of AutoKey.
 
 ## AutoKey 0.97.2
