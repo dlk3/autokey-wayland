@@ -32,6 +32,7 @@ Requires:	python3-pydbus
 Requires:	ImageMagick
 Recommends:	wmctrl
 Recommends:	xautomation
+Recommends:	gtk-layer-shell
 Recommends:	wl-clipboard
 Provides:	autokey = %{version}-%{release}
 %description common
