@@ -54,6 +54,10 @@ import autokey.configmanager.configmanager as cm
 import autokey.configmanager.configmanager_constants as cm_constants
 if common.DESKTOP == 'KDE':
     from autokey.kde_interface import KdeMouseInterface as MouseReadInterface
+elif common.DESKTOP == 'SWAY':
+    from autokey.wlroots_interface import SwayMouseInterface as MouseReadInterface
+elif common.DESKTOP in common.WLROOTS_DESKTOPS:
+    from autokey.wlroots_interface import FallbackMouseInterface as MouseReadInterface
 else:
     from autokey.gnome_interface import GnomeMouseReadInterface as MouseReadInterface
 
@@ -442,9 +446,7 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         self.ui.write(e.EV_KEY, keycode, 0)
         self.syn_raw()
 
-    # implemented in MouseReadInterface
-    # def mouse_location(self):
-    #     raise NotImplementedError
+    # mouse_location() is provided by the MouseReadInterface mixin
 
     def relative_mouse_location(self, window=None):
         mousex,mousey = self.mouse_location()
