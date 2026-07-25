@@ -35,7 +35,7 @@ def waylandChecks():
 
     try:
         #  We only do this stuff when running under Wayland
-        if os.environ['XDG_SESSION_TYPE'] != "wayland":
+        if os.environ.get('XDG_SESSION_TYPE', '') != "wayland":
             return True
 
         #  Check that we're running on a supported desktop environment
