@@ -28,6 +28,15 @@ autokey (0.97.5) noble; urgency=medium
   * [#38](https://github.com/dlk3/autokey-wayland/issues/38) - the window.activate
     script API method did not work for some users
 
+  * [AutoKey/AutoKey #667](https://github.com/autokey/autokey/issues/667) -
+    "Setting an abbreviation still requires pressing Enter"
+
+  * [#40](https://github.com/dlk3/autokey-wayland/pull/40) - "Fix misnamed
+    variables"
+
+  * [AutoKey/AutoKey PR 1168](https://github.com/autokey/autokey/pull/1168) -
+    "remove leftover debug print() calls in UnityLauncher.rebuild_menu"
+
   [Other Changes]
 
   * The Qt/KDE AutoKey user interface code was updated to provide compatibility with 
