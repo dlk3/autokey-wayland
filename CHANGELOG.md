@@ -10,9 +10,9 @@
     [PR 1134](https://github.com/autokey/autokey/pull/1094) by @onchito-walks
     from the AutoKey/AutoKey repository.)
 
-  * Users of the AutoKey user interface can click the column headers on
-    the main menu to sort the tree view according to the values contained in
-    each column.  (Ported [PR 1094](https://github.com/autokey/autokey/pull/1094)
+  * Users of the Qt/KDE version of AutoKey user interface can click the column 
+    headers on the main menu to sort the tree view according to the values
+    contained in each column.  (Ported [PR 1094](https://github.com/autokey/autokey/pull/1094)
     by @mapsedge from the AutoKey/Autokey repository.)
 
   * The script editing window in the Qt/KDE AutoKey user interface will change
@@ -20,10 +20,10 @@
     (Ported [PR 1094](https://github.com/autokey/autokey/pull/1094) by @mapsedge
     from the AutoKey/AutoKey repository.)
 
-  * Users of the AutoKey user interface can change the width of the columns on
-    the main menu.  (Implemented a suggestion by @ineuw in [Discussion
-    1158](https://github.com/autokey/autokey/pull/1158) in the AutoKey/AutoKey
-    repository.)
+  * Users of the GTK/Gnome version of the AutoKey user interface can change the
+    width of the columns on the main menu.  (Implemented a suggestion by @ineuw
+    in [Discussion 1158](https://github.com/autokey/autokey/pull/1158) in the
+    AutoKey/AutoKey repository.)
 
 ### Bug Fixes
 

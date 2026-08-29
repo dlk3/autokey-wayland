@@ -46,7 +46,6 @@ extensions = [
     'enum_tools.autoenum'
 ]
 
-
 # source_suffix = [
     # '.rst': 'restructuredtext',
     # '.md': 'markdown',
