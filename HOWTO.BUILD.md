@@ -1,3 +1,7 @@
+# Fedora
+
+The <code>fedora/mkpackage</code> script builds a source RPM and sends it to COPR to be built.
+
 # Ubuntu
 
 There are three scripts:
@@ -10,29 +14,37 @@ There are three scripts:
     debian/update-ppa - Updates the PPA with the ```~/Downloads/autokey*.deb``` 
                         files produced by the mkpackage script with the testing 
                         ("-t") option
-# Fedora
-
-The <code>fedora/mkpackage</code> script builds a source RPM and sends it to COPR to be built.
-
-# Common Preparation
+# Preparation
 
 - Update debian/changelog and copy text over into CHANGELOG.md and fedora/autokey.spec
 - Update AutoKey version number in:
   - lib/autokey/common.py
   - fedora/autokey.spec
-- git tag $VERSION
+- git tag v$VERSION
 - pytest ~/src/autokey-wayland
 - git commit -a -m "a comment"
 - git push
 
-# Starting the Ubuntu Build
+# Do the Fedora Build
+
+## To build Fedora RPMs on a Fedora Workstation:
+
+This build uses local source, so be sure you're in the right branch with the right changes.
+
+    cd ~/src/autopkey-wayland/fedora
+    ./mkpackage
+
+A SRPM package will be built locally and then forwarded to COPR where the actual RPM builds will be done.  The SRPM, SPEC and SOURCE files will all be left in the local ${HOME}/rpmbuild directory tree.
+
+# Do the Ubuntu Build
 
 ## To build Ubuntu debs on a Fedora workstation:
 
-Edit <code>debian/mkpackage</code> and make sure it's pointing at the right branch of the repo.  This build pulls its source from git, so make sure you've done your commits and pushes.
+Edit <code>debian/mkpackage</code> and make sure it's pointing at the right branch of the repo.  This build pulls its source from git, so make sure you've done your commits and pushes and published the release.
 
     cd ~/src/autokey-wayland/debian
-    ./mkpackage
+    ./mkpackage -t
+    ./update_ppa
 
 On Fedora, the output debs will be rsynced to my PPA server, unless the "-t" option is specified.  With "-t" they will be written into ${HOME}/Downloads instead.
 
@@ -45,13 +57,3 @@ This build uses local source, so be sure you're in the right branch with the rig
 
 On Ubuntu, the output debs will be written to ~/src
 
-# Starting the Fedora Build
-
-## To build Fedora RPMs on a Fedora Workstation:
-
-This build uses local source, so be sure you're in the right branch with the right changes.
-
-    cd ~/src/autopkey-wayland/fedora
-    ./mkpackage
-
-A SRPM package will be built locally and then forwarded to COPR where the actual RPM builds will be done.  The SRPM, SPEC and SOURCE files will all be left in the local ${HOME}/rpmbuild directory tree.
