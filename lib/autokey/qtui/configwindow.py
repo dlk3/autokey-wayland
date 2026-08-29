@@ -57,7 +57,8 @@ class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwin
         self.central_widget.init(app)
         self.central_widget.populate_tree(self.app.configManager)
         header = self.central_widget.treeWidget.header()
-        header.setSectionResizeMode(x, header.Interactive) for x in range(self.central_widget.treeWidget.columnCount())
+        for x in range(self.central_widget.treeWidget.columnCount()):
+             header.setSectionResizeMode(x, QHeaderView.Interactive)
 
     def _create_action_create(self) -> QAction:
         """

@@ -113,7 +113,6 @@ else
 	apt upgrade -y
 	apt install -y git sudo zip python3-pytest
 
-	#  Create the rpmbuild directory tree inside the container
 	mkdir -p ${HOME}/src
 	cd ${HOME}/src
 
