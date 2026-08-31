@@ -1,49 +1,47 @@
 #!/usr/bin/env bash
 
 #  Copyright (C) 2026  David King <dave@daveking.com>
-#  
+#
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License,
 #  version 2, as published by the Free Software Foundation.
-#  
+#
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License,
-#  version 2, along with this program; if not, see 
+#  version 2, along with this program; if not, see
 #  <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.
  #####################################################################
 
-#  Update PPA with debs found in Downloads folder (from mkpackage -t)
+#  Update PPA with debs found in Downloads folder (see mkpackage script)
 
 #  Location we rsync the PPA updates to:
-PPA_DIR='daveking.com:/opt/autokey-wayland-ppa/'
+PPA_DIR=$1
 
 #  Handle command line options
 usage () {
-	echo "Usage: $0 [-h]"
+    echo "Usage: $0 [-h]"
 }
 
-DEBUG=false
-TESTBUILD=false
-while getopts "dth" OPT; do
-	case "${OPT}" in
-		h)
-			usage
-			exit
-			;;
-		*)
-			echo "Invalid option: $OPT"
-			usage
-			exit 1
-			;;
-	esac
+while getopts "h" OPT; do
+    case "${OPT}" in
+        h)
+            usage
+            exit
+            ;;
+        *)
+            echo "Invalid option: $OPT"
+            usage
+            exit 1
+            ;;
+    esac
 done
 shift $((OPTIND-1))
-	
-#  Abend the script when something bad happens.  Will execute the ERR trap 
+
+#  Abend the script when something bad happens.  Will execute the ERR trap
 #  if/when one is in force (see below)
 set -e
 
@@ -68,7 +66,7 @@ for PKG in $(ls *.deb | sort -r); do
         if [[ $CTR > $LIMIT ]]; then
                 rm $PKG
         fi
-done	
+done
 
 #  Create the Packages files in the repo
 echo "Creating Packages files for PPA"
@@ -79,16 +77,16 @@ gzip -k -f Packages
 echo "Creating Release files for PPA"
 
 do_hash() {
-	HASH_NAME=$1
-	HASH_CMD=$2
-	echo "${HASH_NAME}:"
-	for f in $(find -type f); do
-		f=$(echo $f | cut -c3-) # remove ./ prefix
-		if [[ $f == Release* ]] || [[ $f == InRelease* ]] || [[ $f == index.html ]] || [[ $f == markdown.css ]] || [[ $f == pgp-key.public ]]; then
-			continue
-		fi
-		echo " $(${HASH_CMD} ${f}  | cut -d" " -f1) $(wc -c $f)"
-	done
+    HASH_NAME=$1
+    HASH_CMD=$2
+    echo "${HASH_NAME}:"
+    for f in $(find -type f); do
+        f=$(echo $f | cut -c3-) # remove ./ prefix
+        if [[ $f == Release* ]] || [[ $f == InRelease* ]] || [[ $f == index.html ]] || [[ $f == markdown.css ]] || [[ $f == pgp-key.public ]]; then
+            continue
+        fi
+        echo " $(${HASH_CMD} ${f}  | cut -d" " -f1) $(wc -c $f)"
+    done
 }
 
 cat << EOF > Release

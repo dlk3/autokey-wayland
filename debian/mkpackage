@@ -1,30 +1,30 @@
 #!/usr/bin/env bash
 
 #  Copyright (C) 2026  David King <dave@daveking.com>
-#  
+#
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License,
 #  version 2, as published by the Free Software Foundation.
-#  
+#
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License,
-#  version 2, along with this program; if not, see 
+#  version 2, along with this program; if not, see
 #  <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.
  #####################################################################
 
 #  Generate the Ubuntu debs for AutoKey using a Ubuntu 24.04 LTS container
 
-#  Source code to build and version number to use 
+#  Source code to build and version number to use
 GIT_URL='https://github.com/dlk3/autokey-wayland.git'
 BRANCH='main'
 VERSION='v0.97.5'
 
 #  Location we rsync the PPA updates to:
-PPA_DIR='daveking.com:/opt/autokey-wayland-ppa/'
+PPA_DIR='daveking.com:/opt/autokey-wayland-ppa'
 
 #  Tag of the docker.io Ubuntu container we use as the base for our container build
 UBUNTU_CONTAINER="ubuntu:latest"
@@ -34,100 +34,100 @@ export DEBEMAIL='dave@daveking.com'
 
 #  Handle command line options
 usage () {
-	echo "Usage: $0 [-d] [-h] [-t]"
-	echo "    where:"
-	echo "        -d : keep container open for debugging when there is  an error"
-	echo "        -t : test build, do not publish the results to the PPA"
+    echo "Usage: $0 [-d] [-h] [-t]"
+    echo "    where:"
+    echo "        -d : keep container open for debugging when there is  an error"
+    echo "        -t : test build, do not publish the results to the PPA"
 }
 
 DEBUG=false
 TESTBUILD=false
 while getopts "dth" OPT; do
-	case "${OPT}" in
-		d)
-			DEBUG=true
-			;;
-		t)
-			TESTBUILD=true
-			;;
-		h)
-			usage
-			exit
-			;;
-		*)
-			echo "Invalid option: $OPT"
-			usage
-			exit 1
-			;;
-	esac
+    case "${OPT}" in
+        d)
+            DEBUG=true
+            ;;
+        t)
+            TESTBUILD=true
+            BRANCH='develop'
+            PPA_DIR='daveking.com:/opt/autokey-wayland-ppa-testing'
+            ;;
+        h)
+            usage
+            exit
+            ;;
+        *)
+            echo "Invalid option: $OPT"
+            usage
+            exit 1
+            ;;
+    esac
 done
 shift $((OPTIND-1))
-	
-#  Abend the script when something bad happens.  Will execute the ERR trap 
+
+#  Abend the script when something bad happens.  Will execute the ERR trap
 #  if/when one is in force (see below)
 set -e
 
 if [ ! $container ]; then
 
-	#  This section of the script does not run in the podman container, it only
-	#  runs on my workstation and drives the overall build process
-	cd $(dirname $(realpath "$0"))
+    #  This section of the script does not run in the podman container, it only
+    #  runs on my workstation and drives the overall build process
+    cd $(dirname $(realpath "$0"))
 
         #  Run any tests
-	pytest ..
-	RC=$?
-	if [ $RC != 0 ]; then
-		exit $RC
-	fi
+    pytest ..
+    RC=$?
+    if [ $RC != 0 ]; then
+        exit $RC
+    fi
 
-	#  Build the debs in a container
-	echo "Starting build at $(date +%H:%m:%S)"
-	OPT=""
-	if $DEBUG; then
-		OPT="-it"
-	fi
-	/usr/bin/podman run $OPT --name=debbuild --rm --volume=${HOME}:${HOME} docker.io/${UBUNTU_CONTAINER} "$(realpath "$0")" ${HOME}
+    #  Build the debs in a container
+    echo "Starting build at $(date +%H:%m:%S)"
+    OPT=""
+    if $DEBUG; then
+        OPT="-it"
+    fi
+    /usr/bin/podman run $OPT --name=debbuild --rm --volume=${HOME}:${HOME} docker.io/${UBUNTU_CONTAINER} "$(realpath "$0")" ${HOME}
 
-	echo "Build complete at $(date +%H:%m:%S)"
-		
-	#  If this isn't a test, put the deb files into my PPA
-	if [ $TESTBUILD == false ]; then
-		./update_ppa
-	fi
+    echo "Build complete at $(date +%H:%m:%S)"
+
+    #  If this isn't a test, put the deb files into my PPA
+    ./update_ppa "$PPA_DIR"
 
 else
 
-	#  This section of the script runs in the docker container to build the Ubuntu
-	#  debs.
+    #  This section of the script runs in the docker container to build the Ubuntu
+    #  debs.
 
-	#  The output packages will be copied to the $HOME/Downloads directory of
-	#  the user running this script.
-	TARGETDIR=$1
+    #  The output packages will be copied to the $HOME/Downloads directory of
+    #  the user running this script.
+    TARGETDIR=$1
 
         #  Keep the container running and give me a shell prompt when something bad happens
-	if $DEBUG; then
-		trap /bin/sh ERR
-	fi
+    if $DEBUG; then
+        trap /bin/sh ERR
+    fi
 
-	apt update -y
-	apt upgrade -y
-	apt install -y git sudo zip python3-pytest
+    apt update -y
+    apt upgrade -y
+    apt install -y git sudo zip python3-pytest
 
-	mkdir -p ${HOME}/src
-	cd ${HOME}/src
+    mkdir -p ${HOME}/src
+    cd ${HOME}/src
 
-	BRANCH_OPTS=""
-	if [ -n "$BRANCH" ] && [ "$BRANCH" != "main" ]; then
-		BRANCH_OPTS="--branch $BRANCH --single-branch"
-	fi
-	echo git clone $BRANCH_OPTS "$GIT_URL"
-	git clone $BRANCH_OPTS "$GIT_URL"
-	cd autokey-wayland
-	git tag -f "$VERSION"
-        pytest
-	debian/build.sh
-	
-	#  Copy the package files out of the container and on to the host
-	cp -vr ${HOME}/src/*.deb ${TARGETDIR}/Downloads/
-	
+    BRANCH_OPTS=""
+    if [ -n "$BRANCH" ] && [ "$BRANCH" != "main" ]; then
+        BRANCH_OPTS="--branch $BRANCH --single-branch"
+    fi
+    echo git clone $BRANCH_OPTS "$GIT_URL"
+    git clone $BRANCH_OPTS "$GIT_URL"
+    cd autokey-wayland
+    git tag -f "$VERSION"
+    pytest
+    debian/build.sh
+
+    #  Copy the package files out of the container and on to the host
+    cp -vr ${HOME}/src/*.deb ${TARGETDIR}/Downloads/
+
 fi

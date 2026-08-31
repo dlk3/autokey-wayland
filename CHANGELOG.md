@@ -1,5 +1,15 @@
 # Changelog
 
+## AutoKey 0.97.6
+
+### Bug Fixes
+
+  * [#56](https://github.com/dlk3/autokey-wayland/issues/56) - qtpy module
+    needs to be added to Ubuntu/Debian installation package
+
+  * [#57](https://github.com/dlk3/autokey-wayland/issues/57) - import missing
+    module - QtWidgets.QHeaderView - in qtui/configwindow.py
+
 ## AutoKey 0.97.5
 
 ### New Features

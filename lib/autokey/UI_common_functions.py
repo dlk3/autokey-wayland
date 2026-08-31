@@ -1,22 +1,19 @@
-import importlib
 import importlib.util
-import os.path
-from shutil import which
-import re
-import subprocess
-import sys
-import time
 import os
+import os.path
+import re
+import time
+from shutil import which
 
-from . import common
-import autokey.model.helpers
 import autokey.configmanager.configmanager as cm
 import autokey.configmanager.configmanager_constants as cm_constants
 from autokey.model.triggermode import TriggerMode
 
+from . import common
+
 logger = __import__("autokey.logger").logger.get_logger(__name__)
 
-common_modules = ['argparse', 'collections', 'enum', 'faulthandler', 
+common_modules = ['argparse', 'collections', 'enum', 'faulthandler',
             'gettext', 'inspect', 'itertools', 'logging', 'os', 'select', 'shlex',
             'shutil', 'subprocess', 'sys', 'threading', 'time', 'traceback', 'typing',
             'warnings', 'webbrowser', 'dbus', 'pyinotify']
@@ -29,7 +26,7 @@ qt_modules = ['qtpy', 'qtpy.QtGui', 'qtpy.QtWidgets', 'qtpy.QtCore',
 x11_programs = ['wmctrl', 'xrandr']
 wayland_programs = ['wl-copy', 'wl-paste']
 common_programs = ['ps']
-# Checking some of these appears to be redundant as some are provided by the same packages on my system but 
+# Checking some of these appears to be redundant as some are provided by the same packages on my system but
 # better safe than sorry.
 x11_optional_programs = ['xte', 'xmousepos']
 optional_programs = ['visgrep', 'import', 'png2pat']
@@ -41,8 +38,6 @@ def checkGnomeAutokeyExtension():
     object_path = "/org/gnome/Shell/Extensions/AutoKey"
     interface_name = "org.gnome.Shell.Extensions.AutoKey"
     check_dbus_object_exists(bus_name, object_path, interface_name)
-    pass
-
 
 def check_dbus_object_exists(bus_name, object_path, interface_name):
     #keep dbus import here
@@ -100,13 +95,6 @@ def checkProgramImports(programs, optional=False):
 def checkOptionalPrograms():
     if os.environ.get("XDG_SESSION_TYPE") == "x11":
         checkProgramImports(x11_optional_programs, optional=True)
-
-    if common.USED_UI_TYPE == "QT":
-        checkProgramImports(optional_programs, optional=True)
-    elif common.USED_UI_TYPE == "GTK":
-        checkProgramImports(optional_programs, optional=True)
-    elif common.USED_UI_TYPE == "headless":
-        checkProgramImports(optional_programs, optional=True)
     else:
         checkProgramImports(optional_programs, optional=True)
 
@@ -155,7 +143,7 @@ def path_created_or_modified(configManager, configWindow, path):
         configWindow.config_modified()
 
 def set_file_watched(appmonitor, path, watch):
-    if not appmonitor.has_watch(path) and os.path.isdir(path): 
+    if not appmonitor.has_watch(path) and os.path.isdir(path):
         appmonitor.suspend()
         if watch:
             appmonitor.add_watch(path)
@@ -176,8 +164,7 @@ def save_item_filter(app, item):
     try:
         item.set_window_titles(filter_regex)
     except re.error:
-        logger.error(
-            "Invalid window filter regex: '{}'. Discarding without saving.".format(filter_regex)
+        logger.error(f"Invalid window filter regex: '{filter_regex}'. Discarding without saving.")
         )
     item.set_filter_recursive(app.get_is_recursive())
 
@@ -200,7 +187,7 @@ def save_hotkey_settings_dialog(app, item):
 
     if key is None:
         raise RuntimeError("Attempt to set hotkey with no key")
-    logger.info("Item {} updated with hotkey {} and modifiers {}".format(item, key, modifiers))
+    logger.info(f"Item {item} updated with hotkey {key} and modifiers {modifiers}")
     item.set_hotkey(modifiers, key)
 
 def load_hotkey_settings_dialog(app, item):

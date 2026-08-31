@@ -16,6 +16,7 @@ python3-gi
 python3-pyudev
 python3-pyqt5.qsci
 python3-pyqt5.qtsvg
+python3-qtpy
 pyqt5-dev-tools
 wmctrl
 x11-xserver-utils

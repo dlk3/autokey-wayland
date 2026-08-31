@@ -12,8 +12,7 @@ There are three scripts:
                         I made this so that I could do builds from my Fedora 
 		                workstation without resorting to an Ubuntu KVM.
     debian/update-ppa - Updates the PPA with the ```~/Downloads/autokey*.deb``` 
-                        files produced by the mkpackage script with the testing 
-                        ("-t") option
+                        files produced by the mkpackage script
 # Preparation
 
 - Update debian/changelog and copy text over into CHANGELOG.md and fedora/autokey.spec
@@ -40,13 +39,10 @@ A SRPM package will be built locally and then forwarded to COPR where the actual
 
 ## To build Ubuntu debs on a Fedora workstation:
 
-Edit <code>debian/mkpackage</code> and make sure it's pointing at the right branch of the repo.  This build pulls its source from git, so make sure you've done your commits and pushes and published the release.
+This build uses the code from the GitHub repo.  By default it uses the "main" branch and updates my PPA - daveking.com:/opt/autokey-wayland-ppa, but, if the -t option is used, it uses the code in the "devel" branch and publishes the results to the test PPA - daveking.com:/opt/autokey-wayland-ppa-testing.
 
     cd ~/src/autokey-wayland/debian
     ./mkpackage -t
-    ./update_ppa
-
-On Fedora, the output debs will be rsynced to my PPA server, unless the "-t" option is specified.  With "-t" they will be written into ${HOME}/Downloads instead.
 
 ## To build Ubuntu debs on an Ubuntu workstation:
 

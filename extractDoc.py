@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (C) 2023 Sam Sebastian
 
 # This program is free software; you can redistribute it and/or modify
@@ -26,7 +24,7 @@ def get_api(filepath, module_name=None, csv=False):
 
     Ignores functions that start with a "_" these are typically considered internal and should only be used by those who know of them.
 
-    
+
     :param filepath: Filepath to load python script from
     :param module_name: Over write the module name, used for highlevel, qt/gtk specific things
     :param csv: changes output to csv, for use with Gtk autocompletion file
@@ -40,7 +38,7 @@ def get_api(filepath, module_name=None, csv=False):
             #print(node.name)
 
             args = [arg.arg for arg in node.args.args if arg.arg != "self"]
-            
+
 
             # grab only the first line of the doc string
             if node.name[0] == "_": #skip internal methods
@@ -54,7 +52,7 @@ def get_api(filepath, module_name=None, csv=False):
             module_name_output = module_name
             if module_name is None:
                 module_name_output = pathlib.Path(filepath).stem # for engine functions outside of the class, returns "engine"
-                
+
 
             if csv:
                 line = [f"{module_name_output}.{node.name}({', '.join(args)})", comment]
@@ -110,44 +108,41 @@ def get_macro(filepath):
         name=""
         description=""
         args = []
-        if isinstance(class_node, ast.ClassDef):
-            if class_node.bases and class_node.bases[0].id=="AbstractMacro":
-                for node in class_node.body:
-                    if isinstance(node, ast.Assign):
-                        var_name = node.targets[0].id
-                        
-                        if isinstance(node.value, ast.Constant):
-                            name = node.value.s
+        if isinstance(class_node, ast.ClassDef) and class_node.bases and class_node.bases[0].id=="AbstractMacro":
+            for node in class_node.body:
+                if isinstance(node, ast.Assign):
+                    if isinstance(node.value, ast.Constant):
+                        name = node.value.s
 
-                        # because TITLE is wrapped in translate it's considered a call, have to handle that differently
-                        if isinstance(node.value, ast.Call): 
-                            description = node.value.args[0].value
+                    # because TITLE is wrapped in translate it's considered a call, have to handle that differently
+                    if isinstance(node.value, ast.Call):
+                        description = node.value.args[0].value
 
-                        if isinstance(node.value, ast.List):
-                            
-                            for arg in node.value.elts:
-                                if isinstance(arg, ast.Tuple):
-                                    for item in arg.elts:
-                                        if isinstance(item, ast.Call):
-                                            arg_description = item.args[0].value
-                                        elif isinstance(item, ast.Constant):
-                                            arg_name = item.value
+                    if isinstance(node.value, ast.List):
 
-                                    #print(item, arg_name, arg_description)
-                                    args.append([arg_name, arg_description])
+                        for arg in node.value.elts:
+                            if isinstance(arg, ast.Tuple):
+                                for item in arg.elts:
+                                    if isinstance(item, ast.Call):
+                                        arg_description = item.args[0].value
+                                    elif isinstance(item, ast.Constant):
+                                        arg_name = item.value
 
-                        
-                        #print(var_name, name, description, node.value)
-                        arguments = ""
-                        if args:
-                            arguments = " "
-                            for arg in args:
-                                arguments += f'{arg[0]}="{arg[1]}" '
-                        
-                        line = [f"<{name}{arguments.rstrip()}>", description]
-                
-                #print(line)
-                macro.append(line)
+                                #print(item, arg_name, arg_description)
+                                args.append([arg_name, arg_description])
+
+
+                    #print(var_name, name, description, node.value)
+                    arguments = ""
+                    if args:
+                        arguments = " "
+                        for arg in args:
+                            arguments += f'{arg[0]}="{arg[1]}" '
+
+                    line = [f"<{name}{arguments.rstrip()}>", description]
+
+            #print(line)
+            macro.append(line)
 
     return macro
 
