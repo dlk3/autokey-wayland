@@ -165,7 +165,6 @@ def save_item_filter(app, item):
         item.set_window_titles(filter_regex)
     except re.error:
         logger.error(f"Invalid window filter regex: '{filter_regex}'. Discarding without saving.")
-        )
     item.set_filter_recursive(app.get_is_recursive())
 
 
