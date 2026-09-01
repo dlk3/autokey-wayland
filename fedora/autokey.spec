@@ -1,6 +1,6 @@
 %{?python_enable_dependency_generator}
 Name:		autokey
-Version:	0.97.5
+Version:	0.97.6
 Release:	0%{?dist}
 Summary:	Desktop automation utility
 
@@ -199,6 +199,9 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-exten
 %{_mandir}/man1/autokey-qt.1*
 
 %changelog
+* Mon Sep 1 2026 David King <dave@daveking.com> - 0.97.6-0
+- Bugfix release
+
 * Wed Jun 17 2026 David King <dave@daveking.com> - 0.97.5-0
 - Add python3-qtpy as Required package for autokey-qt
 
