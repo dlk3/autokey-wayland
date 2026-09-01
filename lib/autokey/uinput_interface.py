@@ -132,8 +132,8 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
         "KEY_LEFTALT": Key.LEFTALT,
         "KEY_RIGHTALT": Key.RIGHTALT,
 
-        "KEY_LEFTMETA": Key.LEFTMETA,
-        "KEY_RIGHTMETA": Key.RIGHTMETA,
+        "KEY_LEFTMETA": Key.LEFTSUPER,
+        "KEY_RIGHTMETA": Key.RIGHTSUPER,
 
     }
 
