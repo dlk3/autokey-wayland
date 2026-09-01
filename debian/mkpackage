@@ -16,15 +16,21 @@
 #  <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.
  #####################################################################
 
-#  Generate the Ubuntu debs for AutoKey using a Ubuntu 24.04 LTS container
+#  Generate the Ubuntu debs for AutoKey using a Ubuntu container
 
 #  Source code to build and version number to use
 GIT_URL='https://github.com/dlk3/autokey-wayland.git'
-BRANCH='main'
 VERSION='v0.97.5'
 
-#  Location we rsync the PPA updates to:
-PPA_DIR='daveking.com:/opt/autokey-wayland-ppa'
+#  Location of the default (testing) PPA:
+PPA_DIR='daveking.com:/opt/autokey-wayland-ppa-testing'
+
+#  Specify the default for the branch that is to be built.
+#  Can be overidden by an environment variable when this script is called
+#  inside a container
+if [ -z "$BRANCH_OPTS" ]; then
+    BRANCH_OPTS="--branch develop --single-branch"
+fi
 
 #  Tag of the docker.io Ubuntu container we use as the base for our container build
 UBUNTU_CONTAINER="ubuntu:latest"
@@ -34,23 +40,27 @@ export DEBEMAIL='dave@daveking.com'
 
 #  Handle command line options
 usage () {
-    echo "Usage: $0 [-d] [-h] [-t]"
+    echo "Usage: $0 [-d] [-h] [-p]"
     echo "    where:"
-    echo "        -d : keep container open for debugging when there is  an error"
-    echo "        -t : test build, do not publish the results to the PPA"
+    echo "        -d : keep container open for debugging when there is an error"
+    echo "        -p : Publish the results to the production PPA.  The default is"
+    echo "             to publish to the test PPA."
 }
 
-DEBUG=false
-TESTBUILD=false
-while getopts "dth" OPT; do
+#  Specify the default for the -d option
+#  Can be overidden by an environment variable when this script is called
+#  inside a container
+if [ -z "$DEBUG" ]; then
+    DEBUG=false
+fi
+while getopts "dph" OPT; do
     case "${OPT}" in
-        d)
-            DEBUG=true
-            ;;
-        t)
-            TESTBUILD=true
-            BRANCH='develop'
-            PPA_DIR='daveking.com:/opt/autokey-wayland-ppa-testing'
+	d)
+	    DEBUG=true
+	    ;;
+        p)
+            BRANCH_OPTS="--branch main --single-branch"
+            PPA_DIR='daveking.com:/opt/autokey-wayland-ppa'
             ;;
         h)
             usage
@@ -88,11 +98,11 @@ if [ ! $container ]; then
     if $DEBUG; then
         OPT="-it"
     fi
-    /usr/bin/podman run $OPT --name=debbuild --rm --volume=${HOME}:${HOME} docker.io/${UBUNTU_CONTAINER} "$(realpath "$0")" ${HOME}
+    /usr/bin/podman run $OPT --name=debbuild --rm --volume=${HOME}:${HOME} --env="BRANCH_OPTS=$BRANCH_OPTS" --env="DEBUG=$DEBUG" docker.io/${UBUNTU_CONTAINER} "$(realpath "$0")" ${HOME}
 
     echo "Build complete at $(date +%H:%m:%S)"
 
-    #  If this isn't a test, put the deb files into my PPA
+    #  Put the deb files into my PPA
     ./update_ppa "$PPA_DIR"
 
 else
@@ -116,10 +126,6 @@ else
     mkdir -p ${HOME}/src
     cd ${HOME}/src
 
-    BRANCH_OPTS=""
-    if [ -n "$BRANCH" ] && [ "$BRANCH" != "main" ]; then
-        BRANCH_OPTS="--branch $BRANCH --single-branch"
-    fi
     echo git clone $BRANCH_OPTS "$GIT_URL"
     git clone $BRANCH_OPTS "$GIT_URL"
     cd autokey-wayland

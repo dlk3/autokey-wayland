@@ -10,6 +10,9 @@
   * [#57](https://github.com/dlk3/autokey-wayland/issues/57) - import missing
     module - QtWidgets.QHeaderView - in qtui/configwindow.py
 
+  * [#58](https://github.com/dlk3/autokey-wayland/issues/57) - revert column
+    resizing change in qtui/configwindow.py
+
 ## AutoKey 0.97.5
 
 ### New Features

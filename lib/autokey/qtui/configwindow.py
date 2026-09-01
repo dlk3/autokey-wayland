@@ -56,9 +56,10 @@ class ConfigWindow(*autokey.qtui.common.inherits_from_ui_file_with_name("mainwin
         self._set_platform_specific_keyboard_shortcuts()
         self.central_widget.init(app)
         self.central_widget.populate_tree(self.app.configManager)
-        header = self.central_widget.treeWidget.header()
-        for x in range(self.central_widget.treeWidget.columnCount()):
-             header.setSectionResizeMode(x, QHeaderView.Interactive)
+        #  @dlk - revert change intended to allow resizing of columns
+        #header = self.central_widget.treeWidget.header()
+        #for x in range(self.central_widget.treeWidget.columnCount()):
+        #     header.setSectionResizeMode(x, QHeaderView.Interactive)
 
     def _create_action_create(self) -> QAction:
         """

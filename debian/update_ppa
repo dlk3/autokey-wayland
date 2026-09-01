@@ -18,12 +18,12 @@
 
 #  Update PPA with debs found in Downloads folder (see mkpackage script)
 
-#  Location we rsync the PPA updates to:
+#  Location we rsync the PPA updates to, i.e., 'daveking.com:/opt/autokey-wayland-ppa-testing'
 PPA_DIR=$1
 
 #  Handle command line options
 usage () {
-    echo "Usage: $0 [-h]"
+    echo "Usage: $0 [-h] ppa_directory"
 }
 
 while getopts "h" OPT; do
@@ -47,7 +47,7 @@ set -e
 
 #  Update PPA
 rm -fr /tmp/ppa &>/dev/null || true
-rsync --archive --partial --progress $PPA_DIR /tmp/ppa/
+rsync --archive --partial --progress ${PPA_DIR}/* /tmp/ppa/
 mv ${HOME}/Downloads/autokey*.deb /tmp/ppa/
 cd /tmp/ppa
 
@@ -110,6 +110,6 @@ export GNUPGHOME=${HOME}/.gnupg-ppakey
 cat Release | gpg -abs >Release.gpg
 cat Release | gpg -abs --clearsign >InRelease
 
-echo "Sync local repo with remote web site"
+echo "Sync local repo with remote web site: $PPA_DIR"
 rsync --archive --partial --progress --delete /tmp/ppa/ "$PPA_DIR"
 echo "Sync complete"
