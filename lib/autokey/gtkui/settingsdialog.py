@@ -117,7 +117,10 @@ class SettingsDialog:
                 self.uinput_keyboard.set_text(', '.join(keyboard))
         mouse = cm.ConfigManager.SETTINGS[cm_constants.MOUSE]
         if mouse:
-            self.uinput_mouse.set_text(mouse)
+            if isinstance(mouse, str):
+                self.uinput_mouse.set_text(mouse)
+            else:
+                self.uinput_mouse.set_text(', '.join(mouse))
         self.uinput_delay = builder.get_object("uinput_delay")
         self.uinput_delay.set_text(str(cm.ConfigManager.SETTINGS[cm_constants.DELAY]))
         
@@ -155,7 +158,7 @@ class SettingsDialog:
         # UInput Settings
         # dlk - keyboard might be a list
         cm.ConfigManager.SETTINGS[cm_constants.KEYBOARD] = [s.strip() for s in self.uinput_keyboard.get_text().split(',')]
-        cm.ConfigManager.SETTINGS[cm_constants.MOUSE] = self.uinput_mouse.get_text()
+        cm.ConfigManager.SETTINGS[cm_constants.MOUSE] = [s.strip() for s in self.uinput_mouse.get_text().split(',')]
         cm.ConfigManager.SETTINGS[cm_constants.DELAY] = float(self.uinput_delay.get_text())
 
         self._save_disable_capslock_setting()
