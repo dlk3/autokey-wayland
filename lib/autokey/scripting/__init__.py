@@ -56,6 +56,8 @@ elif autokey.common.USED_UI_TYPE == "headless":
 if autokey.common.SESSION_TYPE == "wayland":
     if autokey.common.DESKTOP == 'KDE':
         from .window_kde import Window
+    elif autokey.common.DESKTOP in autokey.common.WLROOTS_DESKTOPS:
+        from .window_wlroots import Window
     else:
         from .window_gnome import Window
     pass
