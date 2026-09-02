@@ -855,17 +855,12 @@ class UInputInterface(threading.Thread, MouseReadInterface, AbstractSysInterface
                     #if event_type.
                     #self.handle_mouseclick(event)
 
-                # dlk3 - the following self.ui.write sends through AutoKey hotkeys,
-                # which it shouldn't do, so we'll return now, before that happens,
-                # if the "held" list holds an AutoKey hotkey
-                if self.__isAutoKeyHotkey(held):
-                    return
-
                 # dlk3 - support multiple keyboards/mice
-                # pass through to autokey uinput device
-                for keyboard in self.keyboards:
-                    if not self.sending and fd == keyboard.fd:
-                        self.ui.write(event.type, event.code, event.value)
+                # pass through to autokey uinput device, but not for AutoKey hotkeys
+                if not self.__isAutoKeyHotkey(held):
+                    for keyboard in self.keyboards:
+                        if not self.sending and fd == keyboard.fd:
+                            self.ui.write(event.type, event.code, event.value)
 
     #  @dlk3 - Does the list of keys from __flush_events() match an AutoKey hotkey?
     def __isAutoKeyHotkey(self, key_list):
