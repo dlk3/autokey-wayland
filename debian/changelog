@@ -11,7 +11,7 @@ autokey (0.97.6) noble; urgency=medium
   * [#58](https://github.com/dlk3/autokey-wayland/issues/57) - revert column
     resizing change in qtui/configwindow.py
 
- -- David King <dave@daveking.com>  Mon, 1 Sep 2026 14:01:27 -0500
+ -- David King <dave@daveking.com>  Tue, 1 Sep 2026 14:01:27 -0500
 
 autokey (0.97.5) noble; urgency=medium
 

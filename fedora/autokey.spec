@@ -199,7 +199,7 @@ install -m 644 -D --target-dir=%{buildroot}%{_datadir}/autokey/gnome-shell-exten
 %{_mandir}/man1/autokey-qt.1*
 
 %changelog
-* Mon Sep 1 2026 David King <dave@daveking.com> - 0.97.6-0
+* Tue Sep 1 2026 David King <dave@daveking.com> - 0.97.6-0
 - Bugfix release
 
 * Wed Jun 17 2026 David King <dave@daveking.com> - 0.97.5-0
