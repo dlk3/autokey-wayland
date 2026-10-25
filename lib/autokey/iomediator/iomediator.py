@@ -24,6 +24,8 @@ from autokey.configmanager.configmanager import ConfigManager
 from autokey.configmanager.configmanager_constants import INTERFACE_TYPE
 if common.DESKTOP == 'KDE':
     from autokey.kde_interface import KdeWindowInterface
+elif common.DESKTOP in common.WLROOTS_DESKTOPS:
+    from autokey.wlroots_interface import WlrootsWindowInterface
 else:
     from autokey.gnome_interface import GnomeExtensionWindowInterface
 from autokey.sys_interface.clipboard import Clipboard
@@ -77,6 +79,9 @@ class IoMediator(threading.Thread):
             if common.DESKTOP == 'KDE':
                 logger.debug("Using kde window interface")
                 self.windowInterface = KdeWindowInterface()
+            elif common.DESKTOP in common.WLROOTS_DESKTOPS:
+                logger.debug("Using wlroots window interface")
+                self.windowInterface = WlrootsWindowInterface()
             else:
                 logger.debug("Using gnome extension window interface")
                 self.windowInterface = GnomeExtensionWindowInterface()
