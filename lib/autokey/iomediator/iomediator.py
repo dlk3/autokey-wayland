@@ -117,7 +117,7 @@ class IoMediator(threading.Thread):
         logger.debug("IoMediator shutting down")
         self.interface.cancel()
         logger.debug("queue.put_nowait()")
-        self.queue.put_nowait((None, None))
+        self.queue.put_nowait((None, None, None, None, None))
         logger.debug("Waiting for IoMediator thread to end")
         self.join()
         logger.debug("IoMediator shutdown completed")
@@ -168,17 +168,20 @@ class IoMediator(threading.Thread):
         Looks up the character for the given key code, applying any
         modifiers currently in effect, and passes it to the expansion service.
         """
-        self.queue.put_nowait((key_code, window_info))
+        # Snapshot modifier state now — by the time the mediator thread
+        # dequeues this event, modifier-up events may have already cleared them.
+        modifiers = self._get_modifiers_on()
+        num_lock = self.modifiers[Key.NUMLOCK]
+        shifted = self.modifiers[Key.CAPSLOCK] ^ self.modifiers[Key.SHIFT]
+        self.queue.put_nowait((key_code, window_info, modifiers, num_lock, shifted))
 
     def run(self):
         while True:
-            key_code, window_info = self.queue.get()
-            if key_code is None and window_info is None:
+            item = self.queue.get()
+            if item[0] is None and item[1] is None:
                 break
 
-            num_lock = self.modifiers[Key.NUMLOCK]
-            modifiers = self._get_modifiers_on()
-            shifted = self.modifiers[Key.CAPSLOCK] ^ self.modifiers[Key.SHIFT]
+            key_code, window_info, modifiers, num_lock, shifted = item
             key = self.interface.lookup_string(key_code, shifted, num_lock, self.modifiers[Key.ALT_GR])
             raw_key = self.interface.lookup_string(key_code, False, False, False)
 
