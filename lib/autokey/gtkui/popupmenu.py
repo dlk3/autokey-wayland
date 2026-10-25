@@ -16,7 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
+
+try:
+    import gi
+    gi.require_version('GtkLayerShell', '0.1')
+    from gi.repository import GtkLayerShell
+    HAS_LAYER_SHELL = True
+except (ValueError, ImportError):
+    HAS_LAYER_SHELL = False
 
 import autokey.configmanager.configmanager as cm
 import autokey.configmanager.configmanager_constants as cm_constants
@@ -97,14 +105,50 @@ class PopupMenu(Gtk.Menu):
             return desc
 
     def show_on_desktop(self):
+        if HAS_LAYER_SHELL and GtkLayerShell.is_supported():
+            GLib.idle_add(self._show_with_layer_shell)
+        else:
+            Gdk.threads_enter()
+            time.sleep(0.2)
+            self._show_with_x11()
+            Gdk.threads_leave()
+
+    def _show_with_layer_shell(self):
+        try:
+            x, y = self.service.mediator.interface.mouse_location()
+        except Exception:
+            x, y = 0, 0
+
+        self._popup_window = Gtk.Window()
+        GtkLayerShell.init_for_window(self._popup_window)
+        GtkLayerShell.set_layer(self._popup_window, GtkLayerShell.Layer.OVERLAY)
+        GtkLayerShell.set_anchor(self._popup_window, GtkLayerShell.Edge.TOP, True)
+        GtkLayerShell.set_anchor(self._popup_window, GtkLayerShell.Edge.LEFT, True)
+        GtkLayerShell.set_margin(self._popup_window, GtkLayerShell.Edge.TOP, y)
+        GtkLayerShell.set_margin(self._popup_window, GtkLayerShell.Edge.LEFT, x)
+        GtkLayerShell.set_keyboard_mode(self._popup_window, GtkLayerShell.KeyboardMode.ON_DEMAND)
+
+        self._popup_window.set_decorated(False)
+        self._popup_window.set_default_size(1, 1)
+        self._popup_window.show()
+
+        self.attach_to_widget(self._popup_window)
+        self.show_all()
+        self.popup_at_widget(self._popup_window, Gdk.Gravity.NORTH_WEST, Gdk.Gravity.NORTH_WEST, None)
+        self.connect("deactivate", self._on_deactivate)
+        return False
+
+    def _show_with_x11(self):
         def position_popup(menu, x, y, user_data):
-            (x,y) = self.service.mediator.interface.mouse_location()
-            logger.debug(f"Placing popup at Mouse postition: X:{x} Y:{y}")
-            return (x,y, True)
-        Gdk.threads_enter()
-        time.sleep(0.2)
+            (x, y) = self.service.mediator.interface.mouse_location()
+            logger.debug(f"Placing popup at Mouse position: X:{x} Y:{y}")
+            return (x, y, True)
         self.popup(None, None, position_popup, 0, 1, 0)
-        Gdk.threads_leave()
+
+    def _on_deactivate(self, menu):
+        if hasattr(self, '_popup_window') and self._popup_window:
+            self._popup_window.destroy()
+            self._popup_window = None
 
     def remove_from_desktop(self):
         Gdk.threads_enter()

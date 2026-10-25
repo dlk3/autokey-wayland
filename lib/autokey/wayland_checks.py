@@ -39,10 +39,15 @@ def waylandChecks():
             return True
 
         #  Check that we're running on a supported desktop environment
-        if os.environ['XDG_SESSION_DESKTOP'] == 'gnome' or 'GNOME_DESKTOP_SESSION_ID' in os.environ or os.environ['XDG_SESSION_DESKTOP'] == 'KDE':
-            logger.debug(f"waylandChecks() found AutoKey running under a supported desktop environment: {os.environ['XDG_SESSION_DESKTOP']}")
+        session_desktop = os.environ.get('XDG_SESSION_DESKTOP', '').lower()
+        supported = (
+            session_desktop in ('gnome', 'kde', 'budgie', 'budgie-desktop')
+            or 'GNOME_DESKTOP_SESSION_ID' in os.environ
+        )
+        if supported:
+            logger.debug(f"waylandChecks() found AutoKey running under a supported desktop environment: {session_desktop}")
         else:
-            logger.debug(f"waylandChecks() found AutoKey running under an unsupported desktop environment: {os.environ['XDG_SESSION_DESKTOP']}, displaying popup.")
+            logger.debug(f"waylandChecks() found AutoKey running under an unsupported desktop environment: {session_desktop}, displaying popup.")
             __show_unsupported_desktop_popup()
             return False
     except Exception as e:
@@ -53,7 +58,12 @@ def waylandChecks():
     show_popup = False
 
     #  Gnome check: is the Gnome Shell extension present?
-    if os.environ['XDG_SESSION_DESKTOP'] == 'gnome' or 'GNOME_DESKTOP_SESSION_ID' in os.environ:
+    #  Budgie sets GNOME_DESKTOP_SESSION_ID but doesn't use GNOME Shell extensions
+    is_gnome = session_desktop == 'gnome' or (
+        'GNOME_DESKTOP_SESSION_ID' in os.environ
+        and session_desktop not in ('budgie', 'budgie-desktop')
+    )
+    if is_gnome:
         ext_id = 'autokey-gnome-extension@autokey'
         try:
             proc = subprocess.run(f'gnome-extensions info {ext_id}', shell=True, capture_output=True, check=True)
@@ -85,11 +95,11 @@ def waylandChecks():
 
     #  If there was a problem, throw up a popup box telling them what to do
     if show_popup:
-        #  This is Gnome-specific, other DTEs added in the future may need
-        #  different messages
         title = 'AutoKey System Configuration Needed'
-        if os.environ['XDG_SESSION_DESKTOP'] == 'KDE':
+        if session_desktop == 'kde':
             message = f'Your user id is not configured to run AutoKey under Wayland.  If this is your <b>first time</b> running AutoKey, try <b>rebooting</b> your system and starting AutoKey again.  Otherwise, try entering this two command, then rebooting:<br /><br />sudo usermod -a -G "{group}" "{user}"'
+        elif session_desktop in ('budgie', 'budgie-desktop'):
+            message = f'Your user id is not configured to run AutoKey under Wayland.  If this is your <b>first time</b> running AutoKey, try <b>rebooting</b> your system and starting AutoKey again.  Otherwise, try entering this command, then rebooting:<br /><br />sudo usermod -a -G "{group}" "{user}"'
         else:
             message = f'Your user id is not configured to run AutoKey under Wayland.  If this is your <b>first time</b> running AutoKey, try <b>rebooting</b> your system and starting AutoKey again.  Otherwise, try entering these two commands, then rebooting:<br /><br />sudo usermod -a -G "{group}" "{user}"<br /><br />gnome-extensions install --force /usr/share/autokey/gnome-shell-extension/autokey-gnome-extension@autokey.shell-extension.zip'
         __show_popup(title, message)

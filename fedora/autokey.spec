@@ -24,15 +24,17 @@ the full flexibility and power of the Python language.
 
 %package common
 Summary:	Desktop automation utility - common data
-Requires:	gnome-extensions-app
 Requires:	python3-dbus
 Requires:	python3-evdev
 Requires:	python3-pyudev
 Requires:	python3-pydbus
 Requires:	ImageMagick
+Recommends:	gnome-extensions-app
 Recommends:	wmctrl
 Recommends:	xautomation
+Recommends:	gtk-layer-shell
 Recommends:	wl-clipboard
+Recommends:	libxfce4windowing
 Provides:	autokey = %{version}-%{release}
 %description common
 This package contains the common data shared between the various front ends.
