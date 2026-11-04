@@ -49,6 +49,17 @@ def waylandChecks():
         logger.exception('Unexpected exception in waylandChecks() while examining environment variables')
         return False
 
+    #  KDE with the AutoKey KWin bridge plugin: input comes from the compositor,
+    #  no input group or /dev/uinput access needed
+    if os.environ.get('XDG_SESSION_DESKTOP') == 'KDE' and os.environ.get('AUTOKEY_INTERFACE', 'kwin') == 'kwin':
+        try:
+            from autokey.kwin_interface import bridge_available, find_kwin_input
+            if bridge_available() and find_kwin_input():
+                logger.debug('waylandChecks() found the AutoKey KWin bridge and kwin-input')
+                return True
+        except Exception:
+            logger.exception('waylandChecks() could not check for the AutoKey KWin bridge')
+
     #  Do we show popup message?
     show_popup = False
 

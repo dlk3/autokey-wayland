@@ -85,7 +85,20 @@ class IoMediator(threading.Thread):
             self.windowInterface = XWindowInterface()
 
 
-        if self.interfaceType == "uinput":
+        # KDE Plasma: use the AutoKey KWin bridge plugin when it is loaded. It
+        # needs neither root nor /dev/uinput.
+        if self.interfaceType == "uinput" and common.DESKTOP == 'KDE' \
+                and os.environ.get("AUTOKEY_INTERFACE", "kwin") == "kwin":
+            from autokey.kwin_interface import KWinInterface, bridge_available
+            if bridge_available():
+                self.interfaceType = "kwin"
+            else:
+                logger.info("The AutoKey KWin bridge plugin is not loaded, using uinput")
+
+        if self.interfaceType == "kwin":
+            from autokey.kwin_interface import KWinInterface
+            self.interface = KWinInterface(self, self.app)
+        elif self.interfaceType == "uinput":
             from autokey.uinput_interface import UInputInterface
             self.interface = UInputInterface(self, self.app)
         elif self.interfaceType == X_RECORD_INTERFACE:
