@@ -28,9 +28,11 @@ DESKTOP = os.environ.get('XDG_CURRENT_DESKTOP')
 if DESKTOP and DESKTOP.lower() in ('kde', 'plasma'):
     DESKTOP = 'KDE'
 
-CONFIG_DIR = os.path.join(XDG_CONFIG_HOME, "autokey")
+# AUTOKEY_CONFIG_DIR / AUTOKEY_DATA_DIR allow running a separate configuration,
+# e.g. one per session type.
+CONFIG_DIR = os.environ.get("AUTOKEY_CONFIG_DIR") or os.path.join(XDG_CONFIG_HOME, "autokey")
 RUN_DIR = os.path.join(os.environ.get('XDG_RUNTIME_DIR', XDG_CACHE_HOME), "autokey")
-DATA_DIR = os.path.join(XDG_DATA_HOME, "autokey")
+DATA_DIR = os.environ.get("AUTOKEY_DATA_DIR") or os.path.join(XDG_DATA_HOME, "autokey")
 # The desktop file to start autokey during login is placed here
 AUTOSTART_DIR = os.path.join(XDG_CONFIG_HOME, "autostart")
 
