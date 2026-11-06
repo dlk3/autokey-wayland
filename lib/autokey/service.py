@@ -192,9 +192,10 @@ class Service:
         if self.__shouldProcess(window_info):
             self.__process_hotkey(modifiers, rawKey, window_info)
 
-            modifierCount = len(modifiers)
-            hotkey_uses_nonprinting_modifiers = modifierCount > 1 or \
-                (modifierCount == 1 and Key.SHIFT not in modifiers)
+            # Shift and AltGr (left or right) only change the typed character
+            printing = (Key.SHIFT, Key.LEFTSHIFT, Key.RIGHTSHIFT, Key.ALT_GR)
+            nonprinting = [m for m in modifiers if m not in printing]
+            hotkey_uses_nonprinting_modifiers = len(nonprinting) > 0
             if hotkey_uses_nonprinting_modifiers:
                 self.inputStack.clear()
                 self.__tryReleaseLock()
