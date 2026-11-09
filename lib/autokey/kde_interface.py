@@ -393,17 +393,18 @@ class KdeWindowInterface(AbstractWindowInterface):
         result = self.kwin.run(kwin_script, script_name='get_active_window', response_expected=True)
         if result and result[0]:
             window = result[0]
-            in_current_workspace = False
-            for desktop in window['desktops']:
-                if desktop['id'] == result[1]['id']:
-                    in_current_workspace = True
-                    break
+            # KWin may report no desktops for a window (e.g. on all desktops).
+            # Fall back to the current desktop so key events are still handled.
+            desktop = window['desktops'][0] if window['desktops'] else result[1]
+            in_current_workspace = not window['desktops'] or any(
+                item['id'] == result[1]['id'] for item in window['desktops']
+            )
             active_window = {
                 'wm_class': window['resourceClass'],
                 'wm_class_instance': window['resourceClass'],
                 'wm_title': window['caption'],
-                'workspace': window['desktops'][0]['x11DesktopNumber'] - 1,
-                'desktop': window['desktops'][0]['id'],
+                'workspace': desktop['x11DesktopNumber'] - 1,
+                'desktop': desktop['id'],
                 'pid': window['pid'],
                 'id': window['internalId'],
                 'frame_type': None,
@@ -682,4 +683,3 @@ class KdeWindowInterface(AbstractWindowInterface):
         """
         kwin_script = kwin_script.replace('<window_id>', window_id)
         self.kwin.run(kwin_script)
-
